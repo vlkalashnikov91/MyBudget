@@ -1,0 +1,154 @@
+import React, {Component} from 'react'
+import { StyleSheet, Alert, ProgressBarAndroid, ListView, Platform, ProgressViewIOS } from 'react-native'
+import { Text, Icon, Card, CardItem, Body, Button, ListItem, List, Right, Left } from 'native-base'
+import { Col, Row, Grid } from 'react-native-easy-grid'
+import { FontAwesome } from '@expo/vector-icons'
+
+export default class CardInfo extends Component {
+  constructor(props) {
+    super(props)
+
+    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
+
+    this._addNewItem = this._addNewItem.bind(this)
+  }
+
+  _deleteItem(data, secId, rowId, rowMap){
+    Alert.alert(
+      'Вы уверены?',
+      null,
+      [
+        {text: 'Нет', onPress: ()=>{
+          rowMap[`${secId}${rowId}`].props.closeRow()
+        }},
+        {text: 'Да', onPress: () => {
+            rowMap[`${secId}${rowId}`].props.closeRow()
+            this.props.dropItem(data.Id)
+          }
+        },
+      ]
+    )
+  }
+
+  _addNewItem() {
+    this.props.addItem()
+  }
+
+  _editItem(id) {
+    this.props.editItem(id)
+  }
+
+  render() {
+    const { itemtype, data, currency } = this.props
+
+    let cardItemStyle, desc, cardColor
+    
+    if (itemtype == 1) {
+      cardItemStyle = styles.cardTarget
+      cardColor = TargetColor
+      desc = 'Цели'
+
+    } else if (itemtype == 2) {
+      cardItemStyle = styles.cardIDebt
+      cardColor = IDebtColor
+      desc = 'Я должен'
+
+    } else if (itemtype == 3) {
+      cardItemStyle = styles.cardDebt
+      cardColor = DebtColor
+      desc = 'Мне должны'
+    }
+
+    return (
+      <Card>
+        <CardItem header bordered style={[cardItemStyle, styles.cardMain]}>
+          <Text style={{color:'white'}}>{desc}</Text>
+          <Icon button name="ios-add" style={styles.addButton} onPress={this._addNewItem}/>
+        </CardItem>
+        <List 
+          dataSource={this.ds.cloneWithRows(data)}
+          leftOpenValue={75} 
+          rightOpenValue={-75}
+          renderRightHiddenRow={(data, secId, rowId, rowMap) =>
+            <Button full danger onPress={() => this._deleteItem(data, secId, rowId, rowMap) }>
+              <Icon active name="trash" />
+            </Button>
+          }
+          renderLeftHiddenRow={(data, secId, rowId, rowMap) =>
+            <Button full success>
+              <Icon active name="add" />
+            </Button>
+          }
+          renderRow={item => {
+            let progressCnt = Number((((item.CurAmount * 100) / item.Amount) / 100).toFixed(1))
+
+            return (
+            <ListItem key={item.Id}
+              button
+              onPress={() => this._editItem(item.Id)} 
+            >
+              <Body>
+                <Left>
+                  <Text uppercase>{item.GoalName}</Text>
+                </Left>
+                <Grid>
+                  <Col>
+                  {(Platform.OS === 'ios') && <ProgressViewIOS progressViewStyle="bar" trackTintColor={cardColor} progress={progressCnt} />}
+                  {(Platform.OS === 'android') && <ProgressBarAndroid styleAttr="Horizontal" indeterminate={false} color={cardColor} progress={progressCnt} />}
+                  </Col>
+                </Grid>
+                <Grid>
+                  <Left>
+                    <Text style={{color:cardColor}}>{item.CurAmount} {currency}</Text>
+                  </Left>
+                  <Right>
+                    <Text note>{item.Amount} {currency}</Text>
+                  </Right>
+                </Grid>
+              </Body>
+            </ListItem>
+            )
+          }}
+        >
+        </List>
+      </Card>
+    )
+  }
+}
+
+const IDebtColor = '#ED665A'
+const TargetColor = '#5D90B7'
+const DebtColor = '#4FA69D'
+  
+const styles = StyleSheet.create({
+  cardMain:{
+    display: 'flex', 
+    borderBottomLeftRadius:0, 
+    borderBottomRightRadius:0
+  },
+  cardTarget: {
+    backgroundColor: TargetColor,
+    borderColor: '#0A0F85',
+    borderRadius: 0,
+  },
+  cardIDebt: {
+    backgroundColor: IDebtColor,
+    borderColor: '#7A0505',
+    borderRadius: 0,
+  },
+  cardDebt: {
+    backgroundColor: DebtColor,
+    borderColor: '#025F0B',
+    borderRadius: 0,
+  },
+  addButton: {
+    color:'white', 
+    marginRight:0, 
+    marginLeft:'auto'
+  },
+  deleteButton: {
+    color:'white',
+    marginTop:1, 
+    marginBottom:'auto'
+  }
+})
