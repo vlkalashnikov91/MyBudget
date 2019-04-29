@@ -1,11 +1,13 @@
 import React, {Component} from 'react'
-import { RefreshControl } from 'react-native'
+import { RefreshControl, Modal, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, Spinner,  } from 'native-base'
+import { Container, Content, Spinner, View, Button, Text, CardItem, Card, Body, Item, Label, Input, H3, Icon } from 'native-base'
 
 import { ToastTr } from '../../components/Toast'
 import CardInfo from '../../components/CardInfo'
 import { TargetActions } from '../../actions/TargetActions'
+import { styles as mainStyle, screenHeight } from '../../Style'
+
 
 class Cards extends Component {
   constructor(props) {
@@ -16,6 +18,7 @@ class Cards extends Component {
       selected2: undefined,
       paymentsARR: [],
       refreshing: false,
+      visibleModal: false,
     }
 
     this._refreshData = this._refreshData.bind(this)
@@ -24,6 +27,8 @@ class Cards extends Component {
     this._addTarget = this._addTarget.bind(this)
     this._addMyDebt = this._addMyDebt.bind(this)
     this._addOweme = this._addOweme.bind(this)
+    this._increaseItem = this._increaseItem.bind(this)
+    this._hideModal = this._hideModal.bind(this)
   }
 
   componentDidMount(){
@@ -62,6 +67,18 @@ class Cards extends Component {
     this.props.navigation.navigate('AddEditItem', {type: 0, itemid: itemId})
   }
 
+  _hideModal() {
+    this.setState({
+      visibleModal: false
+    })
+  }
+
+  _increaseItem(data){
+    this.setState({
+      visibleModal: true
+    })
+  }
+
   render() {
     const { targetDebts, user } = this.props
 
@@ -93,14 +110,57 @@ class Cards extends Component {
               />
             }
           >
-            <CardInfo itemtype={1} currency={user.DefCurrency} data={target} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addTarget}/>
-            <CardInfo itemtype={2} currency={user.DefCurrency} data={oweme} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addMyDebt}/>
-            <CardInfo itemtype={3} currency={user.DefCurrency} data={mydebt} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addOweme}/>
+            <CardInfo itemtype={1} currency={user.DefCurrency} data={target} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addTarget} increaseItem={this._increaseItem} />
+            <CardInfo itemtype={2} currency={user.DefCurrency} data={oweme} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addMyDebt} increaseItem={this._increaseItem} />
+            <CardInfo itemtype={3} currency={user.DefCurrency} data={mydebt} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addOweme} increaseItem={this._increaseItem} />
           </Content>
+
+
+          <Modal animationType="slide"
+            transparent={true}
+            visible={this.state.visibleModal}
+            onRequestClose={this._hideModal}
+          >
+            <View style={mainStyle.modalOverlay} />
+              <Card transparent style={styles.modalCalendar}>
+                <CardItem header bordered>
+                  <Text>Пополнение</Text>
+                  <Icon button name="close" onPress={this._hideModal} style={[{marginRight:0, marginLeft:'auto'}, mainStyle.clGrey]}/>
+                </CardItem>
+                <CardItem>
+                  <Body style={{flexDirection: 'row', alignItems: 'center'}}>
+                    <Item floatingLabel style={{width:'90%'}} >
+                      <Label>Сумма</Label>
+                      <Input style={mainStyle.clGrey} keyboardType="number-pad"/>
+                    </Item>
+                    <H3 style={mainStyle.clGrey}>{user.DefCurrency}</H3>
+                  </Body>
+                </CardItem>
+                <CardItem>
+                  <Body>
+                  <Button block success onPress={this._hideModal}>
+                    <Text>Пополнить</Text>
+                  </Button>
+                  </Body>
+                </CardItem>
+              </Card>
+          </Modal>
         </Container>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  modalCalendar: {
+    flex: 1,
+    backgroundColor: "#fff",
+    marginHorizontal: 15,
+    marginTop: screenHeight / 1.8,
+    marginBottom: 45
+  },
+})
+
+
 
 const mapStateToProps = state => {
   return {

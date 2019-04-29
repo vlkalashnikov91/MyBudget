@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import { StyleSheet, Alert, ProgressBarAndroid, ListView, Platform, ProgressViewIOS } from 'react-native'
-import { Text, Icon, Card, CardItem, Body, Button, ListItem, List, Right, Left } from 'native-base'
+import { StyleSheet, Alert, ProgressBarAndroid, ListView, Platform, ProgressViewIOS, Modal } from 'react-native'
+import { Text, Icon, Card, CardItem, Body, Button, ListItem, List, Right, Left, View } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -19,8 +19,8 @@ export default class CardInfo extends Component {
 
   _deleteItem(data, secId, rowId, rowMap){
     Alert.alert(
-      'Вы уверены?',
-      null,
+      `${capitalize(data.GoalName)}`,
+      'Удалить цель?',
       [
         {text: 'Нет', onPress: ()=>{
           rowMap[`${secId}${rowId}`].props.closeRow()
@@ -41,6 +41,12 @@ export default class CardInfo extends Component {
   _editItem(id) {
     this.props.editItem(id)
   }
+
+  _increaseItem(data){
+      this.props.increaseItem(data)
+  }
+
+
 
   render() {
     const { itemtype, data, currency } = this.props
@@ -79,8 +85,8 @@ export default class CardInfo extends Component {
             </Button>
           }
           renderLeftHiddenRow={(data, secId, rowId, rowMap) =>
-            <Button full success style={{flexDirection:'column'}}>
-              <Icon name="add" />
+            <Button full success onPress={()=> this._increaseItem(data)} >
+              <Icon name="add"/>
             </Button>
           }
           renderRow={item => {

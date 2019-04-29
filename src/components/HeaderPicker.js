@@ -16,7 +16,7 @@ export const HeaderPicker = (props) => {
 return (
     <View>
       <Text ref={textRef} style={{ fontSize: 20, textAlign: "center", display:'none' }}>Text component</Text>
-      <Icon android="md-settings" ios="ios-menu" button onPress={onPress} style={{color:'white', marginRight:15}}/>
+      <Icon name="more" button onPress={onPress} style={{color:'white', marginRight:15}}/>
       <Menu ref={setMenuRef}>
         <MenuItem onPress={hideMenu}>Item 1</MenuItem>
         <MenuItem onPress={hideMenu}>Item 2</MenuItem>
