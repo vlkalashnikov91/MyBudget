@@ -6,6 +6,8 @@ import { ToastTr } from '../../components/Toast'
 import { UserAuth } from '../../actions/UserActions'
 import { validateEmail, charAndNums } from '../../utils/validation.js'
 
+import { styles as mainStyle } from '../../Style'
+
 
 class Registration extends Component {
   constructor(props) {
@@ -97,7 +99,7 @@ class Registration extends Component {
 
       return <Container>
               <Content>
-                <Card style={{ alignItems: 'center' }}>
+                <Card>
                   <CardItem>
                     <Body>
                       <Item floatingLabel error={this.state.errLogin}>
@@ -136,7 +138,7 @@ class Registration extends Component {
                 : <Card transparent>
                   <CardItem>
                     <Body>
-                      <Button block primary onPress={this._registration}>
+                      <Button block onPress={this._registration} style={mainStyle.bgIvan}>
                         <Text>Зарегистрироваться</Text>
                       </Button>
                     </Body>

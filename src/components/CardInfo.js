@@ -4,6 +4,10 @@ import { Text, Icon, Card, CardItem, Body, Button, ListItem, List, Right, Left }
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { FontAwesome } from '@expo/vector-icons'
 
+import { styles as mainStyle } from '../Style'
+import { SummMask, capitalize } from '../utils/utils'
+
+
 export default class CardInfo extends Component {
   constructor(props) {
     super(props)
@@ -60,12 +64,12 @@ export default class CardInfo extends Component {
     }
 
     return (
-      <Card>
+      <Card containerStyle={{padding: 0}}>
         <CardItem header bordered style={[cardItemStyle, styles.cardMain]}>
-          <Text style={{color:'white'}}>{desc}</Text>
-          <Icon button name="ios-add" style={styles.addButton} onPress={this._addNewItem}/>
+          <Text style={mainStyle.clWhite}>{desc}</Text>
+          <Icon button name="add" style={styles.addButton} onPress={this._addNewItem}/>
         </CardItem>
-        <List 
+        <List
           dataSource={this.ds.cloneWithRows(data)}
           leftOpenValue={75} 
           rightOpenValue={-75}
@@ -75,8 +79,8 @@ export default class CardInfo extends Component {
             </Button>
           }
           renderLeftHiddenRow={(data, secId, rowId, rowMap) =>
-            <Button full success>
-              <Icon active name="add" />
+            <Button full success style={{flexDirection:'column'}}>
+              <Icon name="add" />
             </Button>
           }
           renderRow={item => {
@@ -85,27 +89,29 @@ export default class CardInfo extends Component {
             return (
             <ListItem key={item.Id}
               button
-              onPress={() => this._editItem(item.Id)} 
+              onPress={() => this._editItem(item.Id)}
             >
-              <Body>
-                <Left>
-                  <Text uppercase>{item.GoalName}</Text>
-                </Left>
-                <Grid>
+              <Grid>
+                <Row>
                   <Col>
+                    <Text style={mainStyle.clGrey}>{capitalize(item.GoalName)}</Text>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col style={{marginLeft:15}}>
                   {(Platform.OS === 'ios') && <ProgressViewIOS progressViewStyle="bar" trackTintColor={cardColor} progress={progressCnt} />}
                   {(Platform.OS === 'android') && <ProgressBarAndroid styleAttr="Horizontal" indeterminate={false} color={cardColor} progress={progressCnt} />}
                   </Col>
-                </Grid>
-                <Grid>
-                  <Left>
-                    <Text style={{color:cardColor}}>{item.CurAmount} {currency}</Text>
+                </Row>
+                <Row>
+                  <Left style={{marginLeft:15}}>
+                    <Text style={{color:cardColor}}>{SummMask(item.CurAmount)} {currency}</Text>
                   </Left>
                   <Right>
-                    <Text note>{item.Amount} {currency}</Text>
+                    <Text note>{SummMask(item.Amount)} {currency}</Text>
                   </Right>
-                </Grid>
-              </Body>
+                </Row>
+              </Grid>
             </ListItem>
             )
           }}

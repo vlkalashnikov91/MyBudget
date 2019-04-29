@@ -13,7 +13,8 @@ import ListPays from '../../components/ListPays'
 import { PaymentActions } from '../../actions/PaymentActions'
 
 import { styles as mainStyle } from '../../Style'
-import BalanceInfo from '../../components/BalanceInfo';
+import { capitalize } from '../../utils/utils'
+import BalanceInfo from '../../components/BalanceInfo'
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -38,13 +39,13 @@ class HomeScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      headerStyle: mainStyle.headerStyle,
-      headerTitleStyle: mainStyle.headerTitleStyle,
+      headerStyle: mainStyle.bgIvan,
+      headerTitleStyle: mainStyle.clWhite,
       headerTitle: <BalanceInfo />,
       headerRight: (
         <Icon android='md-information-circle' 
           ios='ios-information-circle' 
-          style={[mainStyle.headerTitleStyle, {marginRight:15}]} 
+          style={[mainStyle.clWhite, {marginRight:15}]} 
           button onPress={navigation.getParam('showModalInfo')}
         />
       )
@@ -136,7 +137,7 @@ class HomeScreen extends Component {
     
     if (!payments.isLoad) {
       if (sortPays.length == 0) {
-        Pays = <Grid><Col><Row style={mainStyle.rowStyle}><Text>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
+        Pays = <Grid><Col><Row style={mainStyle.rowStyle}><Text style={mainStyle.clGrey}>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
       } else {
         Pays = <ListPays sortPayments={sortPays} GoToEdit={this._navigateToEdit} />
       }
@@ -145,19 +146,19 @@ class HomeScreen extends Component {
     return (
         <Container>
 
-          <Segment>
+          <Segment style={mainStyle.bgWhite}>
             <Left>
-              <Button transparent onPress={this._prevMonth} style={styles.prevMonthBtn}>
-                <FontAwesome name="angle-left" style={{color:'white'}} size={27} />
+              <Button transparent onPress={this._prevMonth} style={[styles.prevMonthBtn, mainStyle.clGrey]}>
+                <FontAwesome name="angle-left" size={27} />
               </Button>
             </Left>
-            <H3 style={{marginTop:11, marginRight:5, color:'white'}} button onPress={this._showModalCalendar}>
-              {moment(this.state.selectedDate).format("MMMM YYYY")}
+            <H3 style={[{ marginTop:11, marginRight:5 }, mainStyle.clGrey]} button onPress={this._showModalCalendar}>
+              {capitalize(moment(this.state.selectedDate).format("MMMM YYYY"))}
             </H3>
-            <FontAwesome style={{marginTop: 8, color:'white'}} name="sort-down" size={20} button onPress={this._showModalCalendar} />
+            <FontAwesome style={[{ marginTop:8 }, mainStyle.clGrey]} name="sort-down" size={20} button onPress={this._showModalCalendar} />
             <Right>
-              <Button transparent style={styles.nextMonthBtn} onPress={this._nextMonth}>
-                <FontAwesome name="angle-right" style={{color:'white'}} size={27} />
+              <Button transparent style={[styles.nextMonthBtn, mainStyle.clGrey]} onPress={this._nextMonth}>
+                <FontAwesome name="angle-right" size={27} />
               </Button>
             </Right>
           </Segment>
@@ -178,20 +179,16 @@ class HomeScreen extends Component {
                       <Row style={mainStyle.rowStyleCenter}>
                         <Button disabled={(payments.isLoad)} success={(!payments.isLoad)} rounded onPress={this._navigateToIncome}>
                           <Icon ios="ios-add" android="md-add"/>
+                          <Text>Доход</Text>
                         </Button>
-                      </Row>
-                      <Row style={mainStyle.rowStyleCenter}>
-                        <Text note>Добавить доход</Text>
                       </Row>
                     </Col>
                     <Col>
                       <Row style={mainStyle.rowStyleCenter}>
                         <Button disabled={(payments.isLoad)} danger={(!payments.isLoad)} rounded onPress={this._navigateToExpense}>
+                          <Text>Расход</Text>
                           <Icon ios="ios-remove" android="md-remove" />
                         </Button>
-                      </Row>
-                      <Row style={mainStyle.rowStyleCenter}>
-                        <Text note>Добавить расход</Text>
                       </Row>
                     </Col>
                   </Row>
@@ -216,7 +213,7 @@ class HomeScreen extends Component {
                 swipable={true}
                 selectedDate={this.state.selectedDate}
                 onMonthTapped={this._changeMonth}
-                selectedMonthTextStyle={{color:'white'}}
+                selectedMonthTextStyle={mainStyle.clWhite}
                 selectedBackgroundColor='#5D90B7'
                 maxDate={moment(this.state.selectedDate).add(10, 'year')}
                 nextIcon={<FontAwesome name="arrow-right" size={19} style={styles.calendarRightBtn}/>}

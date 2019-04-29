@@ -6,7 +6,7 @@ import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, La
 
 import { styles as mainStyle } from '../../Style'
 import { ToastTr } from '../../components/Toast'
-import { TargetDebtsActions } from '../../actions/TargetDebtsActions'
+import { TargetActions } from '../../actions/TargetActions'
 
 
 class AddEditItem extends Component {
@@ -43,8 +43,8 @@ class AddEditItem extends Component {
     }
     return {
       title: headerText,
-      headerStyle: mainStyle.headerStyle,
-      headerTitleStyle: mainStyle.headerTitleStyle,
+      headerStyle: mainStyle.bgIvan,
+      headerTitleStyle: mainStyle.clWhite,
       headerTintColor: 'white'
     }
   }
@@ -54,7 +54,7 @@ class AddEditItem extends Component {
     let itemid = this.props.navigation.getParam('itemid', -1)
 
     if (type === 0) {
-      let item = this.props.targetDebts.arrTargetDebt.find(el => el.Id === itemid)
+      let item = this.props.targetDebts.Targets.find(el => el.Id === itemid)
       this.setState({Id: item.Id, GoalName: item.GoalName, Amount: item.Amount, CurAmount: item.CurAmount, Type: item.Type, CompleteDate: item.CompleteDate })
     }
   }
@@ -137,7 +137,7 @@ class AddEditItem extends Component {
                       <Body>
                           <Item floatingLabel error={this.state.errGoalName}>
                           <Label>Наименование</Label>
-                          <Input onChangeText={this._changeName} value={this.state.GoalName}/>
+                          <Input onChangeText={this._changeName} value={this.state.GoalName} style={mainStyle.clGrey}/>
                           </Item>
                       </Body>
                   </CardItem>
@@ -145,9 +145,9 @@ class AddEditItem extends Component {
                       <Body style={{flexDirection: 'row', alignItems: 'center'}}>
                           <Item floatingLabel style={{width:'90%'}} error={this.state.errAmount}>
                               <Label>Полная сумма</Label>
-                              <Input onChangeText={this._changeAmount} value={this.state.Amount.toString()} keyboardType="number-pad"/>
+                              <Input style={mainStyle.clGrey} onChangeText={this._changeAmount} value={this.state.Amount.toString()} keyboardType="number-pad"/>
                           </Item>
-                          <H3 style={{color:'grey'}}>{user.userCurrency}</H3>
+                          <H3 style={mainStyle.clGrey}>{user.userCurrency}</H3>
                       </Body>
                   </CardItem>
                   <CardItem>
@@ -156,13 +156,13 @@ class AddEditItem extends Component {
                               <Label>Текущая сумма</Label>
                               <Input onChangeText={this._changeCurAmount} value={this.state.CurAmount.toString()} keyboardType="number-pad"/>
                           </Item>
-                          <H3 style={{color:'grey'}}>{user.DefCurrency}</H3>
+                          <H3 style={mainStyle.clGrey}>{user.DefCurrency}</H3>
                       </Body>
                   </CardItem>
                   <CardItem>
                       <Body>
                           <Grid>
-                            <Row style={{justifyContent: 'center', alignItems: 'center'}}>
+                            <Row style={mainStyle.rowStyleCenter}>
                                 <DatePicker
                                     formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
                                     defaultDate={this.state.CompleteDate}
@@ -213,10 +213,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     additem:(UserId, GoalName, Type, Amount, CurAmount, CompleteDate) => {
-        dispatch(TargetDebtsActions.Add(UserId, GoalName, Type, Amount, CurAmount, CompleteDate))
+        dispatch(TargetActions.Add(UserId, GoalName, Type, Amount, CurAmount, CompleteDate))
     },
     edititem:(UserId, Id, GoalName, Type, Amount, CurAmount, CompleteDate) => {
-      dispatch(TargetDebtsActions.Edit(UserId, Id, GoalName, Type, Amount, CurAmount, CompleteDate))
+      dispatch(TargetActions.Edit(UserId, Id, GoalName, Type, Amount, CurAmount, CompleteDate))
     }
   }
 }

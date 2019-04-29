@@ -12,8 +12,8 @@ const CardsNav = createStackNavigator(
       screen: Cards,
       navigationOptions: () => ({
         title: 'MyBudget',
-        headerStyle: mainStyle.headerStyle,
-        headerTitleStyle: mainStyle.headerTitleStyle,
+        headerStyle: mainStyle.bgIvan,
+        headerTitleStyle: mainStyle.clWhite,
       })
     },
     AddEditItem: AddEditItem

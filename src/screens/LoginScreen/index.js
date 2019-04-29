@@ -20,7 +20,7 @@ export const LoginNavigator = createStackNavigator(
       screen: Registration,
       navigationOptions: ()=>({
         title: 'Регистрация',
-        headerStyle: mainStyle.headerStyle,
+        headerStyle: mainStyle.bgIvan,
         headerTitleStyle: mainStyle.headerTitleStyle,
         headerTintColor: 'white'
       })
@@ -29,7 +29,7 @@ export const LoginNavigator = createStackNavigator(
       screen: ForgotPass,
       navigationOptions: ()=>({
         title: 'Восстановление пароля',
-        headerStyle: mainStyle.headerStyle,
+        headerStyle: mainStyle.bgIvan,
         headerTitleStyle: mainStyle.headerTitleStyle,
         headerTintColor: 'white'
       })
@@ -39,7 +39,7 @@ export const LoginNavigator = createStackNavigator(
       navigationOptions: () => ({
         headerLeft: null,
         title: 'Добро пожаловать!',
-        headerStyle: mainStyle.headerStyle,
+        headerStyle: mainStyle.bgIvan,
         headerTitleStyle: mainStyle.headerTitleStyle,
         headerTintColor: 'white'
       })

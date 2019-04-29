@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Svg } from 'expo'
 import { PieChart } from 'react-native-svg-charts'
-import { Container, Body, Content, Picker, ListItem, Text, List, Card, CardItem, Left, Icon, Right, Spinner, Segment } from 'native-base'
-import { FontAwesome } from '@expo/vector-icons'
+import { Container, Body, Content, Picker, ListItem, Text, List, Card, Left, Icon, Right, Spinner, Segment } from 'native-base'
  
 import { styles as mainStyle } from '../../Style'
+import { SummMask } from '../../utils/utils'
 
 import { GraphActions } from '../../actions/GraphActions'
 import { HeaderPicker } from '../../components/HeaderPicker'
@@ -29,8 +29,8 @@ class Graphics extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Графики расходов',
-      headerStyle: mainStyle.headerStyle,
-      headerTitleStyle: mainStyle.headerTitleStyle,
+      headerStyle: mainStyle.bgIvan,
+      headerTitleStyle: mainStyle.clWhite,
       /*headerRight: (
         <FontAwesome name='repeat' size={18} style={{color:'white', marginRight:20}} button onPress={navigation.getParam('refreshData')} />
       ),*/
@@ -129,12 +129,9 @@ class Graphics extends Component {
 
     }
 
-
-
     return (
         <Container>
-          
-          <Segment style={{backgroundColor:'white'}}>
+          <Segment style={mainStyle.bgWhite}>
             <Picker
               mode="dropdown"
               placeholder="Выберите период"
@@ -174,10 +171,10 @@ class Graphics extends Component {
                               </Svg>
                           </Left>
                           <Body>
-                              <Text>{data.description}</Text>
+                              <Text style={mainStyle.clGrey}>{data.description}</Text>
                           </Body>
                           <Right>
-                              <Text note>{data.value} {user.DefCurrency}</Text>
+                              <Text note>{SummMask(data.value)} {user.DefCurrency}</Text>
                           </Right>
                         </ListItem>
                       )}

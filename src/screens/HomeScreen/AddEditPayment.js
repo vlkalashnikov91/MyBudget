@@ -17,7 +17,7 @@ class AddEditPayment extends Component {
       CategoryId: -1,
       Amount: '',
       Name:'', 
-      TransDate: new Date(),
+      TransDate: undefined,
       IsSpending: (this.props.navigation.getParam('type', 'income') == 'income') ? false : true,
       IsPlaned: false,
       Loading: false,
@@ -43,8 +43,8 @@ class AddEditPayment extends Component {
     }
     return {
       title: headerText,
-      headerStyle: mainStyle.headerStyle,
-      headerTitleStyle: mainStyle.headerTitleStyle,
+      headerStyle: mainStyle.bgIvan,
+      headerTitleStyle: mainStyle.clWhite,
       headerTintColor: 'white'
     }
   }
@@ -152,16 +152,20 @@ class AddEditPayment extends Component {
                   <Body style={styles.CardBody}>
                     <Item floatingLabel style={{width:'90%'}} error={this.state.errAmount}>
                       <Label>Сумма</Label>
-                      <Input onChangeText={this._changeAmount} value={this.state.Amount.toString()} keyboardType="number-pad"/>
+                      <Input
+                        onChangeText={this._changeAmount}
+                        value={this.state.Amount.toString()}
+                        keyboardType="number-pad"
+                        style={mainStyle.clGrey}
+                      />
                     </Item>
-                    <H3 style={{color:'grey'}}>{user.DefCurrency}</H3>
+                    <H3 style={mainStyle.clGrey}>{user.DefCurrency}</H3>
                   </Body>
                 </CardItem>
 
                 <CardItem>
                   <Body style={styles.CardBody}>
-                    <Item picker style={{width:'85%'}} error={this.state.errCategory}>
-                      <Label>Тип категории</Label>
+                    <Item picker style={{width:'85%'}}  error={this.state.errCategory}>
                       <Picker mode="dropdown"
                         iosIcon={<Icon name="arrow-down" />}
                         style={{ width: undefined }}
@@ -170,7 +174,7 @@ class AddEditPayment extends Component {
                         selectedValue={this.state.CategoryId}
                         onValueChange={this._changeCat}
                       >
-                      <Picker.Item label="Не указано" value={-1} />
+                      <Picker.Item label="Без категории" value={-1} />
                       {
                         Cats.map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
                       }
@@ -184,7 +188,7 @@ class AddEditPayment extends Component {
                   <Body>
                     <Item floatingLabel error={this.state.errName}>
                       <Label>Описание</Label>
-                      <Input onChangeText={this._changeDesc} value={this.state.Name} />
+                      <Input onChangeText={this._changeDesc} value={this.state.Name} style={mainStyle.clGrey} multiline={true}/>
                     </Item>
                   </Body>
                 </CardItem>
@@ -201,9 +205,9 @@ class AddEditPayment extends Component {
                       modalTransparent={false}
                       animationType={"fade"}
                       androidMode="calendar"
-                      placeHolderText="Выберите дату"
-                      textStyle={{ color:'grey' }}
-                      placeHolderTextStyle={{ color:'grey' }}
+                      placeHolderText={(this.state.TransDate) ? moment(this.state.TransDate).format('DD.MM.YYYY') : "Выберите дату"}
+                      textStyle={mainStyle.clGrey}
+                      placeHolderTextStyle={mainStyle.clGrey}
                       onDateChange={this._changeDate}
                       disabled={false}
                     />

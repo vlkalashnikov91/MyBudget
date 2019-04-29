@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import { RefreshControl } from 'react-native'
 import { Body, Button, Text, ListItem, List, Icon, Left } from 'native-base'
 
+import { styles as mainStyle } from '../Style'
 
 export default class ListCategoriesIncome extends Component {
     constructor(props) {
@@ -41,7 +42,7 @@ export default class ListCategoriesIncome extends Component {
                 onLongPress={() => dropcategory(value)}
               >
                 <Body>
-                  <Text>{value.Name}</Text>
+                  <Text style={mainStyle.clGrey}>{value.Name}</Text>
                 </Body>
               </ListItem>
               )

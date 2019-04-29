@@ -11,7 +11,6 @@ import { ToastTr } from '../../components/Toast'
 import { styles as mainStyle } from '../../Style'
 
 
-
 class Login extends Component {
   constructor(props) {
     super(props)
@@ -66,18 +65,18 @@ class Login extends Component {
             <Col>
               <Form style={{padding:10}}>
                 <Item>
-                  <Icon ios='ios-man' android='md-man' style={{color:'gray'}}/>
+                  <Icon ios='ios-man' android='md-man' style={mainStyle.clGrey}/>
                   <Input placeholder='Логин или email'/>
                 </Item>
                 <Item>
-                  <Icon android='md-key' ios='ios-key' style={{color:'gray'}}/>
+                  <Icon android='md-key' ios='ios-key' style={mainStyle.clGrey}/>
                   <Input placeholder='Пароль' secureTextEntry={true}/>
                 </Item>
               </Form>
               <Card transparent>
                 <CardItem>
                   <Body>
-                    <Button block style={{backgroundColor: 'blue'}} onPress={this._login}>
+                    <Button block style={mainStyle.bgIvan} onPress={this._login}>
                       <Text>Войти</Text>
                     </Button>
                   </Body>
@@ -85,7 +84,7 @@ class Login extends Component {
                 <CardItem>
                   <Body>
                     <Button block transparent onPress={this._forgotPass}>
-                      <Text uppercase={false}>Забыли пароль</Text>
+                      <Text uppercase={false} style={mainStyle.clIvan}>Забыли пароль</Text>
                     </Button>
                   </Body>
                 </CardItem>
@@ -94,9 +93,9 @@ class Login extends Component {
           </Row>
         </Grid>
         
-        <Footer style={{backgroundColor:'#FFF'}}>
+        <Footer style={mainStyle.bgWhite}>
           <Button block transparent onPress={this._goToRegForm}>
-            <Text uppercase={false}>Зарегистрироваться</Text>
+            <Text uppercase={false} style={mainStyle.clIvan}>Зарегистрироваться</Text>
           </Button>
         </Footer>
 
@@ -106,9 +105,8 @@ class Login extends Component {
             onRequestClose={this._hideModalLoad}
         >
           <View style={mainStyle.modalOverlay} />
-          <View style={mainStyle.modalLoad} >
+            <View style={[mainStyle.rowStyleCenter, {flex:1}]} >
               <Spinner size='large'/>
-              <Label>Загрузка...</Label>
           </View>
         </Modal>
 

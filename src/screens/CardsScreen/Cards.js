@@ -5,7 +5,7 @@ import { Container, Content, Spinner,  } from 'native-base'
 
 import { ToastTr } from '../../components/Toast'
 import CardInfo from '../../components/CardInfo'
-import { TargetDebtsActions } from '../../actions/TargetDebtsActions'
+import { TargetActions } from '../../actions/TargetActions'
 
 class Cards extends Component {
   constructor(props) {
@@ -112,10 +112,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     deletecard:(Id) => {
-      dispatch(TargetDebtsActions.Delete(Id))
+      dispatch(TargetActions.Delete(Id))
     },
     getTargetDebtList:(UserId)=> {
-      dispatch(TargetDebtsActions.Get(UserId))
+      dispatch(TargetActions.Get(UserId))
     }
   }
 }

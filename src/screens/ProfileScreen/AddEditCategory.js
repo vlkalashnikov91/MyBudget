@@ -27,8 +27,8 @@ class AddEditCategory extends Component {
 
     return {
       title: title,
-      headerStyle: mainStyle.headerStyle,
-      headerTitleStyle: mainStyle.headerTitleStyle,
+      headerStyle: mainStyle.bgIvan,
+      headerTitleStyle: mainStyle.clWhite,
       headerTintColor: 'white'
     }
   }
@@ -85,7 +85,7 @@ class AddEditCategory extends Component {
                   <Body>
                     <Item floatingLabel >
                       <Label>Наименование</Label>
-                      <Input onChangeText={this._changeName} value={this.state.Name} />
+                      <Input onChangeText={this._changeName} value={this.state.Name} style={mainStyle.clGrey}/>
                     </Item>
                   </Body>
                 </CardItem>

@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
 import { Header, Body, Title, Right, Left, Button, Icon } from 'native-base'
-import { styles } from '../Style'
 
 export default class HeaderApp extends Component {
     render() {
         return (
-            <Header style={styles.header}>
+            <Header>
             {
                 (this.props.leftIcon != undefined) &&
                 <Left>

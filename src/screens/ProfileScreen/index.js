@@ -14,8 +14,8 @@ const ProfileNav = createStackNavigator(
       screen: Profile,
       navigationOptions: ()=>({
         title: 'Мой кабинет',
-        headerStyle: mainStyle.headerStyle,
-        headerTitleStyle: mainStyle.headerTitleStyle
+        headerStyle: mainStyle.bgIvan,
+        headerTitleStyle: mainStyle.clWhite
       })
     },
 
@@ -23,8 +23,8 @@ const ProfileNav = createStackNavigator(
       screen: ChangePassword,
       navigationOptions: ()=>({
         title: 'Сменить пароль',
-        headerStyle: mainStyle.headerStyle,
-        headerTitleStyle: mainStyle.headerTitleStyle,
+        headerStyle: mainStyle.bgIvan,
+        headerTitleStyle: mainStyle.clWhite,
         headerTintColor: 'white'
       })
     },
@@ -35,8 +35,8 @@ const ProfileNav = createStackNavigator(
       screen: Category,
       navigationOptions: ()=>({
         title: 'Мои категории',
-        headerStyle: mainStyle.headerStyle,
-        headerTitleStyle: mainStyle.headerTitleStyle,
+        headerStyle: mainStyle.bgIvan,
+        headerTitleStyle: mainStyle.clWhite,
         headerTintColor: 'white'
       })
     }

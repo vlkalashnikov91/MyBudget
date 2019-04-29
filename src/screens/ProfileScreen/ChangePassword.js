@@ -25,7 +25,7 @@ export default class ChangePassword extends Component {
                   <Body>
                     <Item floatingLabel>
                       <Label>Текущий пароль</Label>
-                      <Input secureTextEntry={true}/>
+                      <Input secureTextEntry={true} style={mainStyle.clGrey}/>
                     </Item>
                   </Body>
                 </CardItem>
@@ -33,7 +33,7 @@ export default class ChangePassword extends Component {
                   <Body>
                     <Item floatingLabel>
                       <Label>Новый пароль</Label>
-                      <Input secureTextEntry={true}/>
+                      <Input secureTextEntry={true} style={mainStyle.clGrey}/>
                     </Item>
                   </Body>
                 </CardItem>
@@ -41,7 +41,7 @@ export default class ChangePassword extends Component {
                   <Body>
                     <Item floatingLabel>
                       <Label>Подтверждение пароля</Label>
-                      <Input secureTextEntry={true}/>
+                      <Input secureTextEntry={true} style={mainStyle.clGrey}/>
                     </Item>
                   </Body>
                 </CardItem>

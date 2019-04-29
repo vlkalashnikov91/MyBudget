@@ -1,5 +1,6 @@
 import { NetInfo } from 'react-native'
 import axios from 'react-native-axios'
+import moment from 'moment'
 import {  GET_PAYMENT_LIST, ADD_PAYMENT, REMOVE_PAYMENT, EDIT_PAYMENT, ERR_PAYMENT, START_LOADING_PAY } from '../constants/Payment'
 
 const URL = `http://mybudget.somee.com/api/`
@@ -63,7 +64,7 @@ export const PaymentActions = {
                     axios.post(URL + 'mobtransactions',{
                         "Name" : Name,
                         "Amount" : Amount,
-                        "TransDate" : TransDate,
+                        "TransDate" : moment(TransDate).format('YYYY.MM.DD'),
                         "CategoryId" : CategoryId,
                         "IsSpending" : IsSpending,
                         "Description" : null,
@@ -91,7 +92,7 @@ export const PaymentActions = {
                     axios.put(URL + `mobtransactions/${Id}`, {
                         "Name" : Name,
                         "Amount" : Amount,
-                        "TransDate" : TransDate,
+                        "TransDate" : moment(TransDate).format('YYYY.MM.DD'),
                         "CategoryId" : CategoryId,
                         "IsPlaned" : IsPlaned,
                     })

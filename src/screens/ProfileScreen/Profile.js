@@ -80,30 +80,30 @@ class Profile extends Component {
           <Content padder>
             <Card>
               <CardItem header bordered>
-                <Text>Параметры учетной записи</Text>
+                <Text style={mainStyle.clIvan}>Параметры учетной записи</Text>
               </CardItem>
 
               <CardItem bordered button onPress={this._gotoChangePass}>
                 <Body>
-                  <Text>Изменить пароль</Text>
+                  <Text style={mainStyle.clGrey}>Изменить пароль</Text>
                 </Body>
               </CardItem>
             </Card>
 
             <Card>
               <CardItem header bordered>
-                <Text>Мои категории</Text>
+                <Text style={mainStyle.clIvan}>Мои категории</Text>
               </CardItem>
               <CardItem bordered button onPress={this._gotoChangeCat}>
                 <Body>
-                  <Text>Просмотр</Text>
+                  <Text style={mainStyle.clGrey}>Просмотр</Text>
                 </Body>
               </CardItem>
             </Card>
 
             <Card>
               <CardItem header bordered>
-                <Text>Персональные настройки</Text>
+                <Text style={mainStyle.clIvan}>Персональные настройки</Text>
               </CardItem>
               <CardItem bordered>
                 <Body>
@@ -125,7 +125,7 @@ class Profile extends Component {
 
                   <Item picker>
                     <Label>Перенос остатка</Label>
-                    <Icon name='ios-information-circle' style={{color: '#384850'}} button onPress={this.setModalVisible} />
+                    <Icon name='ios-information-circle' style={{color: '#808080'}} button onPress={this.setModalVisible} />
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
                       style={{ width: undefined }}

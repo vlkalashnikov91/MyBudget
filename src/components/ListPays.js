@@ -5,6 +5,10 @@ import moment from 'moment'
 import { Body, Left, Button, Text, ListItem, List, Icon, Right, Spinner } from 'native-base'
 
 import { PaymentActions } from '../actions/PaymentActions'
+import { styles as mainStyle } from '../Style'
+
+import { SummMask } from '../utils/utils'
+
 
 class ListPays extends Component {
     constructor(props) {
@@ -28,7 +32,7 @@ class ListPays extends Component {
 
     _deletePay(data, secId, rowId, rowMap) {
         Alert.alert(
-            'Удаление',
+            `${data.Name}`,
             'Удалить платеж?',
             [
               {text: 'Нет', onPress: ()=> {
@@ -78,16 +82,16 @@ class ListPays extends Component {
                   </Left>
                   <Body>
                       {(value.Name==null)
-                      ? <Text>Не указано</Text>
-                      : <Text>{value.Name}</Text>
+                      ? <Text style={mainStyle.clGrey}>Не указано</Text>
+                      : <Text style={mainStyle.clGrey} numberOfLines={1}>{value.Name}</Text>
                       }
-                      <Text note>{ CatDesc.Name }</Text>
+                      <Text note>{CatDesc.Name}</Text>
                   </Body>
                   <Right style={{flexDirection: 'column'}}>
                     {
                     (CatDesc.IsSpendingCategory) 
-                    ? <Text style={{color:'red'}}> - { value.Amount } {user.DefCurrency}</Text>
-                    : <Text style={{color:'green'}}> + { value.Amount } {user.DefCurrency}</Text>
+                    ? <Text style={{color:'red'}}> - {SummMask(value.Amount)} {user.DefCurrency}</Text>
+                    : <Text style={{color:'green'}}> + {SummMask(value.Amount)} {user.DefCurrency}</Text>
                     }
                     <Text style={{fontSize:10}}>{moment(value.TransDate).format('DD.MM.YYYY')}</Text>
                   </Right>

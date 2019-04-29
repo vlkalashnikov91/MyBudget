@@ -5,7 +5,7 @@ import { GET_TARGET_LIST, REMOVE_TARGET, ADD_TARGET, EDIT_TARGET, ERR_TARGET, ST
 const URL = 'http://mybudget.somee.com/api/goals'
 const NoConn = "Отсутствует подключение к интернету"
 
-export const TargetDebtsActions = {
+export const TargetActions = {
     Get: (UserId) => {
         return (dispatch) => {
     

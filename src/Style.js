@@ -3,12 +3,29 @@ import { StyleSheet, Dimensions } from 'react-native'
 export const screenWidth =  Dimensions.get('screen').width
 export const screenHeight = Dimensions.get('screen').height
 
+export const ivanColor = '#395971'
+
 export const styles = StyleSheet.create({
-  headerStyle: {
-    backgroundColor: '#3F51B5',
+  bgIvan: {
+    backgroundColor: ivanColor,
   },
-  headerTitleStyle: {
+  bgWhite: {
+    backgroundColor: 'white',
+  },
+  bgGreen: {
+    backgroundColor: '#34A34F'
+  },
+  clIvan: {
+    color: ivanColor
+  },
+  clWhite: {
     color:'white'
+  },
+  clGrey: {
+    color: '#384850'
+  },
+  clBlack: {
+    color: 'black'
   },
   exitButton: {
     marginTop: 20
@@ -55,7 +72,7 @@ export const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)'
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
 })
 
