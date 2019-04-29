@@ -3,8 +3,7 @@ import { fromRight } from 'react-navigation-transitions'
 
 import Cards from './Cards'
 import AddEditItem from './AddEditItem'
-
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 
 const CardsNav = createStackNavigator(
   {
@@ -12,8 +11,8 @@ const CardsNav = createStackNavigator(
       screen: Cards,
       navigationOptions: () => ({
         title: 'MyBudget',
-        headerStyle: mainStyle.bgIvan,
-        headerTitleStyle: mainStyle.clWhite,
+        headerStyle: main.bgIvan,
+        headerTitleStyle: main.clWhite,
       })
     },
     AddEditItem: AddEditItem

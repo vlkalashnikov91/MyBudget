@@ -4,7 +4,7 @@ import { Text, Icon, Card, CardItem, Body, Button, ListItem, List, Right, Left, 
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { FontAwesome } from '@expo/vector-icons'
 
-import { styles as mainStyle } from '../Style'
+import { styles as main } from '../Style'
 import { SummMask, capitalize } from '../utils/utils'
 
 
@@ -72,7 +72,7 @@ export default class CardInfo extends Component {
     return (
       <Card>
         <CardItem header bordered style={[cardItemStyle, styles.cardMain]}>
-          <Text style={mainStyle.clWhite}>{desc}</Text>
+          <Text style={main.clWhite}>{desc}</Text>
           <Icon button name="add" style={styles.addButton} onPress={this._addNewItem}/>
         </CardItem>
         <List
@@ -100,7 +100,7 @@ export default class CardInfo extends Component {
               <Grid>
                 <Row>
                   <Col>
-                    <Text style={mainStyle.clGrey}>{capitalize(item.GoalName)}</Text>
+                    <Text style={main.clGrey}>{capitalize(item.GoalName)}</Text>
                   </Col>
                 </Row>
                 <Row>

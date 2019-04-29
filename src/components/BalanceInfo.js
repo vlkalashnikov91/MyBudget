@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Text } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 
-import { styles as mainStyle } from '../Style'
+import { styles as main } from '../Style'
 import { SummMask } from '../utils/utils'
 
 
@@ -34,26 +34,26 @@ class BalanceInfo extends Component {
         return (
             <Grid>
                 <Row>
-                    <Col style={mainStyle.clWhite}>
-                        <Row style={mainStyle.rowStyle}>
-                            <Text style={mainStyle.clWhite}>Баланс</Text>
+                    <Col style={main.clWhite}>
+                        <Row style={[main.jC_C, main.aI_C]}>
+                            <Text style={main.clWhite}>Баланс</Text>
                         </Row>
                     </Col>
                     <Col>
-                        <Row style={mainStyle.rowStyle}>
-                            <Text style={mainStyle.clWhite}>Плановый</Text>
+                        <Row style={[main.jC_C, main.aI_C]}>
+                            <Text style={main.clWhite}>Плановый</Text>
                         </Row>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
-                        <Row style={mainStyle.rowStyle}>
-                            <Text style={mainStyle.clWhite}>{SummMask(balance)} {user.DefCurrency}</Text>
+                        <Row style={[main.jC_C, main.aI_C]}>
+                            <Text style={main.clWhite}>{SummMask(balance)} {user.DefCurrency}</Text>
                         </Row>
                     </Col>
                     <Col>
-                        <Row style={mainStyle.rowStyle}>
-                            <Text style={mainStyle.clWhite}>{SummMask(planed)} {user.DefCurrency}</Text>
+                        <Row style={[main.jC_C, main.aI_C]}>
+                            <Text style={main.clWhite}>{SummMask(planed)} {user.DefCurrency}</Text>
                         </Row>
                     </Col>
                 </Row>

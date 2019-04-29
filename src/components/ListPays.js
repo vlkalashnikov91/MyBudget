@@ -5,7 +5,7 @@ import moment from 'moment'
 import { Body, Left, Button, Text, ListItem, List, Icon, Right, Spinner } from 'native-base'
 
 import { PaymentActions } from '../actions/PaymentActions'
-import { styles as mainStyle } from '../Style'
+import { styles as main } from '../Style'
 
 import { SummMask } from '../utils/utils'
 
@@ -82,8 +82,8 @@ class ListPays extends Component {
                   </Left>
                   <Body>
                       {(value.Name==null)
-                      ? <Text style={mainStyle.clGrey}>Не указано</Text>
-                      : <Text style={mainStyle.clGrey} numberOfLines={1}>{value.Name}</Text>
+                      ? <Text style={main.clGrey}>Не указано</Text>
+                      : <Text style={main.clGrey} numberOfLines={1}>{value.Name}</Text>
                       }
                       <Text note>{CatDesc.Name}</Text>
                   </Body>

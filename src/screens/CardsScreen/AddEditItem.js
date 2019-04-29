@@ -4,7 +4,7 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, H3, DatePicker, Spinner, Grid, Row } from 'native-base'
 
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import { TargetActions } from '../../actions/TargetActions'
 
@@ -137,32 +137,32 @@ class AddEditItem extends Component {
                       <Body>
                           <Item floatingLabel error={this.state.errGoalName}>
                           <Label>Наименование</Label>
-                          <Input onChangeText={this._changeName} value={this.state.GoalName} style={mainStyle.clGrey}/>
+                          <Input onChangeText={this._changeName} value={this.state.GoalName} style={main.clGrey}/>
                           </Item>
                       </Body>
                   </CardItem>
                   <CardItem>
-                      <Body style={{flexDirection: 'row', alignItems: 'center'}}>
+                      <Body style={[main.fD_R, main.aI_C]}>
                           <Item floatingLabel style={{width:'90%'}} error={this.state.errAmount}>
                               <Label>Полная сумма</Label>
-                              <Input style={mainStyle.clGrey} onChangeText={this._changeAmount} value={this.state.Amount.toString()} keyboardType="number-pad"/>
+                              <Input style={main.clGrey} onChangeText={this._changeAmount} value={this.state.Amount.toString()} keyboardType="number-pad"/>
                           </Item>
-                          <H3 style={mainStyle.clGrey}>{user.userCurrency}</H3>
+                          <H3 style={main.clGrey}>{user.userCurrency}</H3>
                       </Body>
                   </CardItem>
                   <CardItem>
-                      <Body style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <Body style={[main.fD_R, main.aI_C]}>
                           <Item floatingLabel style={{width:'90%'}} error={this.state.errCurAmount}>
                               <Label>Текущая сумма</Label>
-                              <Input onChangeText={this._changeCurAmount} value={this.state.CurAmount.toString()} keyboardType="number-pad"/>
+                              <Input style={main.clGrey} onChangeText={this._changeCurAmount} value={this.state.CurAmount.toString()} keyboardType="number-pad"/>
                           </Item>
-                          <H3 style={mainStyle.clGrey}>{user.DefCurrency}</H3>
+                          <H3 style={main.clGrey}>{user.DefCurrency}</H3>
                       </Body>
                   </CardItem>
                   <CardItem>
                       <Body>
                           <Grid>
-                            <Row style={mainStyle.rowStyleCenter}>
+                            <Row style={[main.jC_C, main.aI_C]}>
                                 <DatePicker
                                     formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
                                     defaultDate={this.state.CompleteDate}

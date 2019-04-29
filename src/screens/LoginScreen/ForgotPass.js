@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Spinner } from 'native-base'
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 
 
 export default class ForgotPass extends Component {
@@ -20,7 +20,7 @@ export default class ForgotPass extends Component {
                 <Card transparent>
                   <CardItem>
                     <Body>
-                      <Button block style={mainStyle.bgIvan}>
+                      <Button block style={main.bgIvan}>
                         <Text>Отправить</Text>
                       </Button>
                     </Body>

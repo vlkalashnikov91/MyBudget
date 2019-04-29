@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label } from 'native-base'
 
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import HeaderApp from '../../components/HeaderApp'
 
@@ -25,7 +25,7 @@ export default class ChangePassword extends Component {
                   <Body>
                     <Item floatingLabel>
                       <Label>Текущий пароль</Label>
-                      <Input secureTextEntry={true} style={mainStyle.clGrey}/>
+                      <Input secureTextEntry={true} style={main.clGrey}/>
                     </Item>
                   </Body>
                 </CardItem>
@@ -33,7 +33,7 @@ export default class ChangePassword extends Component {
                   <Body>
                     <Item floatingLabel>
                       <Label>Новый пароль</Label>
-                      <Input secureTextEntry={true} style={mainStyle.clGrey}/>
+                      <Input secureTextEntry={true} style={main.clGrey}/>
                     </Item>
                   </Body>
                 </CardItem>
@@ -41,7 +41,7 @@ export default class ChangePassword extends Component {
                   <Body>
                     <Item floatingLabel>
                       <Label>Подтверждение пароля</Label>
-                      <Input secureTextEntry={true} style={mainStyle.clGrey}/>
+                      <Input secureTextEntry={true} style={main.clGrey}/>
                     </Item>
                   </Body>
                 </CardItem>

@@ -2,7 +2,7 @@ import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import { fromRight } from 'react-navigation-transitions'
 
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 import Login from './Login'
 import Registration from './Registration'
 import ForgotPass from './ForgotPass'
@@ -20,8 +20,7 @@ export const LoginNavigator = createStackNavigator(
       screen: Registration,
       navigationOptions: ()=>({
         title: 'Регистрация',
-        headerStyle: mainStyle.bgIvan,
-        headerTitleStyle: mainStyle.headerTitleStyle,
+        headerStyle: main.bgIvan,
         headerTintColor: 'white'
       })
     },
@@ -29,8 +28,7 @@ export const LoginNavigator = createStackNavigator(
       screen: ForgotPass,
       navigationOptions: ()=>({
         title: 'Восстановление пароля',
-        headerStyle: mainStyle.bgIvan,
-        headerTitleStyle: mainStyle.headerTitleStyle,
+        headerStyle: main.bgIvan,
         headerTintColor: 'white'
       })
     },
@@ -39,8 +37,7 @@ export const LoginNavigator = createStackNavigator(
       navigationOptions: () => ({
         headerLeft: null,
         title: 'Добро пожаловать!',
-        headerStyle: mainStyle.bgIvan,
-        headerTitleStyle: mainStyle.headerTitleStyle,
+        headerStyle: main.bgIvan,
         headerTintColor: 'white'
       })
     },

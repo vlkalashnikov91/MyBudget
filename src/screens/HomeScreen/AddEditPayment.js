@@ -4,7 +4,7 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Spinner } from 'native-base'
 
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import { PaymentActions } from '../../actions/PaymentActions'
 
@@ -43,8 +43,8 @@ class AddEditPayment extends Component {
     }
     return {
       title: headerText,
-      headerStyle: mainStyle.bgIvan,
-      headerTitleStyle: mainStyle.clWhite,
+      headerStyle: main.bgIvan,
+      headerTitleStyle: main.clWhite,
       headerTintColor: 'white'
     }
   }
@@ -149,23 +149,23 @@ class AddEditPayment extends Component {
             <Content padder>
               <Card>
               <CardItem>
-                  <Body style={styles.CardBody}>
+                  <Body style={[main.fD_R, main.aI_C]}>
                     <Item floatingLabel style={{width:'90%'}} error={this.state.errAmount}>
                       <Label>Сумма</Label>
                       <Input
                         onChangeText={this._changeAmount}
                         value={this.state.Amount.toString()}
                         keyboardType="number-pad"
-                        style={mainStyle.clGrey}
+                        style={main.clGrey}
                       />
                     </Item>
-                    <H3 style={mainStyle.clGrey}>{user.DefCurrency}</H3>
+                    <H3 style={main.clGrey}>{user.DefCurrency}</H3>
                   </Body>
                 </CardItem>
 
                 <CardItem>
-                  <Body style={styles.CardBody}>
-                    <Item picker style={{width:'85%'}}  error={this.state.errCategory}>
+                  <Body style={[main.fD_R, main.aI_C]}>
+                    <Item picker style={{width:'85%'}} error={this.state.errCategory}>
                       <Picker mode="dropdown"
                         iosIcon={<Icon name="arrow-down" />}
                         style={{ width: undefined }}
@@ -188,7 +188,7 @@ class AddEditPayment extends Component {
                   <Body>
                     <Item floatingLabel error={this.state.errName}>
                       <Label>Описание</Label>
-                      <Input onChangeText={this._changeDesc} value={this.state.Name} style={mainStyle.clGrey} multiline={true}/>
+                      <Input onChangeText={this._changeDesc} value={this.state.Name} style={main.clGrey} multiline={true}/>
                     </Item>
                   </Body>
                 </CardItem>
@@ -206,8 +206,8 @@ class AddEditPayment extends Component {
                       animationType={"fade"}
                       androidMode="calendar"
                       placeHolderText={(this.state.TransDate) ? moment(this.state.TransDate).format('DD.MM.YYYY') : "Выберите дату"}
-                      textStyle={mainStyle.clGrey}
-                      placeHolderTextStyle={mainStyle.clGrey}
+                      textStyle={main.clGrey}
+                      placeHolderTextStyle={main.clGrey}
                       onDateChange={this._changeDate}
                       disabled={false}
                     />
@@ -240,10 +240,6 @@ const styles = StyleSheet.create({
     marginLeft:10,
     fontSize:35
   },
-  CardBody: {
-    flexDirection:'row', 
-    alignItems:'center'
-  }
 })
 
 const mapStateToProps = state => {

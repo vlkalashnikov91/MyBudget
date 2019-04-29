@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Spinner } from 'native-base'
 
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
 
@@ -27,8 +27,8 @@ class AddEditCategory extends Component {
 
     return {
       title: title,
-      headerStyle: mainStyle.bgIvan,
-      headerTitleStyle: mainStyle.clWhite,
+      headerStyle: main.bgIvan,
+      headerTitleStyle: main.clWhite,
       headerTintColor: 'white'
     }
   }
@@ -85,7 +85,7 @@ class AddEditCategory extends Component {
                   <Body>
                     <Item floatingLabel >
                       <Label>Наименование</Label>
-                      <Input onChangeText={this._changeName} value={this.state.Name} style={mainStyle.clGrey}/>
+                      <Input onChangeText={this._changeName} value={this.state.Name} style={main.clGrey}/>
                     </Item>
                   </Body>
                 </CardItem>

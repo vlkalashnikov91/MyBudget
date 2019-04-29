@@ -7,7 +7,7 @@ import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
 import ListCategoriesIncome from '../../components/ListCategoriesIncome'
 import ListCategoriesExpense from '../../components/ListCategoriesExpense'
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 
 
 class Category extends Component {
@@ -96,26 +96,26 @@ class Category extends Component {
           {(categories.isLoad)
           ? <Spinner />
           :
-            <Tabs tabBarUnderlineStyle={mainStyle.bgIvan} initialPage={0} onChangeTab={({ i }) => this._defineCatType(i)}>
+            <Tabs tabBarUnderlineStyle={main.bgIvan} initialPage={0} onChangeTab={({ i }) => this._defineCatType(i)}>
               <Tab heading="Приход" 
-                tabStyle={mainStyle.bgWhite} 
-                activeTabStyle={mainStyle.bgWhite} 
-                textStyle={mainStyle.clGrey}
-                activeTextStyle={[mainStyle.clGrey, {fontWeight:'normal'}]}
+                tabStyle={main.bgWhite} 
+                activeTabStyle={main.bgWhite} 
+                textStyle={main.clGrey}
+                activeTextStyle={[main.clGrey, {fontWeight:'normal'}]}
               >
                 <ListCategoriesIncome categories={income} dropcategory={this._deleteCategory} navigation={navigation} refreshdata={this._refreshData} />
               </Tab>
               <Tab heading="Расход" 
-                tabStyle={mainStyle.bgWhite} 
-                activeTabStyle={mainStyle.bgWhite} 
-                textStyle={mainStyle.clGrey}
-                activeTextStyle={[mainStyle.clGrey, {fontWeight:'normal'}]}
+                tabStyle={main.bgWhite} 
+                activeTabStyle={main.bgWhite} 
+                textStyle={main.clGrey}
+                activeTextStyle={[main.clGrey, {fontWeight:'normal'}]}
               >
                 <ListCategoriesExpense categories={expense} dropcategory={this._deleteCategory} navigation={navigation} refreshdata={this._refreshData} />
               </Tab>
             </Tabs>          
           }
-          <Fab style={mainStyle.bgGreen} succes position="bottomRight" onPress={this._addCategory} >
+          <Fab style={main.bgGreen} succes position="bottomRight" onPress={this._addCategory} >
             <Icon ios="ios-add" android="md-add" />
           </Fab>
 

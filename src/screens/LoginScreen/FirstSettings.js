@@ -4,7 +4,7 @@ import { Alert } from 'react-native'
 import { Container, Body, Content, Button, Text, Icon, Card, CardItem, Item, Label, Picker } from 'native-base'
 
 import { ChangeSettings } from '../../actions/UserActions'
-
+import { styles as main } from '../../Style'
 
 class FirstSettings extends Component {
   constructor(props) {
@@ -48,12 +48,12 @@ render() {
 
     return <Container>
               <Content>
-                <Card transparent style={{ alignItems: 'center' }}>
+                <Card transparent style={main.aI_C}>
                   <CardItem>
                     <Text>Для комфортного использования предлагаем установить первоначальные настройки</Text>
                   </CardItem>
                  </Card>
-                 <Card transparent style={{ alignItems: 'center' }}>
+                 <Card transparent style={main.aI_C}>
                     <CardItem bordered>
                         <Body>
                             <Item picker>
@@ -74,7 +74,7 @@ render() {
 
                             <Item picker>
                                 <Label>Перенос остатка</Label>
-                                <Icon name='ios-information-circle' style={{color: '#384850'}} button onPress={this.setModalVisible} />
+                                <Icon name='information-circle' style={{color: '#384850'}} button onPress={this.setModalVisible} />
                                 <Picker mode="dropdown"
                                     iosIcon={<Icon name="arrow-down" />}
                                     style={{ width: undefined }}

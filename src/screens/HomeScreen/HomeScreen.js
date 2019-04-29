@@ -12,7 +12,7 @@ import { ToastTr } from '../../components/Toast'
 import ListPays from '../../components/ListPays'
 import { PaymentActions } from '../../actions/PaymentActions'
 
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 import { capitalize } from '../../utils/utils'
 import BalanceInfo from '../../components/BalanceInfo'
 
@@ -36,16 +36,15 @@ class HomeScreen extends Component {
     this._changeMonth = this._changeMonth.bind(this)
   }
 
-
   static navigationOptions = ({ navigation }) => {
     return {
-      headerStyle: mainStyle.bgIvan,
-      headerTitleStyle: mainStyle.clWhite,
+      headerStyle: main.bgIvan,
+      headerTitleStyle: main.clWhite,
       headerTitle: <BalanceInfo />,
       headerRight: (
         <Icon android='md-information-circle' 
           ios='ios-information-circle' 
-          style={[mainStyle.clWhite, {marginRight:15}]} 
+          style={[main.clWhite, {marginRight:15}]} 
           button onPress={navigation.getParam('showModalInfo')}
         />
       )
@@ -137,7 +136,7 @@ class HomeScreen extends Component {
     
     if (!payments.isLoad) {
       if (sortPays.length == 0) {
-        Pays = <Grid><Col><Row style={mainStyle.rowStyle}><Text style={mainStyle.clGrey}>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
+        Pays = <Grid><Col><Row style={[main.jC_C, main.fD_R]}><Text style={main.clGrey}>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
       } else {
         Pays = <ListPays sortPayments={sortPays} GoToEdit={this._navigateToEdit} />
       }
@@ -146,18 +145,18 @@ class HomeScreen extends Component {
     return (
         <Container>
 
-          <Segment style={mainStyle.bgWhite}>
+          <Segment style={main.bgWhite}>
             <Left>
-              <Button transparent onPress={this._prevMonth} style={[styles.prevMonthBtn, mainStyle.clGrey]}>
+              <Button transparent onPress={this._prevMonth} style={[styles.prevMonthBtn, main.clGrey]}>
                 <FontAwesome name="angle-left" size={27} />
               </Button>
             </Left>
-            <H3 style={[{ marginTop:11, marginRight:5 }, mainStyle.clGrey]} button onPress={this._showModalCalendar}>
+            <H3 style={[{ marginTop:11, marginRight:5 }, main.clGrey]} button onPress={this._showModalCalendar}>
               {capitalize(moment(this.state.selectedDate).format("MMMM YYYY"))}
             </H3>
-            <FontAwesome style={[{ marginTop:8 }, mainStyle.clGrey]} name="sort-down" size={20} button onPress={this._showModalCalendar} />
+            <FontAwesome style={[{ marginTop:8 }, main.clGrey]} name="sort-down" size={20} button onPress={this._showModalCalendar} />
             <Right>
-              <Button transparent style={[styles.nextMonthBtn, mainStyle.clGrey]} onPress={this._nextMonth}>
+              <Button transparent style={[styles.nextMonthBtn, main.clGrey]} onPress={this._nextMonth}>
                 <FontAwesome name="angle-right" size={27} />
               </Button>
             </Right>
@@ -176,7 +175,7 @@ class HomeScreen extends Component {
                 <Grid>
                   <Row>
                     <Col>
-                      <Row style={mainStyle.rowStyleCenter}>
+                      <Row style={[main.jC_C, main.aI_C]}>
                         <Button disabled={(payments.isLoad)} success={(!payments.isLoad)} rounded onPress={this._navigateToIncome}>
                           <Icon ios="ios-add" android="md-add"/>
                           <Text>Доход</Text>
@@ -184,7 +183,7 @@ class HomeScreen extends Component {
                       </Row>
                     </Col>
                     <Col>
-                      <Row style={mainStyle.rowStyleCenter}>
+                      <Row style={[main.jC_C, main.aI_C]}>
                         <Button disabled={(payments.isLoad)} danger={(!payments.isLoad)} rounded onPress={this._navigateToExpense}>
                           <Text>Расход</Text>
                           <Icon ios="ios-remove" android="md-remove" />
@@ -205,15 +204,15 @@ class HomeScreen extends Component {
             visible={this.state.visibleCalendar}
             onRequestClose={this._hideModalCalendar}
           >
-            <View style={mainStyle.modalOverlay} />
-            <View style={mainStyle.modalCalendar}>
+            <View style={main.modalOverlay} />
+            <View style={main.modalCalendar}>
               <MonthSelectorCalendar 
                 localeLanguage='ru'
                 localeSettings={moment.locale('ru')}
                 swipable={true}
                 selectedDate={this.state.selectedDate}
                 onMonthTapped={this._changeMonth}
-                selectedMonthTextStyle={mainStyle.clWhite}
+                selectedMonthTextStyle={main.clWhite}
                 selectedBackgroundColor='#5D90B7'
                 maxDate={moment(this.state.selectedDate).add(10, 'year')}
                 nextIcon={<FontAwesome name="arrow-right" size={19} style={styles.calendarRightBtn}/>}

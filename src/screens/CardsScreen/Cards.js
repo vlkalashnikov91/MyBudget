@@ -6,7 +6,7 @@ import { Container, Content, Spinner, View, Button, Text, CardItem, Card, Body, 
 import { ToastTr } from '../../components/Toast'
 import CardInfo from '../../components/CardInfo'
 import { TargetActions } from '../../actions/TargetActions'
-import { styles as mainStyle, screenHeight } from '../../Style'
+import { styles as main, screenHeight } from '../../Style'
 
 
 class Cards extends Component {
@@ -121,19 +121,19 @@ class Cards extends Component {
             visible={this.state.visibleModal}
             onRequestClose={this._hideModal}
           >
-            <View style={mainStyle.modalOverlay} />
+            <View style={main.modalOverlay} />
               <Card transparent style={styles.modalCalendar}>
                 <CardItem header bordered>
                   <Text>Пополнение</Text>
-                  <Icon button name="close" onPress={this._hideModal} style={[{marginRight:0, marginLeft:'auto'}, mainStyle.clGrey]}/>
+                  <Icon button name="close" onPress={this._hideModal} style={[{marginRight:0, marginLeft:'auto'}, main.clGrey]}/>
                 </CardItem>
                 <CardItem>
-                  <Body style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Body style={[main.fD_R, main.aI_C]}>
                     <Item floatingLabel style={{width:'90%'}} >
                       <Label>Сумма</Label>
-                      <Input style={mainStyle.clGrey} keyboardType="number-pad"/>
+                      <Input style={main.clGrey} keyboardType="number-pad"/>
                     </Item>
-                    <H3 style={mainStyle.clGrey}>{user.DefCurrency}</H3>
+                    <H3 style={main.clGrey}>{user.DefCurrency}</H3>
                   </Body>
                 </CardItem>
                 <CardItem>

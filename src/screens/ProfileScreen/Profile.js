@@ -4,7 +4,7 @@ import { Container, Body, Content, Item, Button, Text, Icon, Card, CardItem, Pic
 import { connect } from 'react-redux'
 
 import { UserAuth } from '../../actions/UserActions'
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 
 
@@ -80,30 +80,30 @@ class Profile extends Component {
           <Content padder>
             <Card>
               <CardItem header bordered>
-                <Text style={mainStyle.clIvan}>Параметры учетной записи</Text>
+                <Text style={main.clIvan}>Параметры учетной записи</Text>
               </CardItem>
 
               <CardItem bordered button onPress={this._gotoChangePass}>
                 <Body>
-                  <Text style={mainStyle.clGrey}>Изменить пароль</Text>
+                  <Text style={main.clGrey}>Изменить пароль</Text>
                 </Body>
               </CardItem>
             </Card>
 
             <Card>
               <CardItem header bordered>
-                <Text style={mainStyle.clIvan}>Мои категории</Text>
+                <Text style={main.clIvan}>Мои категории</Text>
               </CardItem>
               <CardItem bordered button onPress={this._gotoChangeCat}>
                 <Body>
-                  <Text style={mainStyle.clGrey}>Просмотр</Text>
+                  <Text style={main.clGrey}>Просмотр</Text>
                 </Body>
               </CardItem>
             </Card>
 
             <Card>
               <CardItem header bordered>
-                <Text style={mainStyle.clIvan}>Персональные настройки</Text>
+                <Text style={main.clIvan}>Персональные настройки</Text>
               </CardItem>
               <CardItem bordered>
                 <Body>
@@ -164,7 +164,7 @@ class Profile extends Component {
               </CardItem>
             </Card>
 
-            <Button block danger onPress={this.logout} style={mainStyle.exitButton}>
+            <Button block danger onPress={this.logout} style={main.exitButton}>
               <Text>Выход</Text>
             </Button>
           </Content>

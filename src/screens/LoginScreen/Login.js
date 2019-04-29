@@ -8,7 +8,7 @@ import { UserAuth } from '../../actions/UserActions'
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
 
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 
 
 class Login extends Component {
@@ -57,7 +57,7 @@ class Login extends Component {
       <Container>
         <Grid>
           <Row size={50}>
-            <Col style={mainStyle.rowStyleCenter}>
+            <Col style={[main.jC_C, main.aI_C]}>
               <Image source={require('../../../assets/favicon.png')}></Image>
             </Col>
           </Row>
@@ -65,18 +65,18 @@ class Login extends Component {
             <Col>
               <Form style={{padding:10}}>
                 <Item>
-                  <Icon ios='ios-man' android='md-man' style={mainStyle.clGrey}/>
+                  <Icon ios='ios-man' android='md-man' style={main.clGrey}/>
                   <Input placeholder='Логин или email'/>
                 </Item>
                 <Item>
-                  <Icon android='md-key' ios='ios-key' style={mainStyle.clGrey}/>
+                  <Icon android='md-key' ios='ios-key' style={main.clGrey}/>
                   <Input placeholder='Пароль' secureTextEntry={true}/>
                 </Item>
               </Form>
               <Card transparent>
                 <CardItem>
                   <Body>
-                    <Button block style={mainStyle.bgIvan} onPress={this._login}>
+                    <Button block style={main.bgIvan} onPress={this._login}>
                       <Text>Войти</Text>
                     </Button>
                   </Body>
@@ -84,7 +84,7 @@ class Login extends Component {
                 <CardItem>
                   <Body>
                     <Button block transparent onPress={this._forgotPass}>
-                      <Text uppercase={false} style={mainStyle.clIvan}>Забыли пароль</Text>
+                      <Text uppercase={false} style={main.clIvan}>Забыли пароль</Text>
                     </Button>
                   </Body>
                 </CardItem>
@@ -93,9 +93,9 @@ class Login extends Component {
           </Row>
         </Grid>
         
-        <Footer style={mainStyle.bgWhite}>
+        <Footer style={main.bgWhite}>
           <Button block transparent onPress={this._goToRegForm}>
-            <Text uppercase={false} style={mainStyle.clIvan}>Зарегистрироваться</Text>
+            <Text uppercase={false} style={main.clIvan}>Зарегистрироваться</Text>
           </Button>
         </Footer>
 
@@ -104,8 +104,8 @@ class Login extends Component {
             visible={user.isLoad}
             onRequestClose={this._hideModalLoad}
         >
-          <View style={mainStyle.modalOverlay} />
-            <View style={[mainStyle.rowStyleCenter, {flex:1}]} >
+          <View style={main.modalOverlay} />
+            <View style={[main.jC_C, main.aI_C, {flex:1}]} >
               <Spinner size='large'/>
           </View>
         </Modal>

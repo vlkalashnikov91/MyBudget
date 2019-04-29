@@ -4,7 +4,7 @@ import { Svg } from 'expo'
 import { PieChart } from 'react-native-svg-charts'
 import { Container, Body, Content, Picker, ListItem, Text, List, Card, Left, Icon, Right, Spinner, Segment } from 'native-base'
  
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 import { SummMask } from '../../utils/utils'
 
 import { GraphActions } from '../../actions/GraphActions'
@@ -29,8 +29,8 @@ class Graphics extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Графики расходов',
-      headerStyle: mainStyle.bgIvan,
-      headerTitleStyle: mainStyle.clWhite,
+      headerStyle: main.bgIvan,
+      headerTitleStyle: main.clWhite,
       /*headerRight: (
         <FontAwesome name='repeat' size={18} style={{color:'white', marginRight:20}} button onPress={navigation.getParam('refreshData')} />
       ),*/
@@ -131,7 +131,7 @@ class Graphics extends Component {
 
     return (
         <Container>
-          <Segment style={mainStyle.bgWhite}>
+          <Segment style={main.bgWhite}>
             <Picker
               mode="dropdown"
               placeholder="Выберите период"
@@ -164,14 +164,18 @@ class Graphics extends Component {
                 <List dataArray={pieDescData}
                     renderRow={data => { 
                       return (
-                        <ListItem icon button selected={this.state.selectedPie == data.key} onPress={() => this._choosPieItem(data.key)} style={{padding:0}}>
+                        <ListItem icon button
+                          selected={this.state.selectedPie == data.key}
+                          onPress={() => this._choosPieItem(data.key)}
+                          style={{padding:0}}
+                        >
                           <Left>
                               <Svg width="13" height="13">
                                 <Svg.Rect x="0" y="0" width="12" height="12" fill={data.svg.fill} />
                               </Svg>
                           </Left>
                           <Body>
-                              <Text style={mainStyle.clGrey}>{data.description}</Text>
+                              <Text style={main.clGrey}>{data.description}</Text>
                           </Body>
                           <Right>
                               <Text note>{SummMask(data.value)} {user.DefCurrency}</Text>

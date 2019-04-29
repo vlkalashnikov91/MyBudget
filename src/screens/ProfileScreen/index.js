@@ -6,7 +6,7 @@ import ChangePassword from './ChangePassword'
 import Category from './Category'
 import AddEditCategory from './AddEditCategory'
 
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 
 const ProfileNav = createStackNavigator(
   {
@@ -14,8 +14,8 @@ const ProfileNav = createStackNavigator(
       screen: Profile,
       navigationOptions: ()=>({
         title: 'Мой кабинет',
-        headerStyle: mainStyle.bgIvan,
-        headerTitleStyle: mainStyle.clWhite
+        headerStyle: main.bgIvan,
+        headerTitleStyle: main.clWhite
       })
     },
 
@@ -23,8 +23,8 @@ const ProfileNav = createStackNavigator(
       screen: ChangePassword,
       navigationOptions: ()=>({
         title: 'Сменить пароль',
-        headerStyle: mainStyle.bgIvan,
-        headerTitleStyle: mainStyle.clWhite,
+        headerStyle: main.bgIvan,
+        headerTitleStyle: main.clWhite,
         headerTintColor: 'white'
       })
     },
@@ -35,8 +35,8 @@ const ProfileNav = createStackNavigator(
       screen: Category,
       navigationOptions: ()=>({
         title: 'Мои категории',
-        headerStyle: mainStyle.bgIvan,
-        headerTitleStyle: mainStyle.clWhite,
+        headerStyle: main.bgIvan,
+        headerTitleStyle: main.clWhite,
         headerTintColor: 'white'
       })
     }

@@ -6,7 +6,7 @@ import { ToastTr } from '../../components/Toast'
 import { UserAuth } from '../../actions/UserActions'
 import { validateEmail, charAndNums } from '../../utils/validation.js'
 
-import { styles as mainStyle } from '../../Style'
+import { styles as main } from '../../Style'
 
 
 class Registration extends Component {
@@ -138,7 +138,7 @@ class Registration extends Component {
                 : <Card transparent>
                   <CardItem>
                     <Body>
-                      <Button block onPress={this._registration} style={mainStyle.bgIvan}>
+                      <Button block onPress={this._registration} style={main.bgIvan}>
                         <Text>Зарегистрироваться</Text>
                       </Button>
                     </Body>

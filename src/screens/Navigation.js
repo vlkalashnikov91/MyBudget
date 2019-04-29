@@ -7,7 +7,7 @@ import HomeScreenNav from './HomeScreen/index.js'
 import ProfileNav from './ProfileScreen/index.js'
 import GraphNav from './GraphScreen/index.js'
 
-import { styles as mainStyle, ivanColor } from '../Style'
+import { styles as main, ivanColor } from '../Style'
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -57,7 +57,7 @@ export const HomeNavigator = createBottomTabNavigator(
       activeTintColor: ivanColor,
       inactiveTintColor: 'gray',
       showLabel: false,
-      style: mainStyle.bgWhite
+      style: main.bgWhite
     },
   }
 )

@@ -27,16 +27,17 @@ export const styles = StyleSheet.create({
   clBlack: {
     color: 'black'
   },
+  jC_C: {
+    justifyContent: 'center'
+  },
+  fD_R: {
+    flexDirection: 'row'
+  },
+  aI_C: {
+    alignItems: 'center'
+  },
   exitButton: {
     marginTop: 20
-  },
-  rowStyle: {
-    justifyContent: 'center', 
-    flexDirection: 'row',
-  },
-  rowStyleCenter: {
-    justifyContent: 'center', 
-    alignItems: 'center'
   },
   modalLoad: {
     flex: 1,
