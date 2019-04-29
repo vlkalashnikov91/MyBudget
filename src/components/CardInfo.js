@@ -64,7 +64,7 @@ export default class CardInfo extends Component {
     }
 
     return (
-      <Card containerStyle={{padding: 0}}>
+      <Card>
         <CardItem header bordered style={[cardItemStyle, styles.cardMain]}>
           <Text style={mainStyle.clWhite}>{desc}</Text>
           <Icon button name="add" style={styles.addButton} onPress={this._addNewItem}/>

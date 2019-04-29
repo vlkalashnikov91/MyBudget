@@ -16,9 +16,18 @@ class BalanceInfo extends Component {
         if ((payments.Payments != undefined) && (payments.Payments.length > 0)) {
             payments.Payments.map(item => {
                 if (item.IsPlaned == false) {
-                    balance = balance + item.Amount
+                    if (item.IsSpending) {
+                        balance = balance - item.Amount
+                    } else {
+                        balance = balance + item.Amount
+                    }
                 }
-                planed = planed + item.Amount
+
+                if (item.IsSpending) {
+                    planed = planed - item.Amount
+                } else {
+                    planed = planed + item.Amount
+                }
             })
         }
 
@@ -32,7 +41,7 @@ class BalanceInfo extends Component {
                     </Col>
                     <Col>
                         <Row style={mainStyle.rowStyle}>
-                        <Text style={mainStyle.clWhite}>Плановый</Text>
+                            <Text style={mainStyle.clWhite}>Плановый</Text>
                         </Row>
                     </Col>
                 </Row>
@@ -55,8 +64,9 @@ class BalanceInfo extends Component {
 
 const mapStateToProps = state => {
     return {
-      user: state.User,
-      payments: state.Payments
+        user: state.User,
+        categories: state.Categories,
+        payments: state.Payments
     }
   }
 
