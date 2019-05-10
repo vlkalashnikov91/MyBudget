@@ -72,50 +72,53 @@ class Category extends Component {
     var income = []
     var expense = []
 
-    categories.Categories.map(item => {
-      if (item.CreatedBy) {
-        if (item.CreatedBy.indexOf('SYS') < 0) { 
+    if (!categories.isLoad) {
+      categories.Categories.map(item => {
+        if (item.CreatedBy) {
+          if (item.CreatedBy.indexOf('SYS') < 0) { 
+            if(item.IsSpendingCategory) {
+              expense.push(item)
+            } else {
+              income.push(item)
+            }
+          }
+        } else {
           if(item.IsSpendingCategory) {
             expense.push(item)
           } else {
             income.push(item)
           }
         }
-      } else {
-        if(item.IsSpendingCategory) {
-          expense.push(item)
-        } else {
-          income.push(item)
-        }
-      }
-    })
+      })
+    }
 
     return (
         <Container>
-
-          {(categories.isLoad)
-          ? <Spinner />
-          :
-            <Tabs tabBarUnderlineStyle={main.bgIvan} initialPage={0} onChangeTab={({ i }) => this._defineCatType(i)}>
-              <Tab heading="Приход" 
-                tabStyle={main.bgWhite} 
-                activeTabStyle={main.bgWhite} 
-                textStyle={main.clGrey}
-                activeTextStyle={[main.clGrey, {fontWeight:'normal'}]}
-              >
-                <ListCategoriesIncome categories={income} dropcategory={this._deleteCategory} navigation={navigation} refreshdata={this._refreshData} />
-              </Tab>
-              <Tab heading="Расход" 
-                tabStyle={main.bgWhite} 
-                activeTabStyle={main.bgWhite} 
-                textStyle={main.clGrey}
-                activeTextStyle={[main.clGrey, {fontWeight:'normal'}]}
-              >
-                <ListCategoriesExpense categories={expense} dropcategory={this._deleteCategory} navigation={navigation} refreshdata={this._refreshData} />
-              </Tab>
-            </Tabs>          
-          }
-          <Fab style={main.bgGreen} succes position="bottomRight" onPress={this._addCategory} >
+          <Tabs tabBarUnderlineStyle={main.bgIvan} initialPage={0} onChangeTab={({ i }) => this._defineCatType(i)}>
+            <Tab heading="Приход" 
+              tabStyle={main.bgWhite} 
+              activeTabStyle={main.bgWhite} 
+              textStyle={main.clGrey}
+              activeTextStyle={[main.clGrey, {fontWeight:'normal'}]}
+            >
+              {(categories.isLoad)
+                ? <Spinner />
+                : <ListCategoriesIncome categories={income} dropcategory={this._deleteCategory} navigation={navigation} refreshdata={this._refreshData} />
+              }
+            </Tab>
+            <Tab heading="Расход" 
+              tabStyle={main.bgWhite} 
+              activeTabStyle={main.bgWhite} 
+              textStyle={main.clGrey}
+              activeTextStyle={[main.clGrey, {fontWeight:'normal'}]}
+            >
+              {(categories.isLoad)
+                ? <Spinner />
+                : <ListCategoriesExpense categories={expense} dropcategory={this._deleteCategory} navigation={navigation} refreshdata={this._refreshData} />
+              }
+            </Tab>
+          </Tabs>          
+          <Fab style={main.bgGreen} position="bottomRight" onPress={this._addCategory} >
             <Icon ios="ios-add" android="md-add" />
           </Fab>
 

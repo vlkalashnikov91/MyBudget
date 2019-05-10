@@ -164,7 +164,7 @@ class Profile extends Component {
               </CardItem>
             </Card>
 
-            <Button block danger onPress={this.logout} style={main.exitButton}>
+            <Button block danger onPress={this.logout} style={main.mt_20}>
               <Text>Выход</Text>
             </Button>
           </Content>

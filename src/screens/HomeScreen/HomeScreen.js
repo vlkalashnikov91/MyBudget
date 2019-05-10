@@ -10,11 +10,13 @@ import 'moment/locale/ru'
 
 import { ToastTr } from '../../components/Toast'
 import ListPays from '../../components/ListPays'
-import { PaymentActions } from '../../actions/PaymentActions'
-
-import { styles as main } from '../../Style'
-import { capitalize } from '../../utils/utils'
 import BalanceInfo from '../../components/BalanceInfo'
+
+import { PaymentActions } from '../../actions/PaymentActions'
+import { INCOME, EXPENSE, EDIT } from '../../constants/Payment'
+
+import { styles as main, ivanColor } from '../../Style'
+import { capitalize } from '../../utils/utils'
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -68,16 +70,16 @@ class HomeScreen extends Component {
 
   }
 
-  _navigateToEdit(Id, type) {
-    this.props.navigation.navigate('AddEditPayment', {type: type, itemid: Id})
+  _navigateToEdit(Id) {
+    this.props.navigation.navigate('AddEditPayment', {type: EDIT, itemid: Id})
   }
   
   _navigateToIncome() {
-    this._navigateToEdit(null, 'income')
+    this.props.navigation.navigate('AddEditPayment', {type: INCOME})
   }
 
   _navigateToExpense() {
-    this._navigateToEdit(null, 'expense')
+    this.props.navigation.navigate('AddEditPayment', {type: EXPENSE})
   }
 
   _setModalInfo = () => {
@@ -128,17 +130,16 @@ class HomeScreen extends Component {
 
 
   render() {
-    const { payments } = this.props
-    const sortPays = [].concat(payments.Payments) // копируем массив платежей
-    sortPays.sort((a, b) => a.Id < b.Id)          // сортируем массив платежей по ID
+    const { payments, categories } = this.props
+    const isLoad = payments.isLoad || categories.isLoad
 
     var Pays = <Spinner />
     
-    if (!payments.isLoad) {
-      if (sortPays.length == 0) {
+    if (!isLoad) {
+      if (payments.Payments.length == 0) {
         Pays = <Grid><Col><Row style={[main.jC_C, main.fD_R]}><Text style={main.clGrey}>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
       } else {
-        Pays = <ListPays sortPayments={sortPays} GoToEdit={this._navigateToEdit} />
+        Pays = <ListPays payments={payments.Payments} GoToEdit={this._navigateToEdit} />
       }
     }
 
@@ -176,7 +177,7 @@ class HomeScreen extends Component {
                   <Row>
                     <Col>
                       <Row style={[main.jC_C, main.aI_C]}>
-                        <Button disabled={(payments.isLoad)} success={(!payments.isLoad)} rounded onPress={this._navigateToIncome}>
+                        <Button disabled={(isLoad)} success={(!isLoad)} rounded onPress={this._navigateToIncome}>
                           <Icon ios="ios-add" android="md-add"/>
                           <Text>Доход</Text>
                         </Button>
@@ -184,7 +185,7 @@ class HomeScreen extends Component {
                     </Col>
                     <Col>
                       <Row style={[main.jC_C, main.aI_C]}>
-                        <Button disabled={(payments.isLoad)} danger={(!payments.isLoad)} rounded onPress={this._navigateToExpense}>
+                        <Button disabled={(isLoad)} danger={(!isLoad)} rounded onPress={this._navigateToExpense}>
                           <Text>Расход</Text>
                           <Icon ios="ios-remove" android="md-remove" />
                         </Button>
@@ -213,15 +214,15 @@ class HomeScreen extends Component {
                 selectedDate={this.state.selectedDate}
                 onMonthTapped={this._changeMonth}
                 selectedMonthTextStyle={main.clWhite}
-                selectedBackgroundColor='#5D90B7'
+                selectedBackgroundColor={ivanColor}
                 maxDate={moment(this.state.selectedDate).add(10, 'year')}
-                nextIcon={<FontAwesome name="arrow-right" size={19} style={styles.calendarRightBtn}/>}
-                prevIcon={<FontAwesome name="arrow-left" size={19} style={styles.calendarLeftBtn}/>}
+                nextIcon={<FontAwesome name="arrow-right" size={19} style={[main.mr_15, main.clIvan]} />}
+                prevIcon={<FontAwesome name="arrow-left" size={19} style={[main.ml_15, main.clIvan]} />}
                 yearTextStyle={styles.modalCalendarText}
                 monthTextStyle={styles.modalCalendarText}
               />
 
-              <Button block info onPress={this._hideModalCalendar}>
+              <Button block onPress={this._hideModalCalendar} style={main.bgIvan}>
                 <Text>Закрыть</Text>
               </Button>
           </View>
@@ -236,23 +237,15 @@ const styles = StyleSheet.create({
     fontFamily:'Roboto',
     fontSize:16
   },
-  calendarLeftBtn: {
-    marginLeft:15, 
-    color:'#5D90B7'
-  },
-  calendarRightBtn: {
-    marginRight:15, 
-    color:'#5D90B7'
-  },
   prevMonthBtn: {
-    marginRight:'auto', 
-    marginLeft:0, 
+    ...main.mr_auto,
+    ...main.ml_0,
     paddingLeft:25, 
     paddingRight:10,
   },
   nextMonthBtn: {
-    marginLeft:'auto',
-    marginRight:0,
+    ...main.ml_auto,
+    ...main.mr_0,
     paddingLeft:10,
     paddingRight:25,
   }

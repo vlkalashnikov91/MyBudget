@@ -6,6 +6,7 @@ import { Container, Content, Spinner, View, Button, Text, CardItem, Card, Body, 
 import { ToastTr } from '../../components/Toast'
 import CardInfo from '../../components/CardInfo'
 import { TargetActions } from '../../actions/TargetActions'
+import { TARGET, IDEBT, OWEME, EDIT } from '../../constants/TargetDebts'
 import { styles as main, screenHeight } from '../../Style'
 
 
@@ -37,8 +38,8 @@ class Cards extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.targetDebts.Error.length > 0) {
-      ToastTr.Danger(nextProps.targetDebts.Error)
+    if (nextProps.targets.Error.length > 0) {
+      ToastTr.Danger(nextProps.targets.Error)
     }
   }
 
@@ -52,53 +53,39 @@ class Cards extends Component {
   }
 
   _addTarget() {
-    this.props.navigation.navigate('AddEditItem', {type: 1})
+    this.props.navigation.navigate('AddEditItem', {type: TARGET})
   }
 
   _addMyDebt() {
-    this.props.navigation.navigate('AddEditItem', {type: 2})
+    this.props.navigation.navigate('AddEditItem', {type: IDEBT})
   }
 
   _addOweme() {
-    this.props.navigation.navigate('AddEditItem', {type: 3})
+    this.props.navigation.navigate('AddEditItem', {type: OWEME})
   }
 
   _editItem(itemId){
-    this.props.navigation.navigate('AddEditItem', {type: 0, itemid: itemId})
+    this.props.navigation.navigate('AddEditItem', {type: EDIT, itemid: itemId})
   }
 
   _hideModal() {
-    this.setState({
-      visibleModal: false
-    })
+    this.setState({ visibleModal: false })
   }
 
   _increaseItem(data){
-    this.setState({
-      visibleModal: true
-    })
+    this.setState({ visibleModal: true })
   }
 
   render() {
-    const { targetDebts, user } = this.props
+    const { targets, user } = this.props
 
-    if (targetDebts.isLoad) {
+    if (targets.isLoad) {
       return <Spinner />
     }
 
-    var target = []
-    var oweme = []
-    var mydebt = []
-
-    targetDebts.Targets.map(item => {
-      if (item.Type == 1) {
-        target.push(item)
-      } else if (item.Type == 2) {
-        oweme.push(item)
-      } else if (item.Type == 3) {
-        mydebt.push(item)
-      }
-    })
+    var target = targets.Targets.filter(item => item.Type === TARGET)
+    var mydebt = targets.Targets.filter(item => item.Type === IDEBT)
+    var oweme = targets.Targets.filter(item => item.Type === OWEME)
 
     return (
         <Container>
@@ -110,9 +97,9 @@ class Cards extends Component {
               />
             }
           >
-            <CardInfo itemtype={1} currency={user.DefCurrency} data={target} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addTarget} increaseItem={this._increaseItem} />
-            <CardInfo itemtype={2} currency={user.DefCurrency} data={oweme} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addMyDebt} increaseItem={this._increaseItem} />
-            <CardInfo itemtype={3} currency={user.DefCurrency} data={mydebt} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addOweme} increaseItem={this._increaseItem} />
+            <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addTarget} increaseItem={this._increaseItem} />
+            <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addMyDebt} increaseItem={this._increaseItem} />
+            <CardInfo itemtype={OWEME} currency={user.DefCurrency} data={oweme} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addOweme} increaseItem={this._increaseItem} />
           </Content>
 
 
@@ -125,7 +112,7 @@ class Cards extends Component {
               <Card transparent style={styles.modalCalendar}>
                 <CardItem header bordered>
                   <Text>Пополнение</Text>
-                  <Icon button name="close" onPress={this._hideModal} style={[{marginRight:0, marginLeft:'auto'}, main.clGrey]}/>
+                  <Icon button name="close" onPress={this._hideModal} style={[main.mr_0, main.ml_auto, main.clGrey]}/>
                 </CardItem>
                 <CardItem>
                   <Body style={[main.fD_R, main.aI_C]}>
@@ -152,8 +139,8 @@ class Cards extends Component {
 
 const styles = StyleSheet.create({
   modalCalendar: {
-    flex: 1,
-    backgroundColor: "#fff",
+    ...main.fl_1,
+    ...main.bgWhite,
     marginHorizontal: 15,
     marginTop: screenHeight / 1.8,
     marginBottom: 45
@@ -164,7 +151,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    targetDebts: state.TargetDebts,
+    targets: state.TargetDebts,
     user: state.User
   }
 }

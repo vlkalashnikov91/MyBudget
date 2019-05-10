@@ -3,6 +3,8 @@ import { View, Text, Button } from 'react-native'
 import { Icon } from 'native-base'
 
 import Menu, { MenuItem, MenuDivider, Position } from 'react-native-enhanced-popup-menu'
+
+import { styles as main } from '../Style'
  
 export const HeaderPicker = (props) => {
     let textRef = React.createRef();
@@ -15,8 +17,8 @@ export const HeaderPicker = (props) => {
 
 return (
     <View>
-      <Text ref={textRef} style={{ fontSize: 20, textAlign: "center", display:'none' }}>Text component</Text>
-      <Icon name="more" button onPress={onPress} style={{color:'white', marginRight:15}}/>
+      <Text ref={textRef} style={{ fontSize: 20, textAlign: 'center', display:'none' }}>Text component</Text>
+      <Icon name="more" button onPress={onPress} style={[main.clWhite, main.mr_15]}/>
       <Menu ref={setMenuRef}>
         <MenuItem onPress={hideMenu}>Item 1</MenuItem>
         <MenuItem onPress={hideMenu}>Item 2</MenuItem>

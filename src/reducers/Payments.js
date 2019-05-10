@@ -23,7 +23,7 @@ export default (state = initialeState, action) => {
             return {...state,
                 isLoad: false,
                 Error: '',
-                Payments: action.payload.Payments,
+                Payments: Array.isArray(action.payload.Payments) ? action.payload.Payments.sort((a, b) => a.Id < b.Id) : [],
             }
         case REMOVE_PAYMENT:
             return {...state,

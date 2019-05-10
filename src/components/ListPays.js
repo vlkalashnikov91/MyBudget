@@ -49,13 +49,13 @@ class ListPays extends Component {
     }
 
     render() {
-      const { categories, user, sortPayments } = this.props
+      const { categories, user, payments } = this.props
 
       return (
         <List 
             rightOpenValue={-75}
             disableRightSwipe={true}
-            dataSource={this.ds.cloneWithRows(sortPayments)}
+            dataSource={this.ds.cloneWithRows(payments)}
             renderRightHiddenRow={(data, secId, rowId, rowMap) =>
                 <Button full danger onPress={_=> this._deletePay(data, secId, rowId, rowMap) }>
                   <Icon active name="trash" />
@@ -67,14 +67,10 @@ class ListPays extends Component {
                   : categories.Categories.find(el => el.Id === value.CategoryId)
 
                 return (
-                <ListItem key={value.Id} 
-                  icon 
-                  button 
-                  onPress={() => this.props.GoToEdit(value.Id, 'edit')}
-                >
+                <ListItem key={value.Id} icon button onPress={_=> this.props.GoToEdit(value.Id)} >
                   <Left button onPress={_=> this._choosePayments(value)}>
                       {(this.state.planedPay === value.Id)
-                      ? <Button rounded light style={{marginLeft:10}} ><Spinner size={'small'}/></Button>
+                      ? <Button rounded light style={main.ml_10} ><Spinner size="small" /></Button>
                       : <Button rounded success={(!value.IsPlaned)} light={(value.IsPlaned)} onPress={_=> this._choosePayments(value)} style={{marginLeft:10}}>
                           <Icon ios="ios-checkmark" android="md-checkmark" />
                       </Button>
@@ -87,7 +83,7 @@ class ListPays extends Component {
                       }
                       <Text note>{CatDesc.Name}</Text>
                   </Body>
-                  <Right style={{flexDirection: 'column'}}>
+                  <Right style={main.fD_C}>
                     {
                     (CatDesc.IsSpendingCategory) 
                     ? <Text style={{color:'red'}}> - {SummMask(value.Amount)} {user.DefCurrency}</Text>

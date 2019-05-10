@@ -6,6 +6,9 @@ export const screenHeight = Dimensions.get('screen').height
 export const ivanColor = '#395971'
 
 export const styles = StyleSheet.create({
+  fl_1: {
+    flex: 1
+  },
   bgIvan: {
     backgroundColor: ivanColor,
   },
@@ -33,11 +36,41 @@ export const styles = StyleSheet.create({
   fD_R: {
     flexDirection: 'row'
   },
+  fD_C: {
+    flexDirection: 'column'
+  },
   aI_C: {
     alignItems: 'center'
   },
-  exitButton: {
-    marginTop: 20
+  mt_20: {
+    marginTop:20
+  },
+  ml_auto: {
+    marginLeft:'auto'
+  },
+  ml_0: {
+    marginLeft:0
+  },
+  ml_10: {
+    marginLeft:10
+  },
+  ml_15: {
+    marginLeft:15
+  },
+  ml_20: {
+    marginLeft:20
+  },
+  mr_auto: {
+    marginRight:'auto'
+  },
+  mr_0: {
+    marginRight:0
+  },
+  mr_15: {
+    marginRight:15
+  },
+  mr_20: {
+    marginRight:20
   },
   modalLoad: {
     flex: 1,
@@ -68,11 +101,7 @@ export const styles = StyleSheet.create({
     marginBottom: screenHeight / 4 - 15
   },
   modalOverlay: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
 })

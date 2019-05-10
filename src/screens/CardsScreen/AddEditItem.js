@@ -7,7 +7,22 @@ import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, La
 import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import { TargetActions } from '../../actions/TargetActions'
+import { TARGET, OWEME, IDEBT, EDIT } from '../../constants/TargetDebts'
 
+const headerText = (type) => {
+  switch(type) {
+    case TARGET:
+      return 'Добавить цель'
+    case OWEME:
+      return 'Дать в долг'
+    case IDEBT:
+      return 'Взять в долг'
+    case EDIT:
+      return 'Редактировать'
+    default:
+      return 'ERROR'
+  }
+}
 
 class AddEditItem extends Component {
   constructor(props) {
@@ -18,7 +33,7 @@ class AddEditItem extends Component {
       Type: '',
       Amount: '',
       CurAmount: '',
-      CompleteDate: new Date(),
+      CompleteDate: undefined,
       errGoalName: false,
       errAmount: false,
       errCurAmount: false,
@@ -30,32 +45,25 @@ class AddEditItem extends Component {
   }
 
   static navigationOptions = ({ navigation }) => {
-    let type = navigation.getParam('type', 1) /* target - в случае если тип будет не определен */
-    let headerText
-    if (type == 1) {
-      headerText = 'Добавить цель'
-    } else if (type == 2){
-      headerText = 'Дать в долг'
-    } else if (type == 3) {
-      headerText = 'Взять в долг'
-    } else if (type == 0) {
-      headerText = 'Редактировать'
-    }
+    let type = navigation.getParam('type', TARGET) /* target - в случае если тип будет не определен */
     return {
-      title: headerText,
-      headerStyle: mainStyle.bgIvan,
-      headerTitleStyle: mainStyle.clWhite,
+      title: headerText(type),
+      headerStyle: main.bgIvan,
+      headerTitleStyle: main.clWhite,
       headerTintColor: 'white'
     }
   }
 
   componentDidMount() {
-    let type = this.props.navigation.getParam('type', 1)
-    let itemid = this.props.navigation.getParam('itemid', -1)
+    nav = this.props.navigation
+    targets = this.props.targets.Targets
 
-    if (type === 0) {
-      let item = this.props.targetDebts.Targets.find(el => el.Id === itemid)
-      this.setState({Id: item.Id, GoalName: item.GoalName, Amount: item.Amount, CurAmount: item.CurAmount, Type: item.Type, CompleteDate: item.CompleteDate })
+    if ((nav.getParam('type', TARGET) === EDIT) && (nav.getParam('itemid', -1) !== -1)) {
+      let item = this.props.targets.Targets.find(el => el.Id === nav.getParam('itemid'))
+
+      if (item != undefined) {
+        this.setState({Id: item.Id, GoalName: item.GoalName, Amount: item.Amount, CurAmount: item.CurAmount, Type: item.Type, CompleteDate: item.CompleteDate })
+      }
     }
   }
 
@@ -63,7 +71,7 @@ class AddEditItem extends Component {
     this.setState({ Loading: false })
     let txt = this.props.navigation.getParam('type', 1) == 1 ? 'Добавлено' : 'Изменено'
 
-    if (nextProps.targetDebts.Error.length == 0) {
+    if (nextProps.targets.Error.length == 0) {
       ToastTr.Success(txt)
     }
 
@@ -80,6 +88,10 @@ class AddEditItem extends Component {
 
   _changeCurAmount = value => {
     this.setState({ CurAmount: Number(value) })
+  }
+
+  _changeDate = value => {
+    this.setState({ CompleteDate: value })
   }
 
   _checkParams() {
@@ -103,12 +115,12 @@ class AddEditItem extends Component {
   _saveItem() {
     let st = this.state
     let UserId = this.props.user.UserId
-    let type = this.props.navigation.getParam('type', 1)
+    let type = this.props.navigation.getParam('type', TARGET)
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
 
-      if (type == 0) {
+      if (type === EDIT) {
         this.props.edititem(UserId, st.Id, st.GoalName, st.Type, st.Amount, st.CurAmount, st.CompleteDate)
       } else {
         this.props.additem(UserId, st.GoalName, type, st.Amount, st.CurAmount, st.CompleteDate)    
@@ -173,10 +185,10 @@ class AddEditItem extends Component {
                                     modalTransparent={false}
                                     animationType={"fade"}
                                     androidMode="calendar"
-                                    placeHolderText="Дата окончания"
-                                    textStyle={{ color: "green" }}
-                                    placeHolderTextStyle={{ color: "#d3d3d3" }}
-                                    onDateChange={(newDate) => this.setState({ CompleteDate: newDate }) }
+                                    placeHolderText={(this.state.CompleteDate) ? moment(this.state.CompleteDate).format('DD.MM.YYYY') : "Дата окончания"}
+                                    textStyle={main.clGrey}
+                                    placeHolderTextStyle={main.clGrey}
+                                    onDateChange={this._changeDate}
                                     disabled={false}
                                 />
                                 <Icon name='ios-information-circle' style={{color: '#384850', marginLeft:20}} button onPress={this._setModalVisible} />
@@ -206,7 +218,7 @@ class AddEditItem extends Component {
 const mapStateToProps = state => {
   return {
     user: state.User,
-    targetDebts: state.TargetDebts
+    targets: state.TargetDebts
   }
 }
 

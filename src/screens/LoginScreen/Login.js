@@ -105,7 +105,7 @@ class Login extends Component {
             onRequestClose={this._hideModalLoad}
         >
           <View style={main.modalOverlay} />
-            <View style={[main.jC_C, main.aI_C, {flex:1}]} >
+            <View style={[main.jC_C, main.aI_C, main.fl_1]} >
               <Spinner size='large'/>
           </View>
         </Modal>

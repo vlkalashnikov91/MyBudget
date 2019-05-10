@@ -1,3 +1,8 @@
+/* Константы для навигации */
+export const INCOME = 'INCOME'
+export const EXPENSE = 'EXPENSE'
+export const EDIT = 'EDIT'
+/* Константы для редьюсеров */
 export const GET_PAYMENT_LIST = 'GET_PAYMENT_LIST'
 export const ADD_PAYMENT = 'ADD_PAYMENT'
 export const REMOVE_PAYMENT = 'REMOVE_PAYMENT'

@@ -22,7 +22,7 @@ export default (state = initialeState, action) => {
             return {...state,
                 isLoad: false,
                 Error: '',
-                Categories: action.payload.data
+                Categories: Array.isArray(action.payload.data) ? action.payload.data.sort((a,b) => a.Id > b.Id) : []
             } 
         case REMOVE_CATEGORY:
             return {...state,

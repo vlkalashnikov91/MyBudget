@@ -7,6 +7,21 @@ import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, La
 import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import { PaymentActions } from '../../actions/PaymentActions'
+import { INCOME, EXPENSE, EDIT } from '../../constants/Payment'
+
+const headerText = (type) => {
+  switch(type) {
+    case INCOME:
+      return 'Добавить доход'
+    case EXPENSE:
+      return 'Добавить расход'
+    case EDIT:
+      return 'Редактировать'
+    default:
+      return 'ERROR'
+  }
+}
+
 
 class AddEditPayment extends Component {
   constructor(props) {
@@ -18,7 +33,7 @@ class AddEditPayment extends Component {
       Amount: '',
       Name:'', 
       TransDate: undefined,
-      IsSpending: (this.props.navigation.getParam('type', 'income') == 'income') ? false : true,
+      IsSpending: (this.props.navigation.getParam('type', INCOME) === INCOME) ? false : true,
       IsPlaned: false,
       Loading: false,
       errCategory: false,
@@ -29,20 +44,14 @@ class AddEditPayment extends Component {
     this._addNewCat = this._addNewCat.bind(this)
     this._checkParams = this._checkParams.bind(this)
     this._editPayment = this._editPayment.bind(this)
+    this._getCategoryList = this._getCategoryList.bind(this)
   }
 
   static navigationOptions = ({ navigation }) => {
-    let type = navigation.getParam('type', 'income') /* income - в случае если тип будет не определен */
-    let headerText
-    if (type == 'income') {
-      headerText = 'Добавить доход'
-    } else if (type == 'expense'){
-      headerText = 'Добавить расход'
-    } else if (type == 'edit') {
-      headerText = 'Редактировать'
-    }
+    let type = navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
+
     return {
-      title: headerText,
+      title: headerText(type),
       headerStyle: main.bgIvan,
       headerTitleStyle: main.clWhite,
       headerTintColor: 'white'
@@ -50,37 +59,56 @@ class AddEditPayment extends Component {
   }
 
   componentDidMount() {
-    let type = this.props.navigation.getParam('type', 'income')
-    let itemid = this.props.navigation.getParam('itemid', -1)
+    nav = this.props.navigation
+    payments = this.props.payments.Payments
 
-
-    if (type === 'edit') {
-      /* Если редактирование, то необходимо подобрать нужную категорию */
-      let item = this.props.payments.Payments.find(el => el.Id === itemid)
-
-      this.setState({ Id: item.Id, CategoryId: item.CategoryId, Amount: item.Amount, Name: item.Name, TransDate: item.TransDate, IsSpending: item.IsSpending })
+    if ((nav.getParam('type', INCOME) === EDIT) && (nav.getParam('itemid', -1) !== -1 )) {
+      let item = payments.find(el => el.Id === nav.getParam('itemid'))
+      
+      if (item !== undefined) {
+        this.setState({ Id: item.Id, CategoryId: item.CategoryId, Amount: item.Amount, Name: item.Name, TransDate: item.TransDate, IsSpending: item.IsSpending })
+      }
     }
   } 
 
   componentWillReceiveProps(nextProps) {
-    this.setState({Loading: false})
+    this.setState({ Loading: false })
 
-    let txt = nextProps.navigation.getParam('type', 'income') == 'income' ? 'Платеж создан' : 'Платеж изменен'
+    let txt = nextProps.navigation.getParam('type', INCOME) == INCOME ? 'Платеж создан' : 'Платеж изменен'
     
-    if(nextProps.payments.Error.length == 0) {
+    if(nextProps.payments.Error.length === 0) {
       ToastTr.Success(txt)
     }
     this.props.navigation.goBack()
   }
 
+  _getCategoryList() {
+    const type = this.props.navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
+    var cat = Array.isArray(this.props.categories.Categories) ? this.props.categories.Categories : []
+
+    if (type == INCOME) {
+        cat = cat.filter(item => item.IsSpendingCategory === false )
+    } else if (type == EXPENSE) {
+        cat = cat.filter(item => item.IsSpendingCategory === true )
+    } else if (type == EDIT) {
+        /*Если было выбрано "Редактировать" - то нужно определить к какой категории относится платеж и сформировать список*/
+        let itemCat = cat.find(el => el.Id === this.state.CategoryId)
+  
+        if (itemCat != undefined) {
+          cat = cat.filter(item => item.IsSpendingCategory === itemCat.IsSpendingCategory )
+        }
+    }
+    return cat
+  }
+
   _editPayment() {
-    let type = this.props.navigation.getParam('type', 'income')
+    let type = this.props.navigation.getParam('type', INCOME)
     st = this.state
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
 
-      if (type == 'edit') {
+      if (type == EDIT) {
         this.props.editpayment(st.Id, st.CategoryId, st.Amount, st.Name, st.TransDate, st.IsSpendingCategory)
       } else {
         this.props.addpayment(st.CategoryId, st.Amount, st.Name, st.TransDate, st.IsSpending, st.IsPlaned, this.props.user.UserId)
@@ -106,7 +134,7 @@ class AddEditPayment extends Component {
 
   _addNewCat() {
     let navigation = this.props.navigation
-    navigation.navigate('AddEditCategory', {type: (navigation.getParam('type', 'income') == 'income') ? false : true })
+    navigation.navigate('AddEditCategory', {type: (navigation.getParam('type', INCOME) == INCOME) ? false : true })
   }
 
   _checkParams() {
@@ -127,23 +155,8 @@ class AddEditPayment extends Component {
     return true
   }
 
-  render(){
-    const { navigation, user, categories } = this.props
-    const type = navigation.getParam('type', 'income') /* income - в случае если тип будет не определен */
-    var Cats = []
-    
-    if (type == 'edit') {
-      /* Если было выбрано "Редактировать" - то нужно определить к какой категории относится платеж и сформировать список */
-      let itemCat = categories.Categories.find(el => el.Id === this.state.CategoryId)
-
-      if (itemCat != undefined) {
-        Cats = categories.Categories.filter(item => item.IsSpendingCategory === itemCat.IsSpendingCategory )
-      }
-    } else if (type == 'income') {
-      Cats = categories.Categories.filter(item => item.IsSpendingCategory === false)
-    } else {
-      Cats = categories.Categories.filter(item => item.IsSpendingCategory === true)
-    }
+  render() {
+    const { user } = this.props
 
     return <Container>
             <Content padder>
@@ -174,9 +187,8 @@ class AddEditPayment extends Component {
                         selectedValue={this.state.CategoryId}
                         onValueChange={this._changeCat}
                       >
-                      <Picker.Item label="Без категории" value={-1} />
                       {
-                        Cats.map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
+                        this._getCategoryList().map(value => <Picker.Item label={value.Name +" - " + value.Id} value={value.Id} key={value.Id} /> )
                       }
                       </Picker>
                     </Item>
@@ -236,10 +248,10 @@ class AddEditPayment extends Component {
     
 const styles = StyleSheet.create({
   AddCatButton: {
-    color:'grey',
-    marginLeft:10,
+    ...main.clGrey,
+    ...main.ml_10,
     fontSize:35
-  },
+  }
 })
 
 const mapStateToProps = state => {
