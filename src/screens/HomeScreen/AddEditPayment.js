@@ -163,7 +163,7 @@ class AddEditPayment extends Component {
               <Card>
               <CardItem>
                   <Body style={[main.fD_R, main.aI_C]}>
-                    <Item floatingLabel style={{width:'90%'}} error={this.state.errAmount}>
+                    <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
                       <Label>Сумма</Label>
                       <Input
                         onChangeText={this._changeAmount}
@@ -188,7 +188,7 @@ class AddEditPayment extends Component {
                         onValueChange={this._changeCat}
                       >
                       {
-                        this._getCategoryList().map(value => <Picker.Item label={value.Name +" - " + value.Id} value={value.Id} key={value.Id} /> )
+                        this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
                       }
                       </Picker>
                     </Item>

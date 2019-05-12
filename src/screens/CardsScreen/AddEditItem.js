@@ -148,14 +148,14 @@ class AddEditItem extends Component {
                   <CardItem>
                       <Body>
                           <Item floatingLabel error={this.state.errGoalName}>
-                          <Label>Наименование</Label>
-                          <Input onChangeText={this._changeName} value={this.state.GoalName} style={main.clGrey}/>
+                            <Label>Наименование</Label>
+                            <Input onChangeText={this._changeName} value={this.state.GoalName} style={main.clGrey}/>
                           </Item>
                       </Body>
                   </CardItem>
                   <CardItem>
                       <Body style={[main.fD_R, main.aI_C]}>
-                          <Item floatingLabel style={{width:'90%'}} error={this.state.errAmount}>
+                          <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
                               <Label>Полная сумма</Label>
                               <Input style={main.clGrey} onChangeText={this._changeAmount} value={this.state.Amount.toString()} keyboardType="number-pad"/>
                           </Item>
@@ -164,7 +164,7 @@ class AddEditItem extends Component {
                   </CardItem>
                   <CardItem>
                         <Body style={[main.fD_R, main.aI_C]}>
-                          <Item floatingLabel style={{width:'90%'}} error={this.state.errCurAmount}>
+                          <Item floatingLabel style={main.width_90prc} error={this.state.errCurAmount}>
                               <Label>Текущая сумма</Label>
                               <Input style={main.clGrey} onChangeText={this._changeCurAmount} value={this.state.CurAmount.toString()} keyboardType="number-pad"/>
                           </Item>
@@ -191,7 +191,7 @@ class AddEditItem extends Component {
                                     onDateChange={this._changeDate}
                                     disabled={false}
                                 />
-                                <Icon name='ios-information-circle' style={{color: '#384850', marginLeft:20}} button onPress={this._setModalVisible} />
+                                <Icon name='ios-information-circle' style={[main.clGrey, main.ml_20]} button onPress={this._setModalVisible} />
                             </Row>
                           </Grid>
                       </Body>

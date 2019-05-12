@@ -81,7 +81,7 @@ export default class CardInfo extends Component {
   }
 
   _increaseItem(data){
-      this.props.increaseItem(data)
+      this.props.increaseItem(data.Id)
   }
 
   render() {

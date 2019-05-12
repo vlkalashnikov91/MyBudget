@@ -1,4 +1,4 @@
-import { GET_TARGET_LIST, REMOVE_TARGET, ADD_TARGET, EDIT_TARGET, ERR_TARGET, START_LOADING_TARGET } from '../constants/TargetDebts'
+import { GET_TARGET_LIST, REMOVE_TARGET, ADD_TARGET, EDIT_TARGET, ERR_TARGET, INCREASE_TARGET, START_LOADING_TARGET } from '../constants/TargetDebts'
 
 const initialeState = {
     Targets: [],
@@ -51,23 +51,33 @@ export default (state = initialeState, action) => {
                 ]                
             }
         case EDIT_TARGET:
-            var tr_debts = state.Targets.filter(item => item.Id != action.payload.Id)
-            tr_debts.push({
-                Id: action.payload.Id,
-                GoalName: action.payload.GoalName,
-                Type: action.payload.Type,
-                Amount: action.payload.Amount,
-                CurAmount: action.payload.CurAmount,
-                CompleteDate: action.payload.CompleteDate,
-                UserId: action.payload.UserId,
-                IsActive: true,
-                User: null,
-                Description: null
+            var targets = state.Targets.map(item => {
+                if (item.Id === action.payload.Id) {
+                    item.GoalName = action.payload.GoalName,
+                    item.Amount = action.payload.Amount,
+                    item.CurAmount = action.payload.CurAmount,
+                    item.CompleteDate = action.payload.CompleteDate
+                }
+                return item
             })
+                
             return {...state,
                 isLoad: false,
                 Error: '',
-                Targets: tr_debts
+                Targets: targets
+            }
+        case INCREASE_TARGET:
+            var targets = state.Targets.map(item => {
+                if (item.Id === action.payload.Id) {
+                    item.CurAmount = item.CurAmount + action.payload.Amount
+                }
+                return item
+            })
+
+            return {...state,
+                isLoad: false,
+                Error: '',
+                Targets: targets
             }
 
         default:

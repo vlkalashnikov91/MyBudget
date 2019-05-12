@@ -1,6 +1,6 @@
 import { NetInfo } from 'react-native'
 import axios from 'react-native-axios'
-import { GET_TARGET_LIST, REMOVE_TARGET, ADD_TARGET, EDIT_TARGET, ERR_TARGET, START_LOADING_TARGET } from '../constants/TargetDebts'
+import { GET_TARGET_LIST, REMOVE_TARGET, ADD_TARGET, EDIT_TARGET, ERR_TARGET, START_LOADING_TARGET, INCREASE_TARGET } from '../constants/TargetDebts'
 
 const URL = 'http://mybudget.somee.com/api/goals'
 const NoConn = "Отсутствует подключение к интернету"
@@ -13,7 +13,6 @@ export const TargetActions = {
 
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
-
                     axios.get(URL + `?id=${UserId}`)
                     .then(res => {
                         dispatch(ActionFetchList(res.data))
@@ -33,7 +32,6 @@ export const TargetActions = {
     
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
-
                     axios.post(URL, {
                         "GoalName": GoalName,
                         "Type": Type,
@@ -59,7 +57,6 @@ export const TargetActions = {
 
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
-
                     axios.delete(URL + `/${Id}`)
                     .then(res => {
                         dispatch(ActionDelete(Id))
@@ -88,8 +85,27 @@ export const TargetActions = {
                         "IsActive": true
                     })
                     .then(res => {
-                        dispatch(AcctionEdit(Id, GoalName, Type, Amount, CurAmount, CompleteDate, UserId))
+                        dispatch(ActionEdit(Id, GoalName, Type, Amount, CurAmount, CompleteDate, UserId))
                     }).catch(error => {
+                        console.log("error", error)
+                        dispatch(ActionReject(error.message))
+                    })
+                } else {
+                    dispatch(ActionReject(NoConn))
+                }
+            })
+        }
+    },
+    Increase: (Id, Amount) => {
+        return(dispatch) => {
+
+            NetInfo.isConnected.fetch().then(isConnected => {
+                if (isConnected) {
+                    axios.get(URL + `/${Id}/payGoal?amount=${Amount}`)
+                    .then(res => {
+                        dispatch(ActionIncrease(Id, Amount))
+                    })
+                    .catch(error => {
                         console.log("error", error)
                         dispatch(ActionReject(error.message))
                     })
@@ -149,7 +165,7 @@ const ActionAdd = (Id, GoalName, Type, Amount, CurAmount, CompleteDate, UserId) 
 }
 
 /*+++++++++++++++ Действия при изменении ++++++++++++++++ */
-const AcctionEdit = (Id, GoalName, Type, Amount, CurAmount, CompleteDate, UserId) => {
+const ActionEdit = (Id, GoalName, Type, Amount, CurAmount, CompleteDate, UserId) => {
     return {
         type: EDIT_TARGET,
         payload: {
@@ -160,6 +176,17 @@ const AcctionEdit = (Id, GoalName, Type, Amount, CurAmount, CompleteDate, UserId
             CurAmount, 
             CompleteDate,
             UserId
+        }
+    }
+}
+
+/*+++++++++++++++ Действия при пополнении ++++++++++++++++ */
+const ActionIncrease = (Id, Amount) => {
+    return {
+        type: INCREASE_TARGET,
+        payload: {
+            Id,
+            Amount
         }
     }
 }

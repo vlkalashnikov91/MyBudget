@@ -2,10 +2,12 @@ import React, {Component} from 'react'
 import { RefreshControl, Modal, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Content, Spinner, View, Button, Text, CardItem, Card, Body, Item, Label, Input, H3, Icon } from 'native-base'
+import moment from 'moment'
 
 import { ToastTr } from '../../components/Toast'
 import CardInfo from '../../components/CardInfo'
 import { TargetActions } from '../../actions/TargetActions'
+import { PaymentActions } from '../../actions/PaymentActions'
 import { TARGET, IDEBT, OWEME, EDIT } from '../../constants/TargetDebts'
 import { styles as main, screenHeight } from '../../Style'
 
@@ -15,11 +17,11 @@ class Cards extends Component {
     super(props)
 
     this.state = {
-      selected1: undefined,
-      selected2: undefined,
-      paymentsARR: [],
       refreshing: false,
       visibleModal: false,
+      Amount:'',
+      IncreaseId: -1,
+      errAmount: false
     }
 
     this._refreshData = this._refreshData.bind(this)
@@ -30,6 +32,9 @@ class Cards extends Component {
     this._addOweme = this._addOweme.bind(this)
     this._increaseItem = this._increaseItem.bind(this)
     this._hideModal = this._hideModal.bind(this)
+    this._chooseItem = this._chooseItem.bind(this)
+    this._checkParams = this._checkParams.bind(this)
+
   }
 
   componentDidMount(){
@@ -41,6 +46,18 @@ class Cards extends Component {
     if (nextProps.targets.Error.length > 0) {
       ToastTr.Danger(nextProps.targets.Error)
     }
+
+    setTimeout(() => {
+      let currMonth = moment().month()+1
+      let currYear = moment().year()
+      this.props.getpaymentlist(this.props.user.UserId, currYear, currMonth)
+    }, 200)
+    
+/*
+    console.log(nextProps.targets)
+    console.log("-----------------------------------------")
+    console.log(this.state)
+    */
   }
 
   _refreshData() {
@@ -69,12 +86,35 @@ class Cards extends Component {
   }
 
   _hideModal() {
-    this.setState({ visibleModal: false })
+    this.setState({ visibleModal: false, IncreaseId: -1, Amount: '', errAmount: false })
   }
 
-  _increaseItem(data){
-    this.setState({ visibleModal: true })
+  _changeAmount = value => {
+    this.setState({ Amount: Number(value) })
   }
+
+  _chooseItem(Id) {
+    this.setState({ visibleModal: true, IncreaseId: Id })
+  }
+
+  _checkParams() {
+    st = this.state
+
+    if (st.Amount.length == 0) {
+      this.setState({ errAmount: true })
+      return false
+    }
+    return true
+  }
+
+  _increaseItem() {
+    if(this._checkParams()) {
+      this.props.increaseTarget(this.state.IncreaseId, this.state.Amount)
+      this._hideModal()
+    }
+  }
+
+
 
   render() {
     const { targets, user } = this.props
@@ -91,17 +131,13 @@ class Cards extends Component {
         <Container>
           <Content
             refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this._refreshData}
-              />
+              <RefreshControl refreshing={this.state.refreshing} onRefresh={this._refreshData} />
             }
           >
-            <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addTarget} increaseItem={this._increaseItem} />
-            <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addMyDebt} increaseItem={this._increaseItem} />
-            <CardInfo itemtype={OWEME} currency={user.DefCurrency} data={oweme} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addOweme} increaseItem={this._increaseItem} />
+            <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addTarget} increaseItem={this._chooseItem} />
+            <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addMyDebt} increaseItem={this._chooseItem} />
+            <CardInfo itemtype={OWEME} currency={user.DefCurrency} data={oweme} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addOweme} increaseItem={this._chooseItem} />
           </Content>
-
 
           <Modal animationType="slide"
             transparent={true}
@@ -116,18 +152,18 @@ class Cards extends Component {
                 </CardItem>
                 <CardItem>
                   <Body style={[main.fD_R, main.aI_C]}>
-                    <Item floatingLabel style={{width:'90%'}} >
+                    <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
                       <Label>Сумма</Label>
-                      <Input style={main.clGrey} keyboardType="number-pad"/>
+                      <Input style={main.clGrey} keyboardType="number-pad" onChangeText={this._changeAmount} value={this.state.Amount.toString()} />
                     </Item>
                     <H3 style={main.clGrey}>{user.DefCurrency}</H3>
                   </Body>
                 </CardItem>
                 <CardItem>
                   <Body>
-                  <Button block success onPress={this._hideModal}>
-                    <Text>Пополнить</Text>
-                  </Button>
+                    <Button block success onPress={this._increaseItem}>
+                      <Text>Пополнить</Text>
+                    </Button>
                   </Body>
                 </CardItem>
               </Card>
@@ -144,7 +180,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginTop: screenHeight / 1.8,
     marginBottom: 45
-  },
+  }
 })
 
 
@@ -158,12 +194,16 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    deletecard:(Id) => {
+    deletecard: (Id) => {
       dispatch(TargetActions.Delete(Id))
     },
-    getTargetDebtList:(UserId)=> {
+    getTargetDebtList: (UserId) => {
       dispatch(TargetActions.Get(UserId))
-    }
+    },
+    increaseTarget: (Id, Amount) => {
+      dispatch(TargetActions.Increase(Id, Amount))
+    },
+    getpaymentlist: (UserId, year, month) => dispatch(PaymentActions.Get(UserId, year, month))
   }
 }
 

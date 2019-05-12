@@ -72,6 +72,9 @@ export const styles = StyleSheet.create({
   mr_20: {
     marginRight:20
   },
+  width_90prc: {
+    width:'90%'
+  },
   modalLoad: {
     flex: 1,
     alignItems: 'center',
