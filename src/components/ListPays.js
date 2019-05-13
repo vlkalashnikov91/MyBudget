@@ -22,30 +22,30 @@ class ListPays extends Component {
     }
 
     componentWillReceiveProps() {
-        this.setState({ planedPay: -1 })
+      this.setState({ planedPay: -1 })
     }
 
     _choosePayments(item) {
-        this.setState({ planedPay: item.Id })
-        this.props.editpayment(item.Id, item.CategoryId, item.Amount, item.Name, item.TransDate, item.IsSpending, !item.IsPlaned) 
+      this.setState({ planedPay: item.Id })
+      this.props.editpayment(item.Id, item.CategoryId, item.Amount, item.Name, item.TransDate, item.IsSpending, !item.IsPlaned) 
     }
 
     _deletePay(data, secId, rowId, rowMap) {
-        Alert.alert(
-            `${data.Name}`,
-            'Удалить платеж?',
-            [
-              {text: 'Нет', onPress: ()=> {
-                    rowMap[`${secId}${rowId}`].props.closeRow()
-                }
-              },
-              {text: 'Да', onPress: ()=> {
-                    rowMap[`${secId}${rowId}`].props.closeRow()
-                    this.props.deletepayment(data.Id)
-                }
-              },
-            ]
-          )
+      Alert.alert(
+          `${data.Name}`,
+          'Удалить платеж?',
+          [
+            {text: 'Нет', onPress: ()=> {
+                  rowMap[`${secId}${rowId}`].props.closeRow()
+              }
+            },
+            {text: 'Да', onPress: ()=> {
+                  rowMap[`${secId}${rowId}`].props.closeRow()
+                  this.props.deletepayment(data.Id)
+              }
+            },
+          ]
+        )
     }
 
     render() {
@@ -71,7 +71,7 @@ class ListPays extends Component {
                   <Left button onPress={_=> this._choosePayments(value)}>
                       {(this.state.planedPay === value.Id)
                       ? <Button rounded light style={main.ml_10} ><Spinner size="small" /></Button>
-                      : <Button rounded success={(!value.IsPlaned)} light={(value.IsPlaned)} onPress={_=> this._choosePayments(value)} style={{marginLeft:10}}>
+                      : <Button rounded success={(!value.IsPlaned)} light={(value.IsPlaned)} onPress={_=> this._choosePayments(value)} style={main.ml_10}>
                           <Icon ios="ios-checkmark" android="md-checkmark" />
                       </Button>
                       }

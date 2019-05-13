@@ -79,9 +79,22 @@ export const CategoriesActions = {
             }
         })
     },
-    Delete: (Id) => {
-        return(dispatch) => {
-            dispatch(ActionDeleteCategory(Id))
+    Delete: (UserId, Id) => {
+        return (dispatch) => {
+            NetInfo.isConnected.fetch().then(isConnected => {
+                if (isConnected) {
+                    axios.delete(URL + `categories/${Id}?userid=${UserId}`)
+                    .then(res => {
+                        dispatch(ActionDeleteCategory(Id))
+                    })
+                    .catch(error => {
+                        console.log("error", error)
+                        dispatch(ActionReject(error.message))
+                    })
+                } else {
+                    dispatch(ActionReject(NoConn))
+                }
+            })
         }
     }
 }

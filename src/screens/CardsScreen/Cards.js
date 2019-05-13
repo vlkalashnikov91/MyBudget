@@ -25,7 +25,6 @@ class Cards extends Component {
     }
 
     this._refreshData = this._refreshData.bind(this)
-    this._deleteItems = this._deleteItems.bind(this)
     this._editItem = this._editItem.bind(this)
     this._addTarget = this._addTarget.bind(this)
     this._addMyDebt = this._addMyDebt.bind(this)
@@ -45,28 +44,17 @@ class Cards extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.targets.Error.length > 0) {
       ToastTr.Danger(nextProps.targets.Error)
+    } else {
+      setTimeout(() => {
+        let currMonth = moment().month()+1
+        let currYear = moment().year()
+        this.props.getpaymentlist(this.props.user.UserId, currYear, currMonth)
+      }, 200)
     }
-
-    setTimeout(() => {
-      let currMonth = moment().month()+1
-      let currYear = moment().year()
-      this.props.getpaymentlist(this.props.user.UserId, currYear, currMonth)
-    }, 200)
-    
-/*
-    console.log(nextProps.targets)
-    console.log("-----------------------------------------")
-    console.log(this.state)
-    */
   }
 
   _refreshData() {
     this.props.getTargetDebtList(this.props.user.UserId)
-  }
-
-  _deleteItems(itemId){
-    this.props.deletecard(itemId)
-    ToastTr.Success('Удалено')
   }
 
   _addTarget() {
@@ -134,9 +122,9 @@ class Cards extends Component {
               <RefreshControl refreshing={this.state.refreshing} onRefresh={this._refreshData} />
             }
           >
-            <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addTarget} increaseItem={this._chooseItem} />
-            <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addMyDebt} increaseItem={this._chooseItem} />
-            <CardInfo itemtype={OWEME} currency={user.DefCurrency} data={oweme} dropItem={this._deleteItems} editItem={this._editItem} addItem={this._addOweme} increaseItem={this._chooseItem} />
+            <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} editItem={this._editItem} addItem={this._addTarget} increaseItem={this._chooseItem} />
+            <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} editItem={this._editItem} addItem={this._addMyDebt} increaseItem={this._chooseItem} />
+            <CardInfo itemtype={OWEME} currency={user.DefCurrency} data={oweme} editItem={this._editItem} addItem={this._addOweme} increaseItem={this._chooseItem} />
           </Content>
 
           <Modal animationType="slide"
@@ -194,9 +182,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    deletecard: (Id) => {
-      dispatch(TargetActions.Delete(Id))
-    },
     getTargetDebtList: (UserId) => {
       dispatch(TargetActions.Get(UserId))
     },

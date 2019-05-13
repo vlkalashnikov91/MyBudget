@@ -22,6 +22,7 @@ class Category extends Component {
 
     this._addCategory = this._addCategory.bind(this)
     this._refreshData = this._refreshData.bind(this)
+    this._deleteCategory = this._deleteCategory.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -46,7 +47,7 @@ class Category extends Component {
       [
         {text: 'Нет'},
         {text: 'Да', onPress: ()=> {
-          this.props.deletecategory(item.Id)
+          this.props.deletecategory(this.props.user.UserId, item.Id)
         }
         },
       ]
@@ -136,8 +137,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    deletecategory:(id) => {
-      dispatch(CategoriesActions.Delete(id))
+    deletecategory:(UserId, id) => {
+      dispatch(CategoriesActions.Delete(UserId, id))
     },
     getcategories: (UserId) => {
       dispatch(CategoriesActions.Get(UserId))

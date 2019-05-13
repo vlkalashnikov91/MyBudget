@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Svg } from 'expo'
 import { PieChart } from 'react-native-svg-charts'
 import { Container, Body, Content, Picker, ListItem, Text, List, Card, Left, Icon, Right, Spinner, Segment } from 'native-base'
+import { FontAwesome } from '@expo/vector-icons'
  
 import { styles as main } from '../../Style'
 import { SummMask } from '../../utils/utils'
@@ -31,10 +32,10 @@ class Graphics extends Component {
       title: 'Графики расходов',
       headerStyle: main.bgIvan,
       headerTitleStyle: main.clWhite,
-      /*headerRight: (
-        <FontAwesome name='repeat' size={18} style={{color:'white', marginRight:20}} button onPress={navigation.getParam('refreshData')} />
-      ),*/
-      headerRight: <HeaderPicker />
+      headerRight: (
+        <FontAwesome name='repeat' size={18} style={[main.clWhite, main.mr_20]} button onPress={navigation.getParam('refreshData')} />
+      ),
+      /*headerRight: <HeaderPicker />*/
     }
   }
 

@@ -79,7 +79,7 @@ class AddEditItem extends Component {
   }
 
   _changeName = value => {
-      this.setState({ GoalName: value })
+    this.setState({ GoalName: value })
   }
 
   _changeAmount = value => {

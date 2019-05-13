@@ -43,7 +43,8 @@ export const PaymentActions = {
 
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
-                    axios.delete(URL + `mobtransactions?id=${id}`).then(res => {
+                    axios.delete(URL + `mobtransactions?id=${id}`)
+                    .then(res => {
                         dispatch(ActionDeletePay(id))
                     }).catch(error => {
                         console.log("error", error)

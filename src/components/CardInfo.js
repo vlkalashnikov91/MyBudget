@@ -2,13 +2,15 @@ import React, {Component} from 'react'
 import { StyleSheet, Alert, ProgressBarAndroid, ListView, Platform, ProgressViewIOS, Modal } from 'react-native'
 import { Text, Icon, Card, CardItem, Body, Button, ListItem, List, Right, Left, View } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
+import { connect } from 'react-redux'
 
 import { styles as main } from '../Style'
 import { SummMask, capitalize } from '../utils/utils'
 import { TARGET, IDEBT, OWEME } from '../constants/TargetDebts'
+import { TargetActions } from '../actions/TargetActions'
 
 
-export default class CardInfo extends Component {
+class CardInfo extends Component {
   constructor(props) {
     super(props)
 
@@ -65,7 +67,7 @@ export default class CardInfo extends Component {
         }},
         {text: 'Да', onPress: () => {
             rowMap[`${secId}${rowId}`].props.closeRow()
-            this.props.dropItem(data.Id)
+            this.props.deletecard(data.Id)
           }
         },
       ]
@@ -174,3 +176,20 @@ const styles = StyleSheet.create({
     marginBottom:'auto'
   }
 })
+
+
+const mapStateToProps = state => {
+  return {
+    targets: state.TargetDebts
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    deletecard: (Id) => {
+      dispatch(TargetActions.Delete(Id))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CardInfo)
