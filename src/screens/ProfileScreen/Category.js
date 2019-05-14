@@ -75,28 +75,20 @@ class Category extends Component {
 
     if (!categories.isLoad) {
       categories.Categories.map(item => {
-        if (item.CreatedBy) {
-          if (item.CreatedBy.indexOf('SYS') < 0) { 
+        if (!item.IsSystem) {
             if(item.IsSpendingCategory) {
               expense.push(item)
             } else {
               income.push(item)
             }
           }
-        } else {
-          if(item.IsSpendingCategory) {
-            expense.push(item)
-          } else {
-            income.push(item)
-          }
-        }
       })
     }
 
     return (
         <Container>
           <Tabs tabBarUnderlineStyle={main.bgIvan} initialPage={0} onChangeTab={({ i }) => this._defineCatType(i)}>
-            <Tab heading="Приход" 
+            <Tab heading="Доход" 
               tabStyle={main.bgWhite} 
               activeTabStyle={main.bgWhite} 
               textStyle={main.clGrey}

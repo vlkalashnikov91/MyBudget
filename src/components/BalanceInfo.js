@@ -32,23 +32,23 @@ class BalanceInfo extends Component {
         }
 
         return (
-            <Grid>
+            <Grid style={{paddingBottom:10}}>
                 <Row>
                     <Col style={main.clWhite}>
                         <Row style={[main.jC_C, main.aI_C]}>
-                            <Text style={main.clWhite}>Баланс</Text>
+                            <Text style={[main.clWhite, {fontSize:13}]}>Баланс</Text>
                         </Row>
                     </Col>
                     <Col>
                         <Row style={[main.jC_C, main.aI_C]}>
-                            <Text style={main.clWhite}>Плановый</Text>
+                            <Text style={[main.clWhite, {fontSize:13}]}>Плановый</Text>
                         </Row>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
                         <Row style={[main.jC_C, main.aI_C]}>
-                            <Text style={main.clWhite}>{SummMask(balance)} {user.DefCurrency}</Text>
+                            <Text style={[main.clWhite, {fontWeight:'bold'}]}>{SummMask(balance)} {user.DefCurrency}</Text>
                         </Row>
                     </Col>
                     <Col>

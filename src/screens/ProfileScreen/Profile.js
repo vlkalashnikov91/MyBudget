@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import { Alert } from 'react-native'
 import { Container, Body, Content, Item, Button, Text, Icon, Card, CardItem, Picker, Label } from 'native-base'
 import { connect } from 'react-redux'
+import { Col, Row, Grid } from 'react-native-easy-grid'
 
 import { UserAuth } from '../../actions/UserActions'
 import { styles as main } from '../../Style'
@@ -92,18 +93,12 @@ class Profile extends Component {
 
             <Card>
               <CardItem header bordered>
-                <Text style={main.clIvan}>Мои категории</Text>
+                <Text style={main.clIvan}>Персональные настройки</Text>
               </CardItem>
               <CardItem bordered button onPress={this._gotoChangeCat}>
                 <Body>
-                  <Text style={main.clGrey}>Просмотр</Text>
+                  <Text style={main.clGrey}>Мои категории</Text>
                 </Body>
-              </CardItem>
-            </Card>
-
-            <Card>
-              <CardItem header bordered>
-                <Text style={main.clIvan}>Персональные настройки</Text>
               </CardItem>
               <CardItem bordered>
                 <Body>

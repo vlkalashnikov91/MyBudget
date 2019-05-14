@@ -8,7 +8,7 @@ import { UserAuth } from '../../actions/UserActions'
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
 
-import { styles as main } from '../../Style'
+import { styles as main, screenHeight, screenWidth } from '../../Style'
 
 
 class Login extends Component {
@@ -56,24 +56,24 @@ class Login extends Component {
     return (
       <Container>
         <Grid>
-          <Row size={50}>
+          <Row size={40}>
             <Col style={[main.jC_C, main.aI_C]}>
-              <Image source={require('../../../assets/favicon.png')}></Image>
+              <Image resizeMode='contain' resizeMethod='scale' style={{ width:screenWidth}} source={require('../../../assets/Login_image.png')}></Image>
             </Col>
           </Row>
-          <Row size={50}>
-            <Col>
+          <Row size={60}>
+            <Col style={{paddingRight: 50, paddingLeft:50}}>
               <Form style={{padding:10}}>
                 <Item>
                   <Icon ios='ios-man' android='md-man' style={main.clGrey}/>
-                  <Input placeholder='Логин или email'/>
+                  <Input placeholder='Логин' maxLength={20} />
                 </Item>
                 <Item>
                   <Icon android='md-key' ios='ios-key' style={main.clGrey}/>
-                  <Input placeholder='Пароль' secureTextEntry={true}/>
+                  <Input placeholder='Пароль' maxLength={20} secureTextEntry={true}/>
                 </Item>
               </Form>
-              <Card transparent>
+              <Card transparent style={{paddingTop:30}}>
                 <CardItem>
                   <Body>
                     <Button block style={main.bgIvan} onPress={this._login}>
@@ -84,7 +84,7 @@ class Login extends Component {
                 <CardItem>
                   <Body>
                     <Button block transparent onPress={this._forgotPass}>
-                      <Text uppercase={false} style={main.clIvan}>Забыли пароль</Text>
+                      <Text uppercase={false} style={main.clIvan}>Забыли пароль?</Text>
                     </Button>
                   </Body>
                 </CardItem>

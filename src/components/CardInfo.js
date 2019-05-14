@@ -114,7 +114,7 @@ class CardInfo extends Component {
 
             return (
             <ListItem key={item.Id} button onPress={_=> this._editItem(item.Id)} >
-              <Grid>
+              <Grid style={{paddingLeft:25, paddingRight:25}}>
                 <Row>
                   <Col>
                     <Text style={main.clGrey}>{capitalize(item.GoalName)}</Text>

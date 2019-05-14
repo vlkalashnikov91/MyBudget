@@ -77,15 +77,14 @@ class ListPays extends Component {
                       }
                   </Left>
                   <Body>
-                      {(value.Name==null)
-                      ? <Text style={main.clGrey}>Не указано</Text>
+                      {((value.Name==null) || (value.Name.length == 0))
+                      ? <Text style={main.clGrey}>---</Text>
                       : <Text style={main.clGrey} numberOfLines={1}>{value.Name}</Text>
                       }
                       <Text note>{CatDesc.Name}</Text>
                   </Body>
-                  <Right style={main.fD_C}>
-                    {
-                    (CatDesc.IsSpendingCategory) 
+                  <Right style={[main.fD_C, {alignItems:'flex-end'}]}>
+                    {(CatDesc.IsSpendingCategory) 
                     ? <Text style={{color:'red'}}> - {SummMask(value.Amount)} {user.DefCurrency}</Text>
                     : <Text style={{color:'green'}}> + {SummMask(value.Amount)} {user.DefCurrency}</Text>
                     }

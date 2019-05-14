@@ -37,7 +37,8 @@ export default (state = initialeState, action) => {
                 Name: action.payload.Name,
                 IsSpendingCategory: action.payload.IsSpendingCategory,
                 CreatedBy: action.payload.CreatedBy,
-                Icon: action.payload.Icon
+                Icon: action.payload.Icon,
+                IsSystem: action.payload.IsSystem
             })
             return {...state,
                 Error: '',
@@ -55,7 +56,8 @@ export default (state = initialeState, action) => {
                         Name: action.payload.Name,
                         IsSpendingCategory: action.payload.IsSpendingCategory,
                         CreatedBy: action.payload.CreatedBy,
-                        Icon: action.payload.Icon
+                        Icon: action.payload.Icon,
+                        IsSystem: action.payload.IsSystem
                     }
                 ]                
             }

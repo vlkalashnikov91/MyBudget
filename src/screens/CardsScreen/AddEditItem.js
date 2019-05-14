@@ -31,9 +31,10 @@ class AddEditItem extends Component {
     this.state = {
       GoalName: '',
       Type: '',
-      Amount: '',
-      CurAmount: '',
-      CompleteDate: undefined,
+      Amount: 0,
+      CurAmount: 0,
+      //CompleteDate: undefined,
+      CompleteDate: null, //временно
       errGoalName: false,
       errAmount: false,
       errCurAmount: false,
@@ -97,7 +98,7 @@ class AddEditItem extends Component {
   _checkParams() {
     st = this.state
 
-    if (st.Amount.length == 0) {
+    if ((st.Amount.length == 0) || (st.Amount <= 0)) {
       this.setState({ errAmount: true })
       return false
     }
@@ -105,7 +106,7 @@ class AddEditItem extends Component {
       this.setState({ errGoalName: true })
       return false
     }
-    if (st.CurAmount.length == 0) {
+    if ((st.CurAmount.length == 0) || (st.CurAmount < 0)) {
       this.setState({ errCurAmount: true })
       return false
     }
@@ -157,20 +158,21 @@ class AddEditItem extends Component {
                       <Body style={[main.fD_R, main.aI_C]}>
                           <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
                               <Label>Полная сумма</Label>
-                              <Input style={main.clGrey} onChangeText={this._changeAmount} value={this.state.Amount.toString()} keyboardType="number-pad"/>
+                              <Input style={main.clGrey} onChangeText={this._changeAmount} value={this.state.Amount.toString()} maxLength={10} keyboardType="number-pad"/>
                           </Item>
-                          <H3 style={main.clGrey}>{user.userCurrency}</H3>
+                          <H3 style={main.clGrey}>{user.DefCurrency}</H3>
                       </Body>
                   </CardItem>
                   <CardItem>
                         <Body style={[main.fD_R, main.aI_C]}>
                           <Item floatingLabel style={main.width_90prc} error={this.state.errCurAmount}>
                               <Label>Текущая сумма</Label>
-                              <Input style={main.clGrey} onChangeText={this._changeCurAmount} value={this.state.CurAmount.toString()} keyboardType="number-pad"/>
+                              <Input style={main.clGrey} onChangeText={this._changeCurAmount} value={this.state.CurAmount.toString()} maxLength={10} keyboardType="number-pad"/>
                           </Item>
                           <H3 style={main.clGrey}>{user.DefCurrency}</H3>
                       </Body>
                   </CardItem>
+                  {/* временно
                   <CardItem>
                       <Body>
                           <Grid>
@@ -196,6 +198,7 @@ class AddEditItem extends Component {
                           </Grid>
                       </Body>
                   </CardItem>
+                  */}
               </Card>
               {(this.state.Loading)
               ? <Spinner />

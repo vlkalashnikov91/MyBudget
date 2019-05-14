@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { StyleSheet } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Spinner } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Spinner, Form } from 'native-base'
 
 import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
@@ -30,15 +30,14 @@ class AddEditPayment extends Component {
     this.state = {
       Id: -1, 
       CategoryId: -1,
-      Amount: '',
+      Amount: 0,
       Name:'', 
       TransDate: undefined,
       IsSpending: (this.props.navigation.getParam('type', INCOME) === INCOME) ? false : true,
       IsPlaned: false,
       Loading: false,
       errCategory: false,
-      errAmount: false,
-      errName: false
+      errAmount: false
     } 
 
     this._addNewCat = this._addNewCat.bind(this)
@@ -133,19 +132,14 @@ class AddEditPayment extends Component {
   }
 
   _addNewCat() {
-    let navigation = this.props.navigation
-    navigation.navigate('AddEditCategory', {type: (navigation.getParam('type', INCOME) == INCOME) ? false : true })
+    this.props.navigation.navigate('Category')
   }
 
   _checkParams() {
     st = this.state
 
-    if (st.Amount.length == 0) {
+    if ((st.Amount.length == 0) || (st.Amount < 0)) {
       this.setState({ errAmount: true })
-      return false
-    }
-    if (st.Name.length == 0) {
-      this.setState({ errName: true })
       return false
     }
     if (st.CategoryId == -1) {
@@ -161,18 +155,19 @@ class AddEditPayment extends Component {
     return <Container>
             <Content padder>
               <Card>
-              <CardItem>
+                <CardItem>
                   <Body style={[main.fD_R, main.aI_C]}>
-                    <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
-                      <Label>Сумма</Label>
-                      <Input
-                        onChangeText={this._changeAmount}
-                        value={this.state.Amount.toString()}
-                        keyboardType="number-pad"
-                        style={main.clGrey}
-                      />
-                    </Item>
-                    <H3 style={main.clGrey}>{user.DefCurrency}</H3>
+                      <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
+                        <Label>Сумма</Label>
+                        <Input
+                          onChangeText={this._changeAmount}
+                          value={this.state.Amount.toString()}
+                          keyboardType="number-pad"
+                          style={main.clGrey}
+                          maxLength={10}
+                        />
+                      </Item>
+                      <H3 style={main.clGrey}>{user.DefCurrency}</H3>
                   </Body>
                 </CardItem>
 
@@ -198,7 +193,7 @@ class AddEditPayment extends Component {
 
                 <CardItem>
                   <Body>
-                    <Item floatingLabel error={this.state.errName}>
+                    <Item floatingLabel>
                       <Label>Описание</Label>
                       <Input onChangeText={this._changeDesc} value={this.state.Name} style={main.clGrey} multiline={true}/>
                     </Item>

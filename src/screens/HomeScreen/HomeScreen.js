@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Alert, StyleSheet, Modal, RefreshControl } from 'react-native'
+import { Alert, StyleSheet, Modal, RefreshControl, Image } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Content, Button, Text, Icon, Card, CardItem, H3, View, Spinner, Segment, Left, Right } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
@@ -46,9 +46,12 @@ class HomeScreen extends Component {
       headerRight: (
         <Icon android='md-information-circle' 
           ios='ios-information-circle' 
-          style={[main.clWhite, {marginRight:15}]} 
+          style={[main.clWhite, main.mr_15]} 
           button onPress={navigation.getParam('showModalInfo')}
         />
+      ),
+      headerLeft: (
+        <Left style={main.ml_15} />
       )
     }
   }
@@ -177,15 +180,15 @@ class HomeScreen extends Component {
                   <Row>
                     <Col>
                       <Row style={[main.jC_C, main.aI_C]}>
-                        <Button disabled={(isLoad)} success={(!isLoad)} rounded onPress={this._navigateToIncome}>
-                          <Icon ios="ios-add" android="md-add"/>
+                        <Button iconLeft disabled={(isLoad)} success={(!isLoad)} rounded onPress={this._navigateToIncome}>
+                          <Icon ios="ios-add" android="md-add" />
                           <Text>Доход</Text>
                         </Button>
                       </Row>
                     </Col>
                     <Col>
                       <Row style={[main.jC_C, main.aI_C]}>
-                        <Button disabled={(isLoad)} danger={(!isLoad)} rounded onPress={this._navigateToExpense}>
+                        <Button iconRight disabled={(isLoad)} danger={(!isLoad)} rounded onPress={this._navigateToExpense}>
                           <Text>Расход</Text>
                           <Icon ios="ios-remove" android="md-remove" />
                         </Button>
