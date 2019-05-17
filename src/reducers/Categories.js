@@ -1,5 +1,4 @@
 import { ADD_CATEGORY, REMOVE_CATEGORY, GET_CATEGORY_LIST, EDIT_CATEGORY, ERR_CATEGORY, START_LOADING_CATS } from '../constants/Categories'
-import moment from 'moment'
 
 const initialeState = {
     Categories: [],

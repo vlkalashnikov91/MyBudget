@@ -29,7 +29,7 @@ class AddEditPayment extends Component {
     
     this.state = {
       Id: -1, 
-      CategoryId: -1,
+      CategoryId: (this.props.navigation.getParam('type', INCOME) === INCOME) ? 30 : 31,
       Amount: 0,
       Name:'', 
       TransDate: undefined,
