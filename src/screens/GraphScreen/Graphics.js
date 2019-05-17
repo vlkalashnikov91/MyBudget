@@ -89,12 +89,13 @@ class Graphics extends Component {
 
   render() {
     const { user, graph } = this.props
+    const { graphArr, selectedPie} = this.state
     var pieGraphData = []
     var pieDescData = []
 
-    if (this.state.graphArr.length > 0) {
+    if (graphArr.length > 0) {
 
-      pieGraphData = this.state.graphArr
+      pieGraphData = graphArr
         .filter(item => item.Amount > 0)
         .map(item => ({
             value: item.Amount,
@@ -104,7 +105,7 @@ class Graphics extends Component {
               onPress: () => this._choosPieItem(item.key),
               scale:0.85,
             },
-            arc: (this.state.selectedPie == item.key) ? { outerRadius: '115%', cornerRadius: 10,  } : {},
+            arc: (selectedPie === item.key) ? { outerRadius: '115%', cornerRadius: 10,  } : {},
             key: item.key,
         }))
 
@@ -129,7 +130,6 @@ class Graphics extends Component {
       })
 
     }
-
     return (
         <Container>
           <Segment style={main.bgWhite}>
@@ -166,8 +166,8 @@ class Graphics extends Component {
                     renderRow={data => { 
                       return (
                         <ListItem icon button
-                          selected={this.state.selectedPie == data.key}
-                          onPress={() => this._choosPieItem(data.key)}
+                          //selected={(this.state.selectedPie === data.key)}
+                          onPress={_ => this._choosPieItem(data.key)}
                           style={{padding:0}}
                         >
                           <Left>
@@ -176,7 +176,7 @@ class Graphics extends Component {
                               </Svg>
                           </Left>
                           <Body>
-                              <Text style={main.clGrey}>{data.description}</Text>
+                              <Text style={[main.clGrey, (selectedPie === data.key) && {color:'blue'}]}>{data.description}</Text>
                           </Body>
                           <Right>
                               <Text note>{SummMask(data.value)} {user.DefCurrency}</Text>

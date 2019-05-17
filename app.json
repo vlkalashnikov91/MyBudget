@@ -8,11 +8,11 @@
       "ios",
       "android"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/favicon_new.png",
     "splash": {
-      "image": "./assets/Loading.png",
+      "image": "./assets/Loading_Screen_logo3.png",
       "resizeMode": "cover",
       "backgroundColor": "#FFF"
     },

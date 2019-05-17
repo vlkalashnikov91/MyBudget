@@ -25,9 +25,7 @@ export default class ListCategoriesIncome extends Component {
       const { navigation, categories, dropcategory, refreshdata } = this.props
 
       return (
-        <List
-          dataArray = {categories}
-
+        <List dataArray = {categories}
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}

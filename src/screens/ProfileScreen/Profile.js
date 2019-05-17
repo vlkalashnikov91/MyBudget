@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import { Alert } from 'react-native'
 import { Container, Body, Content, Item, Button, Text, Icon, Card, CardItem, Picker, Label } from 'native-base'
 import { connect } from 'react-redux'
-import { Col, Row, Grid } from 'react-native-easy-grid'
 
 import { UserAuth } from '../../actions/UserActions'
 import { styles as main } from '../../Style'

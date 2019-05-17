@@ -30,7 +30,7 @@ export default class App extends Component {
 
   render() {
     if (this.state.loading) {
-      return <AppLoading />;
+      return <AppLoading />
     }
 
     return (

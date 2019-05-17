@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Alert, StyleSheet, Modal, RefreshControl, Image } from 'react-native'
+import { Alert, StyleSheet, Modal, RefreshControl } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Content, Button, Text, Icon, Card, CardItem, H3, View, Spinner, Segment, Left, Right } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'

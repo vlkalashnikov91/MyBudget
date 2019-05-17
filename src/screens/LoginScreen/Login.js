@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import { Container, Label, Button, Text, Card, CardItem, Item, Input, Footer, Body, Form, Icon, Spinner } from 'native-base'
-import { View, Modal, Image, NetInfo, Alert } from 'react-native'
+import { Container, Label, Button, Text, Card, CardItem, Item, Input, Footer, Body, Form, Icon, Spinner, Content } from 'native-base'
+import { View, Modal, Image, KeyboardAvoidingView, ScrollView } from 'react-native'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { connect } from 'react-redux'
 
@@ -16,13 +16,16 @@ class Login extends Component {
     super(props)
 
     this.state = {
-      login: 'vlkalashnikov',
-      password: '123456789',
+      login: '',
+      password: '',
+      errlogin: false,
+      errpassword: false
     }
 
     this._goToRegForm = this._goToRegForm.bind(this)
     this._forgotPass = this._forgotPass.bind(this)
     this._login = this._login.bind(this)
+    this._checkParams = this._checkParams.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -42,8 +45,32 @@ class Login extends Component {
     this.props.navigation.navigate('ForgotPass')
   }
 
+  _changePassword = value => {
+    this.setState({ password: value })
+  }
+
+  _changeLogin = value => {
+    this.setState({ login: value })
+  }
+
+  _checkParams() {
+    st = this.state
+
+    if (st.login.length === 0) {
+      this.setState({ errlogin: true })
+      return false
+    }
+    if (st.password.length === 0) {
+      this.setState({ errpassword: true })
+      return false
+    }
+    return true
+  }
+
   _login() {
-    this.props.login(this.state.login, this.state.password)
+    if (this._checkParams()) {
+      this.props.login(this.state.login, this.state.password)
+    }
   }
 
   _hideModalLoad() {
@@ -55,28 +82,28 @@ class Login extends Component {
 
     return (
       <Container>
-        <Grid>
-          <Row size={40}>
+        <Grid style={[main.fD_C, {height:screenHeight}]}>
+          <Row size={45}>
             <Col style={[main.jC_C, main.aI_C]}>
-              <Image resizeMode='contain' resizeMethod='scale' style={{ width:screenWidth}} source={require('../../../assets/Login_image.png')}></Image>
+              <Image resizeMode='contain' resizeMethod='scale' style={{ width:screenWidth/1.8, height: 55}} source={require('../../../assets/Logo.png')}></Image>
             </Col>
           </Row>
-          <Row size={60}>
+          <Row size={55}>
             <Col style={{paddingRight: 50, paddingLeft:50}}>
               <Form style={{padding:10}}>
-                <Item>
+                <Item error={this.state.errlogin}>
                   <Icon ios='ios-man' android='md-man' style={main.clGrey}/>
-                  <Input placeholder='Логин' maxLength={20} />
+                  <Input placeholder='Логин' maxLength={20} style={main.ml_10} onChangeText={this._changeLogin}/>
                 </Item>
-                <Item>
+                <Item error={this.state.errpassword}>
                   <Icon android='md-key' ios='ios-key' style={main.clGrey}/>
-                  <Input placeholder='Пароль' maxLength={20} secureTextEntry={true}/>
+                  <Input placeholder='Пароль' maxLength={20} secureTextEntry={true} onChangeText={this._changePassword}/>
                 </Item>
               </Form>
               <Card transparent style={{paddingTop:30}}>
                 <CardItem>
                   <Body>
-                    <Button block style={main.bgIvan} onPress={this._login}>
+                    <Button block success onPress={this._login}>
                       <Text>Войти</Text>
                     </Button>
                   </Body>
@@ -84,7 +111,7 @@ class Login extends Component {
                 <CardItem>
                   <Body>
                     <Button block transparent onPress={this._forgotPass}>
-                      <Text uppercase={false} style={main.clIvan}>Забыли пароль?</Text>
+                      <Text uppercase={false} note>Забыли пароль?</Text>
                     </Button>
                   </Body>
                 </CardItem>
@@ -92,24 +119,23 @@ class Login extends Component {
             </Col>
           </Row>
         </Grid>
-        
+
         <Footer style={main.bgWhite}>
           <Button block transparent onPress={this._goToRegForm}>
-            <Text uppercase={false} style={main.clIvan}>Зарегистрироваться</Text>
+            <Text uppercase={false} note >Зарегистрироваться</Text>
           </Button>
         </Footer>
 
         <Modal animationType="fade"
-            transparent={true}
-            visible={user.isLoad}
-            onRequestClose={this._hideModalLoad}
+          transparent={true}
+          visible={user.isLoad}
+          onRequestClose={this._hideModalLoad}
         >
           <View style={main.modalOverlay} />
             <View style={[main.jC_C, main.aI_C, main.fl_1]} >
               <Spinner size='large'/>
           </View>
         </Modal>
-
       </Container>
     )
   }
