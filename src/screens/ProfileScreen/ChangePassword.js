@@ -3,7 +3,6 @@ import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, La
 
 import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
-import HeaderApp from '../../components/HeaderApp'
 
 export default class ChangePassword extends Component {
   constructor(props) {

@@ -1,12 +1,12 @@
 import React, {Component} from 'react'
 import { Alert } from 'react-native'
-import { Container, Body, Content, Item, Button, Text, Icon, Card, CardItem, Picker, Label } from 'native-base'
+import { Container, Body, Content, Item, Button, Text, Icon, Card, CardItem, Picker, Label, Right } from 'native-base'
 import { connect } from 'react-redux'
+import { FontAwesome } from '@expo/vector-icons'
 
 import { UserAuth } from '../../actions/UserActions'
 import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
-
 
 class Profile extends Component {
   constructor(props) {
@@ -69,6 +69,10 @@ class Profile extends Component {
     this.props.navigation.navigate('Category')
   }
 
+  _gotoAbout = () => {
+    this.props.navigation.navigate('About')
+  }
+
   _saveSettings() {
     let st = this.state
     this.props.changesettings(this.props.user.UserId, st.DefCurrency, st.CarryOverRests, st.UseTemplates)
@@ -87,6 +91,9 @@ class Profile extends Component {
                 <Body>
                   <Text style={main.clGrey}>Изменить пароль</Text>
                 </Body>
+                <Right>
+                  <FontAwesome name="angle-right" size={20}/>
+                </Right>
               </CardItem>
             </Card>
 
@@ -98,6 +105,9 @@ class Profile extends Component {
                 <Body>
                   <Text style={main.clGrey}>Мои категории</Text>
                 </Body>
+                <Right>
+                  <FontAwesome name="angle-right" size={20}/>
+                </Right>
               </CardItem>
               <CardItem bordered>
                 <Body>
@@ -155,6 +165,12 @@ class Profile extends Component {
                 <Button onPress={this._saveSettings} disabled={this.state.isChange} iconRight>
                   <Text>Сохранить изменения</Text>
                 </Button>
+              </CardItem>
+            </Card>
+
+            <Card>
+              <CardItem button onPress={this._gotoAbout}> 
+                  <Text>О приложении</Text>
               </CardItem>
             </Card>
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import { Container, Label, Button, Text, Card, CardItem, Item, Input, Footer, Body, Form, Icon, Spinner, Content } from 'native-base'
-import { View, Modal, Image, KeyboardAvoidingView, ScrollView } from 'react-native'
+import { Container, Label, Button, Text, Card, CardItem, Item, Input, Footer, Body, Form, Icon, Spinner } from 'native-base'
+import { View, Modal, Image } from 'react-native'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { connect } from 'react-redux'
 
@@ -16,8 +16,8 @@ class Login extends Component {
     super(props)
 
     this.state = {
-      login: '',
-      password: '',
+      login: 'vlkalashnikov',
+      password: '123456789',
       errlogin: false,
       errpassword: false
     }

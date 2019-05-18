@@ -9,7 +9,6 @@ import { styles as main } from '../../Style'
 import { SummMask } from '../../utils/utils'
 
 import { GraphActions } from '../../actions/GraphActions'
-import { HeaderPicker } from '../../components/HeaderPicker'
 import { ToastTr } from '../../components/Toast'
 
 class Graphics extends Component {
@@ -35,7 +34,6 @@ class Graphics extends Component {
       headerRight: (
         <FontAwesome name='repeat' size={18} style={[main.clWhite, main.mr_20]} button onPress={navigation.getParam('refreshData')} />
       ),
-      /*headerRight: <HeaderPicker />*/
     }
   }
 

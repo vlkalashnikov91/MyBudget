@@ -85,15 +85,15 @@ class AddEditPayment extends Component {
     const type = this.props.navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
     var cat = Array.isArray(this.props.categories.Categories) ? this.props.categories.Categories : []
 
-    if (type == INCOME) {
+    if (type === INCOME) {
         cat = cat.filter(item => item.IsSpendingCategory === false )
-    } else if (type == EXPENSE) {
+    } else if (type === EXPENSE) {
         cat = cat.filter(item => item.IsSpendingCategory === true )
-    } else if (type == EDIT) {
+    } else if (type === EDIT) {
         /*Если было выбрано "Редактировать" - то нужно определить к какой категории относится платеж и сформировать список*/
         let itemCat = cat.find(el => el.Id === this.state.CategoryId)
   
-        if (itemCat != undefined) {
+        if (itemCat !== undefined) {
           cat = cat.filter(item => item.IsSpendingCategory === itemCat.IsSpendingCategory )
         }
     }

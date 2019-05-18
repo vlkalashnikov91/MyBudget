@@ -36,8 +36,8 @@ export default class ListCategoriesIncome extends Component {
               return (
               <ListItem key={value.Id}
                 button
-                onPress={()=> navigation.navigate('AddEditCategory', {type:'edit', itemid: value.Id})}
-                onLongPress={() => dropcategory(value)}
+                onPress={_=> navigation.navigate('AddEditCategory', {type:'edit', itemid: value.Id})}
+                onLongPress={_=> dropcategory(value)}
               >
                 <Body>
                   <Text style={main.clGrey}>{value.Name}</Text>

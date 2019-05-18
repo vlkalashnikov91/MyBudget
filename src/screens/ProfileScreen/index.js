@@ -7,6 +7,7 @@ import Category from './Category'
 import AddEditCategory from './AddEditCategory'
 
 import { styles as main } from '../../Style'
+import About from './About'
 
 const ProfileNav = createStackNavigator(
   {
@@ -15,7 +16,8 @@ const ProfileNav = createStackNavigator(
       navigationOptions: ()=>({
         title: 'Мой кабинет',
         headerStyle: main.bgIvan,
-        headerTitleStyle: main.clWhite
+        headerTitleStyle: main.clWhite,
+        headerTintColor: 'white'
       })
     },
 
@@ -35,6 +37,16 @@ const ProfileNav = createStackNavigator(
       screen: Category,
       navigationOptions: ()=>({
         title: 'Мои категории',
+        headerStyle: main.bgIvan,
+        headerTitleStyle: main.clWhite,
+        headerTintColor: 'white'
+      })
+    },
+    
+    About: {
+      screen: About,
+      navigationOptions: ()=>({
+        title: 'О приложении',
         headerStyle: main.bgIvan,
         headerTitleStyle: main.clWhite,
         headerTintColor: 'white'

@@ -138,7 +138,7 @@ class Registration extends Component {
                 : <Card transparent>
                   <CardItem>
                     <Body>
-                      <Button block onPress={this._registration} style={main.bgIvan}>
+                      <Button block success onPress={this._registration}>
                         <Text>Зарегистрироваться</Text>
                       </Button>
                     </Body>

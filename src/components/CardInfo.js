@@ -20,6 +20,7 @@ class CardInfo extends Component {
     this._description = this._description.bind(this)
     this._cardColor = this._cardColor.bind(this)
     this._cardstyle = this._cardstyle.bind(this)
+    this._showModal = this._showModal.bind(this)
   }
 
   _description() {
@@ -49,11 +50,20 @@ class CardInfo extends Component {
   _cardstyle() {
     switch(this.props.itemtype) {
       case TARGET:
-        return styles.cardTarget
+        return {
+          color: TargetColor,
+          backgroundColor: TargetColor
+        }
       case IDEBT:
-        return styles.cardIDebt
+        return {
+          color: IDebtColor,
+          backgroundColor: IDebtColor
+        }
       case OWEME:
-        return styles.cardDebt
+        return {
+          color: DebtColor,
+          backgroundColor: DebtColor
+        }
     }
   }
 
@@ -86,61 +96,80 @@ class CardInfo extends Component {
       this.props.increaseItem(data.Id)
   }
 
+  _showModal() {
+
+  }
+
   render() {
     const { data, currency } = this.props
 
     return (
-      <Card>
-        <CardItem header bordered style={[this._cardstyle(), styles.cardMain]}>
-          <Text style={main.clWhite}>{this._description()}</Text>
-          <Icon button name="add" style={[main.clWhite, main.mr_0, main.ml_auto]} onPress={this._addNewItem}/>
-        </CardItem>
-        <List
-          dataSource={this.ds.cloneWithRows(data)}
-          leftOpenValue={75} 
-          rightOpenValue={-75}
-          renderRightHiddenRow={(data, secId, rowId, rowMap) =>
-            <Button full danger onPress={_=> this._deleteItem(data, secId, rowId, rowMap) }>
-              <Icon active name="trash" />
+      <Grid style={[{marginTop:10}, (data.length === 0) && {marginBottom:10}]}>
+        <Row>
+          <Left style={main.ml_15}>
+            <Text style={{color: this._cardstyle().color}}>{this._description()}</Text>
+          </Left>
+          <Right>
+            <Button small rounded onPress={this._addNewItem} style={[main.mr_15, main.ml_auto, {backgroundColor: this._cardstyle().backgroundColor}]}>
+              <Icon name="add" fontSize={20}/>
             </Button>
-          }
-          renderLeftHiddenRow={(data, secId, rowId, rowMap) =>
-            <Button full success onPress={_=> this._increaseItem(data)} >
-              <Icon name="add"/>
-            </Button>
-          }
-          renderRow={item => {
-            let progressCnt = Number((((item.CurAmount * 100) / item.Amount) / 100).toFixed(1))
+          </Right>
+        </Row>
+        {(data.length > 0) &&
+        <Card>
+        <CardItem>
+          <List
+            dataSource={this.ds.cloneWithRows(data)}
+            leftOpenValue={75} 
+            rightOpenValue={-75}
+            renderRightHiddenRow={(data, secId, rowId, rowMap) =>
+              <Button full danger onPress={_=> this._deleteItem(data, secId, rowId, rowMap) }>
+                <Icon active name="trash" />
+              </Button>
+            }
+            renderLeftHiddenRow={(data, secId, rowId, rowMap) =>
+              <Button full success onPress={_=> this._increaseItem(data)} >
+                <Icon name="add"/>
+              </Button>
+            }
+            renderRow={item => {
+              let progressCnt = Number((((item.CurAmount * 100) / item.Amount) / 100).toFixed(1))
 
-            return (
-            <ListItem key={item.Id} button onPress={_=> this._editItem(item.Id)} >
-              <Grid style={{paddingLeft:25, paddingRight:25}}>
-                <Row>
-                  <Col>
-                    <Text style={main.clGrey}>{capitalize(item.GoalName)}</Text>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col style={main.ml_15}>
-                  {(Platform.OS === 'ios') && <ProgressViewIOS progressViewStyle="bar" trackTintColor={this._cardColor()} progress={progressCnt} />}
-                  {(Platform.OS === 'android') && <ProgressBarAndroid styleAttr="Horizontal" indeterminate={false} color={this._cardColor()} progress={progressCnt} />}
-                  </Col>
-                </Row>
-                <Row>
-                  <Left style={main.ml_15}>
-                    <Text style={{color:this._cardColor()}}>{SummMask(item.CurAmount)} {currency}</Text>
-                  </Left>
-                  <Right>
-                    <Text note>{SummMask(item.Amount)} {currency}</Text>
-                  </Right>
-                </Row>
-              </Grid>
-            </ListItem>
-            )
-          }}
-        >
-        </List>
-      </Card>
+              return (
+              <ListItem key={item.Id} button 
+                onPress={_=> this._editItem(item.Id)} 
+                onLongPress={_ => this._showModal(value)}
+              >
+                <Grid>
+                  <Row>
+                    <Col>
+                      <Text style={main.clGrey}>{capitalize(item.GoalName)}</Text>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col style={main.ml_15}>
+                    {(Platform.OS === 'ios') && <ProgressViewIOS progressViewStyle="bar" trackTintColor={this._cardColor()} progress={progressCnt} />}
+                    {(Platform.OS === 'android') && <ProgressBarAndroid styleAttr="Horizontal" indeterminate={false} color={this._cardColor()} progress={progressCnt} />}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Left style={main.ml_15}>
+                      <Text style={{color:this._cardColor()}}>{SummMask(item.CurAmount)} {currency}</Text>
+                    </Left>
+                    <Right>
+                      <Text note>{SummMask(item.Amount)} {currency}</Text>
+                    </Right>
+                  </Row>
+                </Grid>
+              </ListItem>
+              )
+            }}
+          >
+          </List>
+        </CardItem>
+        </Card>
+        }
+      </Grid>
     )
   }
 }
@@ -154,21 +183,6 @@ const styles = StyleSheet.create({
     display: 'flex', 
     borderBottomLeftRadius:0, 
     borderBottomRightRadius:0
-  },
-  cardTarget: {
-    backgroundColor: TargetColor,
-    borderColor: '#0A0F85',
-    borderRadius: 0,
-  },
-  cardIDebt: {
-    backgroundColor: IDebtColor,
-    borderColor: '#7A0505',
-    borderRadius: 0,
-  },
-  cardDebt: {
-    backgroundColor: DebtColor,
-    borderColor: '#025F0B',
-    borderRadius: 0,
   },
   deleteButton: {
     ...main.clWhite,

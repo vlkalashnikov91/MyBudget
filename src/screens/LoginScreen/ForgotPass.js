@@ -20,7 +20,7 @@ export default class ForgotPass extends Component {
                 <Card transparent>
                   <CardItem>
                     <Body>
-                      <Button block style={main.bgIvan}>
+                      <Button block success>
                         <Text>Отправить</Text>
                       </Button>
                     </Body>
