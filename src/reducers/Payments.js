@@ -46,7 +46,7 @@ export default (state = initialeState, action) => {
                         IsSpending: action.payload.IsSpending,
                         IsPlaned: action.payload.IsPlaned
                     }
-                ]                
+                ].sort((a,b)=> a.Id < b.Id)
             }
         case EDIT_PAYMENT: 
             var pays = state.Payments.filter(item => item.Id != action.payload.Id)
@@ -62,7 +62,7 @@ export default (state = initialeState, action) => {
             return {...state,
                 isLoad: false,
                 Error: '',
-                Payments: pays,
+                Payments: pays.sort((a,b)=> a.Id < b.Id)
             }
         default:
             return state

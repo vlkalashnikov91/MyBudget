@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Alert } from 'react-native'
-import { Container, Body, Content, Button, Text, Icon, Card, CardItem, Item, Label, Picker } from 'native-base'
+import { Container, Body, Content, Button, Text, Icon, Card, CardItem, Item, Label, Picker, Spinner } from 'native-base'
 
-import { ChangeSettings } from '../../actions/UserActions'
+import { UserAuth } from '../../actions/UserActions'
 import { styles as main } from '../../Style'
 
 class FirstSettings extends Component {
@@ -45,51 +45,58 @@ _saveSettings() {
 
 render() {
     const { user } = this.props
+    const { CarryOverRests, DefCurrency } = this.state
 
     return <Container>
               <Content>
                 <Card transparent style={main.aI_C}>
                   <CardItem>
-                    <Text>Для комфортного использования предлагаем установить первоначальные настройки</Text>
+                    <Text style={main.txtAl_c}>Для комфортного использования предлагаем установить первоначальные настройки</Text>
                   </CardItem>
                  </Card>
                  <Card transparent style={main.aI_C}>
                     <CardItem bordered>
-                        <Body>
-                            <Item picker>
-                                <Label>Валюта по умолчанию</Label>
+                        <Body style={[main.fD_R, main.aI_C]}>
+                            <Label style={{width:'65%'}}>Валюта по умолчанию</Label>
+                            <Item picker style={{width:'30%'}}>
                                 <Picker mode="dropdown"
                                     iosIcon={<Icon name="arrow-down" />}
                                     style={{ width: undefined }}
                                     placeholderStyle={{ color: "#bfc6ea" }}
                                     placeholderIconColor="#007aff"
-                                    selectedValue={this.state.DefCurrency}
-                                    onValueChange={this._changeCurrency.bind(this)}
+                                    selectedValue={DefCurrency}
+                                    onValueChange={this._changeCurrency}
                                 >
                                     <Picker.Item label="₸" value="₸" />
                                     <Picker.Item label="$" value="$" />
                                     <Picker.Item label="€" value="€" />
                                 </Picker>
                             </Item>
-
-                            <Item picker>
-                                <Label>Перенос остатка</Label>
-                                <Icon name='information-circle' style={{color: '#384850'}} button onPress={this.setModalVisible} />
+                        </Body>
+                    </CardItem>
+                    <CardItem>
+                        <Body style={[main.fD_R, main.aI_C]}>
+                            <Label style={{width:'65%'}}>
+                                Перенос остатка  <Icon name='information-circle' style={main.clGrey} button onPress={this.setModalVisible} />
+                            </Label>
+                            <Item picker style={{width:'30%'}}>
                                 <Picker mode="dropdown"
                                     iosIcon={<Icon name="arrow-down" />}
                                     style={{ width: undefined }}
                                     placeholderStyle={{ color: "#bfc6ea" }}
                                     placeholderIconColor="#007aff"
-                                    selectedValue={this.state.CarryOverRests}
-                                    onValueChange={this._balanceTransfer.bind(this)}
+                                    selectedValue={CarryOverRests}
+                                    onValueChange={this._balanceTransfer}
                                 >
                                     <Picker.Item label="Да" value={true} />
                                     <Picker.Item label="Нет" value={false} />
                                 </Picker>
                             </Item>
-
-                            <Text>* вы можете изменить эти настройки в любой момент в личном кабинете</Text>
-
+                        </Body>
+                    </CardItem>
+                    <CardItem>
+                        <Body>
+                            <Text style={main.txtAl_c} note>* вы можете изменить эти настройки в любой момент в личном кабинете</Text>
                         </Body>
                     </CardItem>
                  </Card>
@@ -98,7 +105,7 @@ render() {
                 : <Card transparent>
                     <CardItem>
                         <Body>
-                            <Button block success onPress={() => this._saveSettings()}>
+                            <Button block style={main.bgGreen} onPress={_=> this._saveSettings()}>
                                 <Text>Продолжить</Text>
                             </Button>
                         </Body>
@@ -119,7 +126,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     changesettings:(DefCurrency, UseTemplates, CarryOverRests) => {
-        dispatch(ChangeSettings(DefCurrency, UseTemplates, CarryOverRests))
+        dispatch(UserAuth.ChangeSettings(DefCurrency, UseTemplates, CarryOverRests))
     }
   }
 }

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { RefreshControl, Modal, StyleSheet } from 'react-native'
+import { RefreshControl, Modal, StyleSheet, Alert } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Content, Spinner, View, Button, Text, CardItem, Card, Body, Item, Label, Input, H3, Icon } from 'native-base'
 import moment from 'moment'
@@ -9,7 +9,8 @@ import CardInfo from '../../components/CardInfo'
 import { TargetActions } from '../../actions/TargetActions'
 import { PaymentActions } from '../../actions/PaymentActions'
 import { TARGET, IDEBT, OWEME, EDIT } from '../../constants/TargetDebts'
-import { styles as main, screenHeight } from '../../Style'
+import { styles as main, screenHeight, screenWidth } from '../../Style'
+import { capitalize } from '../../utils/utils'
 
 
 class Cards extends Component {
@@ -18,10 +19,12 @@ class Cards extends Component {
 
     this.state = {
       refreshing: false,
-      visibleModal: false,
+      visibleModalIncrease: false,
+      visibleModalMenu: false,
       Amount:'',
       IncreaseId: -1,
-      errAmount: false
+      errAmount: false,
+      choosenItem: {}
     }
 
     this._refreshData = this._refreshData.bind(this)
@@ -30,9 +33,11 @@ class Cards extends Component {
     this._addMyDebt = this._addMyDebt.bind(this)
     this._addOweme = this._addOweme.bind(this)
     this._increaseItem = this._increaseItem.bind(this)
-    this._hideModal = this._hideModal.bind(this)
-    this._chooseItem = this._chooseItem.bind(this)
-    this._checkParams = this._checkParams.bind(this)
+    this._hideModalIncrease = this._hideModalIncrease.bind(this)
+    this._showModalIncrease = this._showModalIncrease.bind(this)
+    this._hideModalMenu = this._hideModalMenu.bind(this)
+    this._showModalMenu = this._showModalMenu.bind(this)
+    this._deleteItem = this._deleteItem.bind(this)
 
   }
 
@@ -73,36 +78,51 @@ class Cards extends Component {
     this.props.navigation.navigate('AddEditItem', {type: EDIT, itemid: itemId})
   }
 
-  _hideModal() {
-    this.setState({ visibleModal: false, IncreaseId: -1, Amount: '', errAmount: false })
+  _deleteItem(){
+    Alert.alert(
+      `${capitalize(this.state.choosenItem.GoalName)}`,
+      'Удалить цель?',
+      [
+        {text: 'Нет'},
+        {text: 'Да', onPress: () => {
+            this.props.deletecard(this.state.choosenItem.Id)
+            this._hideModalMenu()
+          }
+        },
+      ]
+    )
   }
 
-  _changeAmount = value => {
-    this.setState({ Amount: Number(value) })
+  _hideModalIncrease() {
+    this.setState({ visibleModalIncrease: false, Amount: '', errAmount: false })
   }
 
-  _chooseItem(Id) {
-    this.setState({ visibleModal: true, IncreaseId: Id })
+  _showModalIncrease() {
+    this.setState({ visibleModalIncrease: true })
   }
 
-  _checkParams() {
-    st = this.state
-
-    if (st.Amount.length == 0) {
-      this.setState({ errAmount: true })
-      return false
-    }
-    return true
+  _chngIncreaseAmount = value => {
+    this.setState({ Amount: value })
   }
 
   _increaseItem() {
-    if(this._checkParams()) {
-      this.props.increaseTarget(this.state.IncreaseId, this.state.Amount)
-      this._hideModal()
+    st = this.state
+    if ((st.Amount.length == 0) || (Number(st.Amount < 0))) {
+      this.setState({ errAmount: true })
+    } else {
+      this.props.increaseTarget(st.choosenItem.Id, Number(st.Amount))
+      this._hideModalIncrease()
+      this._hideModalMenu()
     }
   }
 
+  _showModalMenu(item) {
+    this.setState({ visibleModalMenu: true, choosenItem: item})
+  }
 
+  _hideModalMenu() {
+    this.setState({ visibleModalMenu: false, choosenItem: {}})
+  }
 
   render() {
     const { targets, user } = this.props
@@ -117,57 +137,85 @@ class Cards extends Component {
 
     return (
         <Container>
-          <Content
-            refreshControl={
+          <Content refreshControl = {
               <RefreshControl refreshing={this.state.refreshing} onRefresh={this._refreshData} />
             }
           >
-            <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} editItem={this._editItem} addItem={this._addTarget} increaseItem={this._chooseItem} />
-            <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} editItem={this._editItem} addItem={this._addMyDebt} increaseItem={this._chooseItem} />
-            <CardInfo itemtype={OWEME} currency={user.DefCurrency} data={oweme} editItem={this._editItem} addItem={this._addOweme} increaseItem={this._chooseItem} />
+            <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} editItem={this._editItem} addItem={this._addTarget} showModalMenu={this._showModalMenu} />
+            <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} editItem={this._editItem} addItem={this._addMyDebt} showModalMenu={this._showModalMenu} />
+            <CardInfo itemtype={OWEME} currency={user.DefCurrency} data={oweme} editItem={this._editItem} addItem={this._addOweme} showModalMenu={this._showModalMenu} />
           </Content>
 
           <Modal animationType="slide"
             transparent={true}
-            visible={this.state.visibleModal}
-            onRequestClose={this._hideModal}
+            visible={this.state.visibleModalIncrease}
+            onRequestClose={this._hideModalIncrease}
           >
             <View style={main.modalOverlay} />
-              <Card transparent style={styles.modalCalendar}>
-                <CardItem header bordered>
-                  <Text>Пополнение</Text>
-                  <Icon button name="close" onPress={this._hideModal} style={[main.mr_0, main.ml_auto, main.clGrey]}/>
-                </CardItem>
-                <CardItem>
-                  <Body style={[main.fD_R, main.aI_C]}>
-                    <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
-                      <Label>Сумма</Label>
-                      <Input style={main.clGrey} keyboardType="number-pad" onChangeText={this._changeAmount} value={this.state.Amount.toString()} />
-                    </Item>
-                    <H3 style={main.clGrey}>{user.DefCurrency}</H3>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Body>
-                    <Button block success onPress={this._increaseItem}>
-                      <Text>Пополнить</Text>
-                    </Button>
-                  </Body>
-                </CardItem>
-              </Card>
+            <Card transparent style={styles.modalWindow}>
+              <CardItem header bordered>
+                <Text>Пополнение</Text>
+                <Icon button name="close" onPress={this._hideModalIncrease} style={[main.mr_0, main.ml_auto, main.clGrey]}/>
+              </CardItem>
+              <CardItem>
+                <Body style={[main.fD_R, main.aI_C]}>
+                  <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
+                    <Label>Сумма</Label>
+                    <Input style={main.clGrey} keyboardType="number-pad" onChangeText={this._chngIncreaseAmount} value={this.state.Amount} />
+                  </Item>
+                  <H3 style={main.clGrey}>{user.DefCurrency}</H3>
+                </Body>
+              </CardItem>
+              <CardItem>
+                <Body>
+                  <Button block success onPress={this._increaseItem}>
+                    <Text>Пополнить</Text>
+                  </Button>
+                </Body>
+              </CardItem>
+            </Card>
           </Modal>
-        </Container>
+
+          <Modal animationType="fade"
+            transparent={true}
+            visible={this.state.visibleModalMenu}
+            onRequestClose={this._hideModalMenu}
+          >
+          <View style={main.modalOverlay} />
+          <Card transparent style={styles.modalMenu}>
+            <CardItem header>
+              <Text>{this.state.choosenItem.GoalName}</Text>
+              <Icon button name="close" onPress={this._hideModalMenu} style={[main.mr_0, main.ml_auto, main.clGrey]}/>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Button transparent onPress={this._showModalIncrease}><Text uppercase={false} style={main.clGrey}>Пополнить</Text></Button>
+                <Button disabled transparent><Text uppercase={false} style={main.clGrey}>Погасить полностью</Text></Button>
+                <Button transparent onPress={this._deleteItem}><Text uppercase={false} style={main.clGrey}>Удалить</Text></Button>
+              </Body>
+            </CardItem>
+          </Card>
+        </Modal>
+
+      </Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  modalCalendar: {
+  modalWindow: {
     ...main.fl_1,
     ...main.bgWhite,
     marginHorizontal: 15,
     marginTop: screenHeight / 1.8,
     marginBottom: 45
+  },
+  modalMenu: {
+    ...main.bgWhite,
+    width: screenWidth / 1.2, 
+    height: screenHeight / 3.5, 
+    marginTop: screenHeight / 4, 
+    marginLeft: (screenWidth - (screenWidth / 1.2)) / 2
   }
 })
 
@@ -187,6 +235,9 @@ const mapDispatchToProps = dispatch => {
     },
     increaseTarget: (Id, Amount) => {
       dispatch(TargetActions.Increase(Id, Amount))
+    },
+    deletecard: (Id) => {
+      dispatch(TargetActions.Delete(Id))
     },
     getpaymentlist: (UserId, year, month) => dispatch(PaymentActions.Get(UserId, year, month))
   }

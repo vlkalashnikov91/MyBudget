@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
+import { StyleSheet } from 'react-native'
 import { Svg } from 'expo'
 import { PieChart } from 'react-native-svg-charts'
 import { Container, Body, Content, Picker, ListItem, Text, List, Card, Left, Icon, Right, Spinner, Segment } from 'native-base'
@@ -135,11 +136,7 @@ class Graphics extends Component {
               mode="dropdown"
               placeholder="Выберите период"
               iosIcon={<Icon name="arrow-down"/>}
-              itemStyle={{
-                backgroundColor: '#d3d3d3',
-                marginLeft: 0,
-                paddingLeft: 10,
-              }}
+              itemStyle={styles.PickerItem}
               style={{ width: undefined }}
               selectedValue={this.state.period}
               onValueChange={this._changePeriod}
@@ -159,14 +156,14 @@ class Graphics extends Component {
                 animate={true}
                 animationDuration={500}
               />
-              <Card style={{marginTop:10}}>
+              <Card style={main.mt_10}>
                 <List dataArray={pieDescData}
                     renderRow={data => { 
                       return (
                         <ListItem icon button
                           //selected={(this.state.selectedPie === data.key)}
                           onPress={_ => this._choosPieItem(data.key)}
-                          style={{padding:0}}
+                          style={main.pd_0}
                         >
                           <Left>
                               <Svg width="13" height="13">
@@ -174,7 +171,7 @@ class Graphics extends Component {
                               </Svg>
                           </Left>
                           <Body>
-                              <Text style={[main.clGrey, (selectedPie === data.key) && {color:'blue'}]}>{data.description}</Text>
+                              <Text style={[main.clGrey, (selectedPie === data.key) && {color:'#62B1F6'}]}>{data.description}</Text>
                           </Body>
                           <Right>
                               <Text note>{SummMask(data.value)} {user.DefCurrency}</Text>
@@ -190,6 +187,14 @@ class Graphics extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  PickerItem: {
+    ...main.bgGray,
+    ...main.ml_0,
+    ...main.pdL_10
+  }
+})
 
 const mapStateToProps = state => {
   return {

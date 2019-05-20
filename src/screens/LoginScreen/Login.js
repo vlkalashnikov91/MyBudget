@@ -1,14 +1,15 @@
 import React, {Component} from 'react'
-import { Container, Label, Button, Text, Card, CardItem, Item, Input, Footer, Body, Form, Icon, Spinner } from 'native-base'
-import { View, Modal, Image } from 'react-native'
+import { Container, View, Button, Text, Card, CardItem, Item, Input, Body, Form, Icon, Spinner, CheckBox } from 'native-base'
+import { Modal, Image } from 'react-native'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { connect } from 'react-redux'
 
 import { UserAuth } from '../../actions/UserActions'
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
+import { Storage } from '../../utils/deviceServices'
 
-import { styles as main, screenHeight, screenWidth } from '../../Style'
+import { styles as main, screenHeight, screenWidth, ivanColor, ivanGray } from '../../Style'
 
 
 class Login extends Component {
@@ -16,8 +17,9 @@ class Login extends Component {
     super(props)
 
     this.state = {
-      login: 'vlkalashnikov',
-      password: '123456789',
+      login: '',
+      password: '',
+      saveMe: false,
       errlogin: false,
       errpassword: false
     }
@@ -25,7 +27,13 @@ class Login extends Component {
     this._goToRegForm = this._goToRegForm.bind(this)
     this._forgotPass = this._forgotPass.bind(this)
     this._login = this._login.bind(this)
+    this._saveMe = this._saveMe.bind(this)
     this._checkParams = this._checkParams.bind(this)
+  }
+
+  async componentWillMount() {
+    let username = await Storage.GetItem('username')
+    this.setState({ login: username,  saveMe: (username.length == 0) ? false : true})
   }
 
   componentWillReceiveProps(nextProps) {
@@ -69,8 +77,12 @@ class Login extends Component {
 
   _login() {
     if (this._checkParams()) {
-      this.props.login(this.state.login, this.state.password)
+      this.props.login(this.state.login, this.state.password, this.state.saveMe)
     }
+  }
+
+  _saveMe() {
+    this.setState({ saveMe: !this.state.saveMe})
   }
 
   _hideModalLoad() {
@@ -83,27 +95,34 @@ class Login extends Component {
     return (
       <Container>
         <Grid style={[main.fD_C, {height:screenHeight}]}>
-          <Row size={45}>
+          <Row size={40}>
             <Col style={[main.jC_C, main.aI_C]}>
               <Image resizeMode='contain' resizeMethod='scale' style={{ width:screenWidth/1.8, height: 55}} source={require('../../../assets/Logo.png')}></Image>
             </Col>
           </Row>
-          <Row size={55}>
-            <Col style={{paddingRight: 50, paddingLeft:50}}>
+          <Row size={60}>
+            <Col style={[main.pdR_50, main.pdL_50]}>
               <Form style={{padding:10}}>
                 <Item error={this.state.errlogin}>
-                  <Icon ios='ios-man' android='md-man' style={main.clGrey}/>
-                  <Input placeholder='Логин' maxLength={20} style={main.ml_10} onChangeText={this._changeLogin}/>
+                  <Icon ios='ios-man' android='md-man' style={main.clIvan}/>
+                  <Input placeholder='Логин'value={this.state.login} maxLength={20} placeholderTextColor={ivanGray} style={[main.ml_10, main.clGrey]} onChangeText={this._changeLogin}/>
                 </Item>
                 <Item error={this.state.errpassword}>
-                  <Icon android='md-key' ios='ios-key' style={main.clGrey}/>
-                  <Input placeholder='Пароль' maxLength={20} secureTextEntry={true} onChangeText={this._changePassword}/>
+                  <Icon android='md-key' ios='ios-key' style={main.clIvan}/>
+                  <Input placeholder='Пароль' value={this.state.password} maxLength={20} placeholderTextColor={ivanGray} style={main.clGrey} secureTextEntry={true} onChangeText={this._changePassword}/>
                 </Item>
+
+                <View style={[main.fD_R, main.mt_10]}>
+                  <CheckBox checked={this.state.saveMe} color={ivanColor} onPress={this._saveMe} />
+                  <Text button onPress={this._saveMe} style={main.ml_20}>Запомнить меня</Text>
+                </View>
+
               </Form>
+
               <Card transparent style={{paddingTop:30}}>
                 <CardItem>
                   <Body>
-                    <Button block success onPress={this._login}>
+                    <Button block onPress={this._login} style={main.bgGreen}>
                       <Text>Войти</Text>
                     </Button>
                   </Body>
@@ -113,18 +132,16 @@ class Login extends Component {
                     <Button block transparent onPress={this._forgotPass}>
                       <Text uppercase={false} note>Забыли пароль?</Text>
                     </Button>
+
+                    <Button block transparent onPress={this._goToRegForm}>
+                      <Text uppercase={false} note >Зарегистрироваться</Text>
+                    </Button>
                   </Body>
                 </CardItem>
               </Card>
             </Col>
           </Row>
         </Grid>
-
-        <Footer style={main.bgWhite}>
-          <Button block transparent onPress={this._goToRegForm}>
-            <Text uppercase={false} note >Зарегистрироваться</Text>
-          </Button>
-        </Footer>
 
         <Modal animationType="fade"
           transparent={true}
@@ -149,8 +166,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    login: (username, pass) => {
-      dispatch(UserAuth.Login(username, pass))
+    login: (username, pass, saveMe) => {
+      dispatch(UserAuth.Login(username, pass, saveMe))
     },
     getcategories: (UserId) => {
       dispatch(CategoriesActions.Get(UserId))

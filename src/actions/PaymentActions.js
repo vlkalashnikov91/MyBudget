@@ -22,7 +22,7 @@ export const PaymentActions = {
                     .catch(function (error) {
                         if (error.response) {
                             /*если 404 - значит данных нет за этот месяц */
-                            if(error.response.status == 404) {
+                            if(error.response.status === 404) {
                                 dispatch(ActionFetchList([]))
                             } else {
                                 dispatch(ActionReject(error.message))

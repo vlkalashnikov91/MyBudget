@@ -30,13 +30,12 @@ class AddEditPayment extends Component {
     this.state = {
       Id: -1, 
       CategoryId: (this.props.navigation.getParam('type', INCOME) === INCOME) ? 30 : 31,
-      Amount: 0,
+      Amount: '',
       Name:'', 
-      TransDate: undefined,
+      TransDate: new Date(),
       IsSpending: (this.props.navigation.getParam('type', INCOME) === INCOME) ? false : true,
       IsPlaned: false,
       Loading: false,
-      errCategory: false,
       errAmount: false
     } 
 
@@ -65,7 +64,7 @@ class AddEditPayment extends Component {
       let item = payments.find(el => el.Id === nav.getParam('itemid'))
       
       if (item !== undefined) {
-        this.setState({ Id: item.Id, CategoryId: item.CategoryId, Amount: item.Amount, Name: item.Name, TransDate: item.TransDate, IsSpending: item.IsSpending })
+        this.setState({ Id: item.Id, CategoryId: item.CategoryId, Amount: item.Amount.toString(), Name: item.Name, TransDate: item.TransDate, IsSpending: item.IsSpending })
       }
     }
   } 
@@ -100,6 +99,37 @@ class AddEditPayment extends Component {
     return cat
   }
 
+  _changeDesc = value => {
+    this.setState({ Name: value })
+  }
+
+  _changeCat = value => {
+    this.setState({ CategoryId: value })
+  }
+
+  _changeAmount = value => {
+    this.setState({ Amount: value })
+  }
+
+  _changeDate = value => {
+    this.setState({ TransDate: value })
+  }
+
+  _addNewCat() {
+    this.props.navigation.navigate('Category')
+  }
+
+  _checkParams() {
+    st = this.state
+
+    if ((st.Amount.length === 0) || (Number(st.Amount) < 0)) {
+      this.setState({ errAmount: true })
+      return false
+    }
+
+    return true
+  }
+
   _editPayment() {
     let type = this.props.navigation.getParam('type', INCOME)
     st = this.state
@@ -115,53 +145,20 @@ class AddEditPayment extends Component {
     }
   }
 
-  _changeDesc = value => {
-    this.setState({ Name: value })
-  }
-
-  _changeCat = value => {
-    this.setState({ CategoryId: value })
-  }
-
-  _changeAmount = value => {
-    this.setState({ Amount: Number(value) })
-  }
-
-  _changeDate = value => {
-    this.setState({ TransDate: value })
-  }
-
-  _addNewCat() {
-    this.props.navigation.navigate('Category')
-  }
-
-  _checkParams() {
-    st = this.state
-
-    if ((st.Amount.length == 0) || (st.Amount < 0)) {
-      this.setState({ errAmount: true })
-      return false
-    }
-    if (st.CategoryId == -1) {
-      this.setState({ errCategory: true })
-      return false
-    }
-    return true
-  }
-
   render() {
     const { user } = this.props
+    const { Amount, errAmount, CategoryId, Name, TransDate, Loading} = this.state
 
     return <Container>
             <Content padder>
               <Card>
                 <CardItem>
                   <Body style={[main.fD_R, main.aI_C]}>
-                      <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
+                      <Item floatingLabel style={main.width_90prc} error={errAmount}>
                         <Label>Сумма</Label>
                         <Input
                           onChangeText={this._changeAmount}
-                          value={this.state.Amount.toString()}
+                          value={Amount}
                           keyboardType="number-pad"
                           style={main.clGrey}
                           maxLength={10}
@@ -173,13 +170,13 @@ class AddEditPayment extends Component {
 
                 <CardItem>
                   <Body style={[main.fD_R, main.aI_C]}>
-                    <Item picker style={{width:'85%'}} error={this.state.errCategory}>
+                    <Item picker style={{width:'85%'}}>
                       <Picker mode="dropdown"
                         iosIcon={<Icon name="arrow-down" />}
                         style={{ width: undefined }}
                         placeholderStyle={{ color: "#bfc6ea" }}
                         placeholderIconColor="#007aff"
-                        selectedValue={this.state.CategoryId}
+                        selectedValue={CategoryId}
                         onValueChange={this._changeCat}
                       >
                       {
@@ -195,7 +192,7 @@ class AddEditPayment extends Component {
                   <Body>
                     <Item floatingLabel>
                       <Label>Описание</Label>
-                      <Input onChangeText={this._changeDesc} value={this.state.Name} style={main.clGrey} multiline={true}/>
+                      <Input onChangeText={this._changeDesc} value={Name} style={main.clGrey} multiline={true}/>
                     </Item>
                   </Body>
                 </CardItem>
@@ -204,7 +201,7 @@ class AddEditPayment extends Component {
                   <Body>
                     <DatePicker
                       formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
-                      defaultDate={this.state.TransDate}
+                      defaultDate={TransDate}
                       minimumDate={new Date(2016, 1, 1)}
                       maximumDate={new Date(2040, 12, 31)}
                       locale="ru"
@@ -212,7 +209,7 @@ class AddEditPayment extends Component {
                       modalTransparent={false}
                       animationType={"fade"}
                       androidMode="calendar"
-                      placeHolderText={(this.state.TransDate) ? moment(this.state.TransDate).format('DD.MM.YYYY') : "Выберите дату"}
+                      placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
                       textStyle={main.clGrey}
                       placeHolderTextStyle={main.clGrey}
                       onDateChange={this._changeDate}
@@ -222,12 +219,12 @@ class AddEditPayment extends Component {
                 </CardItem>
               </Card>
 
-              {(this.state.Loading)
+              {(Loading)
               ? <Spinner />
               : <Card transparent>
                   <CardItem>
                     <Body>
-                      <Button success block onPress={this._editPayment}>
+                      <Button style={main.bgGreen} block onPress={this._editPayment}>
                         <Text>Сохранить</Text>
                       </Button>
                     </Body>

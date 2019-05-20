@@ -43,7 +43,7 @@ export default (state = initialeState, action) => {
             return {...state,
                 Error: '',
                 isLoad: false,
-                Categories: cats,
+                Categories: cats.sort((a,b) => a.Id > b.Id),
             }
         case ADD_CATEGORY:
             return {...state,
@@ -59,7 +59,7 @@ export default (state = initialeState, action) => {
                         Icon: action.payload.Icon,
                         IsSystem: action.payload.IsSystem
                     }
-                ]                
+                ].sort((a,b) => a.Id > b.Id)
             }
         default:
             return state

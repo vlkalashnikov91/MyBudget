@@ -1,12 +1,14 @@
-import { AsyncStorage, NetInfo } from 'react-native'
+import { NetInfo } from 'react-native'
 import axios from 'react-native-axios'
 import { USER_LOGIN, USER_LOGOUT, CHANGE_USER_SETTINGS, USER_ERR, USER_LOADING, USER_REGISTRATION } from '../constants/User'
+import { Storage } from '../utils/deviceServices'
 
 const URL = `http://mybudget.somee.com/api/`
 const NoConn = "Отсутствует подключение к интернету"
+const UnAuth = "Пользователь не найден"
 
 export const UserAuth = {
-    Login: (username, pass) => {
+    Login: (username, pass, saveMe) => {
         return (dispatch) => {
     
             dispatch({ type: USER_LOADING })
@@ -19,11 +21,17 @@ export const UserAuth = {
                         "pass": pass
                     })
                     .then(res => {
+                        SaveMe(username, saveMe)
                         dispatch(ActionLogin(res.data, pass))
                     })
                     .catch(error => {
                         console.log("error", error)
-                        dispatch(ActionReject(error.message))
+
+                        if (error.response.status === 401) {
+                            dispatch(ActionReject(UnAuth))
+                        } else {
+                            dispatch(ActionReject(error.message))
+                        }
                     })
                 } else {
                     dispatch(ActionReject(NoConn))
@@ -34,7 +42,7 @@ export const UserAuth = {
     Logout: () => {
         return(dispatch) => {
             dispatch(ActionLogout())
-            AsyncStorage.clear()
+            Storage.Clear()
             /*
             axios.get(URL3).then(res => {
                 dispatch(ActionLogout())
@@ -98,7 +106,24 @@ export const UserAuth = {
             })
         }
     }
-} 
+}
+
+const SaveMe = async (username, isSave) => {
+    /* Если надо сохранить, то перетираем страго пользователя
+        Если созранить не надо, то нужно проверить какой логин был введен.
+            Если был введен старый логин и выбрано "не запоминать" - удалить логин
+            Если был введен новый логин и выбрано "не сохранять" - оставляем старый логин
+    */
+    let oldUser = await Storage.GetItem('username')
+
+    if (isSave) {
+        Storage.SaveItem('username', username)
+    } else {
+        if (oldUser.toUpperCase() === username.toUpperCase()) {
+            Storage.RemoveItem('username')
+        }
+    }
+}
 
 
 /*+++++++++++++++ Действия при ошибки в запросе ++++++++++++++++ */
@@ -113,15 +138,6 @@ const ActionReject = err => {
 
 /*+++++++++++++++ Действия при login ++++++++++++++++ */
 const ActionLogin = (userInfo, pass) => {
-    AsyncStorage.setItem('UserId', userInfo.UserId)
-    AsyncStorage.setItem('Pass', pass)
-    AsyncStorage.setItem('DefCurrency', userInfo.DefCurrency)
-
-/*    AsyncStorage.setItem('UseTemplates', userInfo.UseTemplates)
-    AsyncStorage.setItem('CarryOverRests', userInfo.CarryOverRests)
-    AsyncStorage.setItem('UpdateDate', userInfo.UpdateDate)
-*/
-
     return {
         type: USER_LOGIN,
         payload: {
@@ -144,9 +160,6 @@ const ActionLogout = () => {
 
 /*+++++++++++++++ Действия при регистрации ++++++++++++++++ */
 const ActionReg = (UserId, pass) => {
-    AsyncStorage.setItem('UserId', UserId)
-    AsyncStorage.setItem('Pass', pass)
-
     return {
         type: USER_REGISTRATION,
         payload: {

@@ -31,8 +31,8 @@ class AddEditItem extends Component {
     this.state = {
       GoalName: '',
       Type: '',
-      Amount: 0,
-      CurAmount: 0,
+      Amount: '',
+      CurAmount: '',
       //CompleteDate: undefined,
       CompleteDate: null, //временно
       errGoalName: false,
@@ -63,7 +63,7 @@ class AddEditItem extends Component {
       let item = this.props.targets.Targets.find(el => el.Id === nav.getParam('itemid'))
 
       if (item != undefined) {
-        this.setState({Id: item.Id, GoalName: item.GoalName, Amount: item.Amount, CurAmount: item.CurAmount, Type: item.Type, CompleteDate: item.CompleteDate })
+        this.setState({Id: item.Id, GoalName: item.GoalName, Amount: item.Amount.toString(), CurAmount: item.CurAmount.toString(), Type: item.Type, CompleteDate: item.CompleteDate })
       }
     }
   }
@@ -84,11 +84,11 @@ class AddEditItem extends Component {
   }
 
   _changeAmount = value => {
-    this.setState({ Amount: Number(value) })
+    this.setState({ Amount: value })
   }
 
   _changeCurAmount = value => {
-    this.setState({ CurAmount: Number(value) })
+    this.setState({ CurAmount: value })
   }
 
   _changeDate = value => {
@@ -98,7 +98,7 @@ class AddEditItem extends Component {
   _checkParams() {
     st = this.state
 
-    if ((st.Amount.length == 0) || (st.Amount <= 0)) {
+    if ((st.Amount.length == 0) || Number(st.Amount <= 0)) {
       this.setState({ errAmount: true })
       return false
     }
@@ -106,10 +106,7 @@ class AddEditItem extends Component {
       this.setState({ errGoalName: true })
       return false
     }
-    if ((st.CurAmount.length == 0) || (st.CurAmount < 0)) {
-      this.setState({ errCurAmount: true })
-      return false
-    }
+
     return true
   }
 
@@ -122,9 +119,9 @@ class AddEditItem extends Component {
       this.setState({ Loading: true })
 
       if (type === EDIT) {
-        this.props.edititem(UserId, st.Id, st.GoalName, st.Type, st.Amount, st.CurAmount, st.CompleteDate)
+        this.props.edititem(UserId, st.Id, st.GoalName, st.Type, Number(st.Amount), Number(st.CurAmount), st.CompleteDate)
       } else {
-        this.props.additem(UserId, st.GoalName, type, st.Amount, st.CurAmount, st.CompleteDate)    
+        this.props.additem(UserId, st.GoalName, type, Number(st.Amount), Number(st.CurAmount), st.CompleteDate)    
       }
     }
   }
@@ -141,6 +138,7 @@ class AddEditItem extends Component {
 
   render() {
       const { user } = this.props
+      const { GoalName, Amount, CurAmount, CompleteDate, errGoalName, errAmount, errCurAmount, Loading } = this.state
 
       return (
         <Container>
@@ -148,26 +146,26 @@ class AddEditItem extends Component {
               <Card>
                   <CardItem>
                       <Body>
-                          <Item floatingLabel error={this.state.errGoalName}>
+                          <Item floatingLabel error={errGoalName}>
                             <Label>Наименование</Label>
-                            <Input onChangeText={this._changeName} value={this.state.GoalName} style={main.clGrey}/>
+                            <Input onChangeText={this._changeName} value={GoalName} style={main.clGrey}/>
                           </Item>
                       </Body>
                   </CardItem>
                   <CardItem>
                       <Body style={[main.fD_R, main.aI_C]}>
-                          <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
+                          <Item floatingLabel style={main.width_90prc} error={errAmount}>
                               <Label>Полная сумма</Label>
-                              <Input style={main.clGrey} onChangeText={this._changeAmount} value={this.state.Amount.toString()} maxLength={10} keyboardType="number-pad"/>
+                              <Input style={main.clGrey} onChangeText={this._changeAmount} value={Amount} maxLength={10} keyboardType="number-pad"/>
                           </Item>
                           <H3 style={main.clGrey}>{user.DefCurrency}</H3>
                       </Body>
                   </CardItem>
                   <CardItem>
                         <Body style={[main.fD_R, main.aI_C]}>
-                          <Item floatingLabel style={main.width_90prc} error={this.state.errCurAmount}>
+                          <Item floatingLabel style={main.width_90prc} error={errCurAmount}>
                               <Label>Текущая сумма</Label>
-                              <Input style={main.clGrey} onChangeText={this._changeCurAmount} value={this.state.CurAmount.toString()} maxLength={10} keyboardType="number-pad"/>
+                              <Input style={main.clGrey} onChangeText={this._changeCurAmount} value={CurAmount} maxLength={10} keyboardType="number-pad"/>
                           </Item>
                           <H3 style={main.clGrey}>{user.DefCurrency}</H3>
                       </Body>
@@ -179,7 +177,7 @@ class AddEditItem extends Component {
                             <Row style={[main.jC_C, main.aI_C]}>
                                 <DatePicker
                                     formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
-                                    defaultDate={this.state.CompleteDate}
+                                    defaultDate={CompleteDate}
                                     minimumDate={new Date(2016, 1, 1)}
                                     maximumDate={new Date(2040, 12, 31)}
                                     locale="ru"
@@ -187,7 +185,7 @@ class AddEditItem extends Component {
                                     modalTransparent={false}
                                     animationType={"fade"}
                                     androidMode="calendar"
-                                    placeHolderText={(this.state.CompleteDate) ? moment(this.state.CompleteDate).format('DD.MM.YYYY') : "Дата окончания"}
+                                    placeHolderText={(CompleteDate) ? moment(CompleteDate).format('DD.MM.YYYY') : "Дата окончания"}
                                     textStyle={main.clGrey}
                                     placeHolderTextStyle={main.clGrey}
                                     onDateChange={this._changeDate}
@@ -200,12 +198,12 @@ class AddEditItem extends Component {
                   </CardItem>
                   */}
               </Card>
-              {(this.state.Loading)
+              {(Loading)
               ? <Spinner />
               : <Card transparent>
                   <CardItem>
                       <Body>
-                          <Button success block onPress={this._saveItem}>
+                          <Button style={main.bgGreen} block onPress={this._saveItem}>
                               <Text>Сохранить</Text>
                           </Button>
                       </Body>

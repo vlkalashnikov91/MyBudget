@@ -2,8 +2,13 @@ import { StyleSheet, Dimensions } from 'react-native'
 
 export const screenWidth =  Dimensions.get('screen').width
 export const screenHeight = Dimensions.get('screen').height
-
 export const ivanColor = '#395971'
+export const IDebtColor = '#ED665A'
+export const TargetColor = '#5D90B7'
+export const DebtColor = '#4FA69D'
+export const ivanGreen = '#43ac6a'
+export const ivanDanger = '#F04124'
+export const ivanGray = '#a7a7a7'
 
 export const styles = StyleSheet.create({
   fl_1: {
@@ -16,10 +21,22 @@ export const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   bgGreen: {
-    backgroundColor: '#34A34F'
+    backgroundColor: ivanGreen
+  },
+  bgGray: {
+    backgroundColor: ivanGray
+  },
+  bgDanger: {
+    backgroundColor: ivanDanger
   },
   clIvan: {
     color: ivanColor
+  },
+  clIvanD: {
+    color: ivanDanger
+  },
+  clIvanG: {
+    color: ivanGreen
   },
   clWhite: {
     color:'white'
@@ -41,6 +58,9 @@ export const styles = StyleSheet.create({
   },
   aI_C: {
     alignItems: 'center'
+  },
+  mt_10: {
+    marginTop:10
   },
   mt_20: {
     marginTop:20
@@ -72,8 +92,35 @@ export const styles = StyleSheet.create({
   mr_20: {
     marginRight:20
   },
+  pd_0: {
+    padding:0
+  },
+  pdR_10: {
+    paddingRight: 10
+  },
+  pdR_50: {
+    paddingRight: 50
+  },
+  pdR_25: {
+    paddingRight: 25
+  },
+  pdL_10: {
+    paddingLeft: 10
+  },
+  pdL_25: {
+    paddingLeft: 25
+  },
+  pdL_50: {
+    paddingLeft: 50
+  },
+
+
+
   width_90prc: {
     width:'90%'
+  },
+  txtAl_c: {
+    textAlign:'center'
   },
   modalLoad: {
     flex: 1,
@@ -99,9 +146,9 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: "#fff",
     borderRadius: 4,
-    marginHorizontal: 15,
+    marginHorizontal: 25,
     marginTop: screenHeight / 4,
-    marginBottom: screenHeight / 4 - 15
+    marginBottom: screenHeight / 4 - 10
   },
   modalOverlay: {
     ...StyleSheet.absoluteFill,

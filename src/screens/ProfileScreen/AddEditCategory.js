@@ -46,8 +46,6 @@ class AddEditCategory extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("2")
-
     let txt = nextProps.navigation.getParam('type', 'add') == 'add' ? 'Категория создана' : 'Категория изменена'
     
     if(nextProps.categories.Error.length == 0) {
@@ -96,7 +94,7 @@ class AddEditCategory extends Component {
               : <Card transparent>
                   <CardItem>
                     <Body>
-                      <Button disabled={this.state.notValid} success={!this.state.notValid} block onPress={this._editCategory}>
+                      <Button disabled={this.state.notValid} style={(this.state.notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
                         <Text>Сохранить</Text>
                       </Button>
                     </Body>

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Alert, StyleSheet, Modal, RefreshControl } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, Button, Text, Icon, Card, CardItem, H3, View, Spinner, Segment, Left, Right } from 'native-base'
+import { Container, Content, Button, Text, Icon, Card, CardItem, H2, View, Spinner, Segment, Left, Right } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { FontAwesome } from '@expo/vector-icons'
 import MonthSelectorCalendar from 'react-native-month-selector'
@@ -155,10 +155,9 @@ class HomeScreen extends Component {
                 <FontAwesome name="angle-left" size={27} />
               </Button>
             </Left>
-            <H3 style={[{ marginTop:11, marginRight:5 }, main.clGrey]} button onPress={this._showModalCalendar}>
+            <H2 style={[{ marginTop:11}, main.clGrey]} button onPress={this._showModalCalendar}>
               {capitalize(moment(this.state.selectedDate).format("MMMM YYYY"))}
-            </H3>
-            <FontAwesome style={[{ marginTop:8 }, main.clGrey]} name="sort-down" size={20} button onPress={this._showModalCalendar} />
+            </H2>
             <Right>
               <Button transparent style={[styles.nextMonthBtn, main.clGrey]} onPress={this._nextMonth}>
                 <FontAwesome name="angle-right" size={27} />
@@ -180,7 +179,7 @@ class HomeScreen extends Component {
                   <Row>
                     <Col>
                       <Row style={[main.jC_C, main.aI_C]}>
-                        <Button iconLeft disabled={(isLoad)} success={(!isLoad)} rounded onPress={this._navigateToIncome}>
+                        <Button iconLeft disabled={(isLoad)} style={(!isLoad)? main.bgGreen : {}} rounded onPress={this._navigateToIncome}>
                           <Icon ios="ios-add" android="md-add" />
                           <Text>Доход</Text>
                         </Button>
@@ -188,7 +187,7 @@ class HomeScreen extends Component {
                     </Col>
                     <Col>
                       <Row style={[main.jC_C, main.aI_C]}>
-                        <Button iconRight disabled={(isLoad)} danger={(!isLoad)} rounded onPress={this._navigateToExpense}>
+                        <Button iconRight disabled={(isLoad)} style={(!isLoad)? main.bgDanger : {}} rounded onPress={this._navigateToExpense}>
                           <Text>Расход</Text>
                           <Icon ios="ios-remove" android="md-remove" />
                         </Button>
@@ -213,7 +212,6 @@ class HomeScreen extends Component {
               <MonthSelectorCalendar 
                 localeLanguage='ru'
                 localeSettings={moment.locale('ru')}
-                swipable={true}
                 selectedDate={this.state.selectedDate}
                 onMonthTapped={this._changeMonth}
                 selectedMonthTextStyle={main.clWhite}
@@ -238,19 +236,19 @@ class HomeScreen extends Component {
 const styles = StyleSheet.create({
   modalCalendarText: {
     fontFamily:'Roboto',
-    fontSize:16
+    fontSize:15
   },
   prevMonthBtn: {
     ...main.mr_auto,
     ...main.ml_0,
-    paddingLeft:25, 
-    paddingRight:10,
+    ...main.pdL_25,
+    ...main.pdR_10
   },
   nextMonthBtn: {
     ...main.ml_auto,
     ...main.mr_0,
-    paddingLeft:10,
-    paddingRight:25,
+    ...main.pdL_10,
+    ...main.pdR_25
   }
 })
 

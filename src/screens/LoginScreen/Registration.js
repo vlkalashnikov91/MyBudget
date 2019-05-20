@@ -4,8 +4,7 @@ import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, La
 
 import { ToastTr } from '../../components/Toast'
 import { UserAuth } from '../../actions/UserActions'
-import { validateEmail, charAndNums } from '../../utils/validation.js'
-
+import { validateEmail } from '../../utils/validation.js'
 import { styles as main } from '../../Style'
 
 
@@ -28,8 +27,8 @@ class Registration extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.user.err.length > 0) {
-      ToastTr.Danger(nextProps.user.err)
+    if(nextProps.user.Error.length > 0) {
+      ToastTr.Danger(nextProps.user.Error)
     } else if (nextProps.user.UserId.length > 0) {
       this.props.navigation.navigate('FirstSettings')
     }
@@ -96,13 +95,14 @@ class Registration extends Component {
 
   render() {
       const { user } = this.props
+      const { errLogin, errEmail, errPass, errRePass } = this.state
 
       return <Container>
               <Content>
                 <Card>
                   <CardItem>
                     <Body>
-                      <Item floatingLabel error={this.state.errLogin}>
+                      <Item floatingLabel error={errLogin}>
                         <Label>Логин</Label>
                         <Input onChangeText={this._changeLogin}/>
                       </Item>
@@ -110,7 +110,7 @@ class Registration extends Component {
                   </CardItem>
                   <CardItem>
                     <Body>
-                      <Item floatingLabel error={this.state.errEmail}>
+                      <Item floatingLabel error={errEmail}>
                         <Label>Email</Label>
                         <Input onChangeText={this._changeEmail}/>
                       </Item>
@@ -118,15 +118,15 @@ class Registration extends Component {
                   </CardItem>
                   <CardItem >
                     <Body>
-                      <Item floatingLabel error={this.state.errPass}>
+                      <Item floatingLabel error={errPass}>
                         <Label>Пароль</Label>
                         <Input secureTextEntry={true} onChangeText={this._changePass}/>
                       </Item>
                     </Body>
                   </CardItem>
-                  <CardItem>
+                  <CardItem style={{paddingBottom:20}}>
                     <Body>
-                      <Item floatingLabel error={this.state.errRePass}>
+                      <Item floatingLabel error={errRePass}>
                         <Label>Подтверждение пароля</Label>
                         <Input secureTextEntry={true} onChangeText={this._changeRePass}/>
                       </Item>
@@ -138,8 +138,8 @@ class Registration extends Component {
                 : <Card transparent>
                   <CardItem>
                     <Body>
-                      <Button block success onPress={this._registration}>
-                        <Text>Зарегистрироваться</Text>
+                      <Button block onPress={this._registration} style={main.bgGreen}>
+                        <Text>Далее</Text>
                       </Button>
                     </Body>
                   </CardItem>

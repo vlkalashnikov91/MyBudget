@@ -49,7 +49,7 @@ export default class ChangePassword extends Component {
               <Card transparent>
                 <CardItem>
                   <Body>
-                    <Button success block onPress={this._changePass}>
+                    <Button block onPress={this._changePass} style={main.bgGreen}>
                       <Text>Сохранить</Text>
                     </Button>
                   </Body>
