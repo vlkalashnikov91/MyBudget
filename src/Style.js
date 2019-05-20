@@ -122,23 +122,11 @@ export const styles = StyleSheet.create({
   txtAl_c: {
     textAlign:'center'
   },
-  modalLoad: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FFF',
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.36,
-    shadowRadius: 6.68,
-    elevation: 11,
-    marginHorizontal: screenWidth / 3 - 15 ,
-    marginTop: screenHeight / 3 + 35,
-    marginBottom: screenHeight / 3 + 35
+  fontW_N: {
+    fontWeight: 'normal'
+  },
+  fontW_B: {
+    fontWeight: 'bold'
   },
   modalCalendar: {
     flex: 1,

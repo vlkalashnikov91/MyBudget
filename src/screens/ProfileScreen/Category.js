@@ -92,7 +92,7 @@ class Category extends Component {
               tabStyle={main.bgWhite} 
               activeTabStyle={main.bgWhite} 
               textStyle={main.clGrey}
-              activeTextStyle={[main.clGrey, {fontWeight:'normal'}]}
+              activeTextStyle={[main.clGrey, main.fontW_N]}
             >
               {(categories.isLoad)
                 ? <Spinner />
@@ -103,7 +103,7 @@ class Category extends Component {
               tabStyle={main.bgWhite} 
               activeTabStyle={main.bgWhite} 
               textStyle={main.clGrey}
-              activeTextStyle={[main.clGrey, {fontWeight:'normal'}]}
+              activeTextStyle={[main.clGrey, main.fontW_N]}
             >
               {(categories.isLoad)
                 ? <Spinner />
