@@ -7,7 +7,6 @@ import { styles as main, IDebtColor, TargetColor, DebtColor, screenWidth } from 
 import { capitalize } from '../utils/utils'
 import { TARGET, IDEBT, OWEME } from '../constants/TargetDebts'
 
-
 export default class CardInfo extends Component {
   constructor(props) {
     super(props)
@@ -61,7 +60,7 @@ export default class CardInfo extends Component {
   }
 
   render() {
-    const { data } = this.props
+    const { data, currency } = this.props
     const { Color } = this._cardstyle()
 
     return (
@@ -97,11 +96,11 @@ export default class CardInfo extends Component {
                     </Col>
                   </Row>
                   <Row>
-                      <Svg width={screenWidth/1.12} height="28">
-                        <Svg.Rect x="0" y="0" width="100%" height="28" fill='#d9d9d9' />
-                        <Svg.Rect x="0" y="0" width={`${progressCnt}%`} height="28" fill={Color} />
-                        <Text style={main.clWhite}>{item.CurAmount} из {item.Amount}</Text>
-                      </Svg>
+                    <Svg width={screenWidth/1.12} height="26">
+                      <Svg.Rect x="0" y="0" width="100%" height="26" fill='#d9d9d9' />
+                      <Svg.Rect x="0" y="0" width={`${progressCnt}%`} height="26" fill={Color} />
+                      <Text style={main.clWhite}>{item.CurAmount} из {item.Amount} {currency}</Text>
+                    </Svg>
                   </Row>
                 </Grid>
               </ListItem>

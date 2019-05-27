@@ -5,7 +5,7 @@ import { Storage } from '../utils/deviceServices'
 
 const URL = `http://mybudget.somee.com/api/`
 const NoConn = "Отсутствует подключение к интернету"
-const UnAuth = "Пользователь не найден"
+const UnAuth = "Неверный логин или пароль"
 
 export const UserAuth = {
     Login: (username, pass, saveMe) => {
@@ -26,12 +26,7 @@ export const UserAuth = {
                     })
                     .catch(error => {
                         console.log("error", error)
-
-                        if (error.response.status === 401) {
-                            dispatch(ActionReject(UnAuth))
-                        } else {
-                            dispatch(ActionReject(error.message))
-                        }
+                        dispatch(ActionReject(error.message))
                     })
                 } else {
                     dispatch(ActionReject(NoConn))
@@ -138,9 +133,19 @@ const ActionReject = err => {
 
 /*+++++++++++++++ Действия при login ++++++++++++++++ */
 const ActionLogin = (userInfo, pass) => {
+    if (userInfo.Status === 401) {
+        return {
+            type: USER_ERR,
+            payload: {
+                err: UnAuth
+            }
+        } 
+    }
+
     return {
         type: USER_LOGIN,
         payload: {
+            Status: userInfo.Status,
             UserId: userInfo.UserId,
             DefCurrency: userInfo.DefCurrency,
             CarryOverRests: userInfo.CarryOverRests,

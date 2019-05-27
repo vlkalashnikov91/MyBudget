@@ -1,3 +1,5 @@
+import React from 'react'
+import { Image } from 'react-native'
 import { createStackNavigator } from 'react-navigation'
 import { fromRight } from 'react-navigation-transitions'
 
@@ -14,20 +16,14 @@ const ProfileNav = createStackNavigator(
     Profile: {
       screen: Profile,
       navigationOptions: ()=>({
-        title: 'Мой кабинет',
-        headerStyle: main.bgIvan,
-        headerTitleStyle: main.clWhite,
-        headerTintColor: 'white'
+        title: 'Мой кабинет'
       })
     },
 
     ChangePassword: {
       screen: ChangePassword,
       navigationOptions: ()=>({
-        title: 'Сменить пароль',
-        headerStyle: main.bgIvan,
-        headerTitleStyle: main.clWhite,
-        headerTintColor: 'white'
+        title: 'Сменить пароль'
       })
     },
 
@@ -36,26 +32,25 @@ const ProfileNav = createStackNavigator(
     Category: {
       screen: Category,
       navigationOptions: ()=>({
-        title: 'Мои категории',
-        headerStyle: main.bgIvan,
-        headerTitleStyle: main.clWhite,
-        headerTintColor: 'white'
+        title: 'Мои категории'
       })
     },
     
     About: {
       screen: About,
       navigationOptions: ()=>({
-        title: 'О приложении',
-        headerStyle: main.bgIvan,
-        headerTitleStyle: main.clWhite,
-        headerTintColor: 'white'
+        title: 'О приложении'
       })
     }
   },
   {
     initialRouteName: 'Profile',
-    transitionConfig: () => fromRight()
+    transitionConfig: () => fromRight(),
+    defaultNavigationOptions: {
+      headerStyle: main.bgIvan,
+      headerTitleStyle: main.clWhite,
+      headerTintColor: 'white'
+    }
   }
 )
 

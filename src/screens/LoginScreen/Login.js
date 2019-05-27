@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import { Container, View, Button, Text, Card, CardItem, Item, Input, Body, Form, Icon, Spinner, CheckBox } from 'native-base'
-import { Modal, Image } from 'react-native'
+import { Container, View, Button, Text, Card, CardItem, Item, Input, Body, Form, Icon, CheckBox } from 'native-base'
+import { Image } from 'react-native'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { connect } from 'react-redux'
 
@@ -10,6 +10,7 @@ import { ToastTr } from '../../components/Toast'
 import { Storage } from '../../utils/deviceServices'
 
 import { styles as main, screenHeight, screenWidth, ivanColor, ivanGray } from '../../Style'
+import ModalLoading from '../../components/ModalLoading'
 
 
 class Login extends Component {
@@ -85,10 +86,6 @@ class Login extends Component {
     this.setState({ saveMe: !this.state.saveMe})
   }
 
-  _hideModalLoad() {
-    this.setState({ visibleModalLoad: false })
-  }
-
   render() {
     const { user } = this.props
 
@@ -116,7 +113,6 @@ class Login extends Component {
                   <CheckBox checked={this.state.saveMe} color={ivanColor} onPress={this._saveMe} />
                   <Text button onPress={this._saveMe} style={main.ml_20}>Запомнить меня</Text>
                 </View>
-
               </Form>
 
               <Card transparent style={{paddingTop:30}}>
@@ -143,16 +139,8 @@ class Login extends Component {
           </Row>
         </Grid>
 
-        <Modal animationType="fade"
-          transparent={true}
-          visible={user.isLoad}
-          onRequestClose={this._hideModalLoad}
-        >
-          <View style={main.modalOverlay} />
-            <View style={[main.jC_C, main.aI_C, main.fl_1]} >
-              <Spinner size='large'/>
-          </View>
-        </Modal>
+        <ModalLoading isActive={user.isLoad} />
+
       </Container>
     )
   }

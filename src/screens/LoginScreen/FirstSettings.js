@@ -14,6 +14,9 @@ class FirstSettings extends Component {
         DefCurrency: "₸",
         CarryOverRests: false,
     }
+
+    this._changeCurrency = this._changeCurrency.bind(this)
+    this._balanceTransfer = this._balanceTransfer.bind(this)
 }
 
 componentWillReceiveProps(nextProps) {
@@ -55,10 +58,10 @@ render() {
                   </CardItem>
                  </Card>
                  <Card transparent style={main.aI_C}>
-                    <CardItem bordered>
+                    <CardItem>
                         <Body style={[main.fD_R, main.aI_C]}>
-                            <Label style={{width:'65%'}}>Валюта по умолчанию</Label>
-                            <Item picker style={{width:'30%'}}>
+                            <Label style={main.width_65prc}>Валюта по умолчанию</Label>
+                            <Item picker style={main.width_30prc}>
                                 <Picker mode="dropdown"
                                     iosIcon={<Icon name="arrow-down" />}
                                     style={{ width: undefined }}
@@ -76,10 +79,10 @@ render() {
                     </CardItem>
                     <CardItem>
                         <Body style={[main.fD_R, main.aI_C]}>
-                            <Label style={{width:'65%'}}>
+                            <Label style={main.width_65prc}>
                                 Перенос остатка  <Icon name='information-circle' style={main.clGrey} button onPress={this.setModalVisible} />
                             </Label>
-                            <Item picker style={{width:'30%'}}>
+                            <Item picker style={main.width_30prc}>
                                 <Picker mode="dropdown"
                                     iosIcon={<Icon name="arrow-down" />}
                                     style={{ width: undefined }}
@@ -99,19 +102,16 @@ render() {
                             <Text style={main.txtAl_c} note>* вы можете изменить эти настройки в любой момент в личном кабинете</Text>
                         </Body>
                     </CardItem>
-                 </Card>
-                 {(user.isLoad)
-                ? <Spinner />
-                : <Card transparent>
+                </Card>
+                <Card transparent>
                     <CardItem>
                         <Body>
-                            <Button block style={main.bgGreen} onPress={_=> this._saveSettings()}>
+                            <Button block style={main.bgGreen} onPress={this._saveSettings}>
                                 <Text>Продолжить</Text>
                             </Button>
                         </Body>
                     </CardItem>
-                 </Card>
-                }
+                </Card>
               </Content>
             </Container>
   }

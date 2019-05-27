@@ -1,10 +1,13 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Spinner } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label } from 'native-base'
 
 import { styles as main } from '../../Style'
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
+import ModalLoading from '../../components/ModalLoading'
+import { ADD, EDIT } from '../../constants/Categories'
+
 
 class AddEditCategory extends Component {
   constructor(props) {
@@ -24,41 +27,52 @@ class AddEditCategory extends Component {
 
   static navigationOptions = ({ navigation }) => {
     let title = (navigation.getParam('type') == 'edit') ? 'Редактировать' : 'Новая категория'
-
     return {
-      title: title,
-      headerStyle: main.bgIvan,
-      headerTitleStyle: main.clWhite,
-      headerTintColor: 'white'
+      title: title
     }
   }
 
   componentDidMount() {
-    let type = this.props.navigation.getParam('type', 'add')
+    let type = this.props.navigation.getParam('type', ADD)
     let itemid = this.props.navigation.getParam('itemid', -1)
 
-    if (type === 'edit') {
+    if (type === EDIT) {
       /* Если редактирование, то необходимо подобрать нужную категорию */
-      let item = this.props.categories.Categories.find(el => el.Id === itemid)
-      let notValid = (item.Name.length > 0 ) ? false : true
-      this.setState({ Id: item.Id, Name: item.Name, IsSpendingCategory: item.IsSpendingCategory, CreatedBy: item.CreatedBy, Icon: item.Icon, notValid: notValid })
+      let item = this.props.categories.Income.find(el => el.Id === itemid)
+
+      if (item == undefined) {
+        item = this.props.categories.Expense.find(el => el.Id === itemid)
+      }
+
+      if (item != undefined) {
+        this.setState({ 
+          Id: item.Id, 
+          Name: item.Name, 
+          IsSpendingCategory: item.IsSpendingCategory, 
+          CreatedBy: item.CreatedBy, 
+          Icon: item.Icon, 
+          notValid: (item.Name.length > 0 ) ? false : true
+        })
+      }
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    let txt = nextProps.navigation.getParam('type', 'add') == 'add' ? 'Категория создана' : 'Категория изменена'
-    
-    if(nextProps.categories.Error.length == 0) {
-      ToastTr.Success(txt)
+    if (!nextProps.categories.isLoad) {
+      let txt = nextProps.navigation.getParam('type', ADD) === ADD ? 'Категория создана' : 'Категория изменена'
+      
+      if(nextProps.categories.Error.length == 0) {
+        ToastTr.Success(txt)
+      }
+      this.props.navigation.goBack()
     }
-    this.props.navigation.goBack()
   }
 
   _editCategory() {
     let st = this.state
-    let type = this.props.navigation.getParam('type', 'add')
+    let type = this.props.navigation.getParam('type', ADD)
 
-    if (type=='edit') {
+    if (type == EDIT) {
       this.props.editcategory(st.Id, st.Name, st.IsSpendingCategory, st.CreatedBy, st.Icon)
     } else {
       this.props.addcategory(this.props.user.UserId, st.Name, st.IsSpendingCategory)
@@ -88,22 +102,21 @@ class AddEditCategory extends Component {
                   </Body>
                 </CardItem>
               </Card>
+              <Card transparent>
+                <CardItem>
+                  <Body>
+                    <Button disabled={this.state.notValid} style={(this.state.notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
+                      <Text>Сохранить</Text>
+                    </Button>
+                  </Body>
+                </CardItem>
+              </Card>
+          </Content>
 
-              {(categories.isLoad)
-              ? <Spinner />
-              : <Card transparent>
-                  <CardItem>
-                    <Body>
-                      <Button disabled={this.state.notValid} style={(this.state.notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
-                        <Text>Сохранить</Text>
-                      </Button>
-                    </Body>
-                  </CardItem>
-                </Card>
-              }
-            </Content>
-          </Container>
-        }
+          <ModalLoading isActive={categories.isLoad} />
+
+        </Container>
+      }
 }
 
 const mapStateToProps = state => {

@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions } from 'react-native'
+import { StyleSheet, Dimensions, Platform } from 'react-native'
 
 export const screenWidth =  Dimensions.get('screen').width
 export const screenHeight = Dimensions.get('screen').height
@@ -114,10 +114,14 @@ export const styles = StyleSheet.create({
     paddingLeft: 50
   },
 
-
-
   width_90prc: {
     width:'90%'
+  },
+  width_30prc: {
+    width:'30%'
+  },
+  width_65prc: {
+    width:'65%'
   },
   txtAl_c: {
     textAlign:'center'
@@ -132,7 +136,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 4,
     marginHorizontal: 25,
     marginTop: screenHeight / 4,
@@ -142,6 +146,11 @@ export const styles = StyleSheet.create({
     ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
+  imageForHeader: {
+    width: 40, 
+    height: 40, 
+    marginLeft: 15
+  }
 })
 
 

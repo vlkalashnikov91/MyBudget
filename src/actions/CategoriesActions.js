@@ -34,6 +34,8 @@ export const CategoriesActions = {
     Add: (UserId, Name, IsSpendingCategory) => {
         return (dispatch) => {
 
+            dispatch({ type: START_LOADING_CATS })
+
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
 
@@ -57,11 +59,13 @@ export const CategoriesActions = {
         }
     },
     Edit: (Id, Name, IsSpendingCategory, CreatedBy, Icon) => {
+        return (dispatch) => {
 
-        NetInfo.isConnected.fetch().then(isConnected => {
-            if (isConnected) {
+            dispatch({ type: START_LOADING_CATS })
 
-                return (dispatch) => {
+            NetInfo.isConnected.fetch().then(isConnected => {
+                if (isConnected) {
+                
                     axios.put(URL + `categories/${Id}`, {
                         "Name" : Name,
                         "Icon" : Icon
@@ -73,11 +77,11 @@ export const CategoriesActions = {
                         console.log("error", error)
                         dispatch(ActionReject(error.message))
                     })
+                } else {
+                    dispatch(ActionReject(NoConn))
                 }
-            } else {
-                dispatch(ActionReject(NoConn))
-            }
-        })
+            })
+        }
     },
     Delete: (UserId, Id) => {
         return (dispatch) => {
@@ -113,10 +117,25 @@ const ActionReject = err => {
 
 /*+++++++++++++++ Загрузка списка категорий ++++++++++++++++ */
 const ActionFetchList = data => {
+
+    let income = []
+    let expense = []
+
+    if (Array.isArray(data)) {
+        data.map(item => {
+            if (item.IsSpendingCategory) {
+                expense.push(item)
+            } else {
+                income.push(item)
+            }
+        })
+    }
+
     return {
         type: GET_CATEGORY_LIST,
         payload: {
-            data
+            income,
+            expense
         }
     }
 }

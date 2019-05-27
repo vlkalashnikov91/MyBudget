@@ -1,7 +1,8 @@
 import { ADD_CATEGORY, REMOVE_CATEGORY, GET_CATEGORY_LIST, EDIT_CATEGORY, ERR_CATEGORY, START_LOADING_CATS } from '../constants/Categories'
 
 const initialeState = {
-    Categories: [],
+    Income: [],
+    Expense: [],
     Error: '',
     isLoad: false
 }
@@ -22,45 +23,82 @@ export default (state = initialeState, action) => {
             return {...state,
                 isLoad: false,
                 Error: '',
-                Categories: Array.isArray(action.payload.data) ? action.payload.data.sort((a,b) => a.Id > b.Id) : []
+                Income: action.payload.income.sort((a,b) => a.Id > b.Id),
+                Expense: action.payload.expense.sort((a,b) => a.Id > b.Id)
             } 
         case REMOVE_CATEGORY:
             return {...state,
                 isLoad: false,
                 Error: '',
-                Categories: state.Categories.filter(item => item.Id != action.payload.Id)
+                Income: state.Income.filter(item => item.Id != action.payload.Id),
+                Expense: state.Expense.filter(item => item.Id != action.payload.Id)
             }
+            
         case EDIT_CATEGORY:
-            var cats = state.Categories.filter(item => item.Id != action.payload.Id)
-            cats.push({
+            let editCat = {
                 Id: action.payload.Id,
                 Name: action.payload.Name,
                 IsSpendingCategory: action.payload.IsSpendingCategory,
                 CreatedBy: action.payload.CreatedBy,
                 Icon: action.payload.Icon,
                 IsSystem: action.payload.IsSystem
-            })
-            return {...state,
-                Error: '',
-                isLoad: false,
-                Categories: cats.sort((a,b) => a.Id > b.Id),
             }
+
+            let arr = []
+
+            if (action.payload.IsSpendingCategory) {
+
+                arr = state.Expense.filter(item => item.Id != action.payload.Id)
+                arr.push(editCat)
+
+                return {...state,
+                    Error: '',
+                    isLoad: false,
+                    Expense: arr.sort((a,b) => a.Id > b.Id)
+                }
+
+            } else {
+                arr = state.Income.filter(item => item.Id != action.payload.Id)
+                arr.push(editCat)
+
+                return {...state,
+                    Error: '',
+                    isLoad: false,
+                    Income: arr.sort((a,b) => a.Id > b.Id)
+                }
+            }
+
         case ADD_CATEGORY:
-            return {...state,
-                Error: '',
-                isLoad: false,
-                Categories: [
-                    ...state.Categories,
-                    {
-                        Id: action.payload.Id,
-                        Name: action.payload.Name,
-                        IsSpendingCategory: action.payload.IsSpendingCategory,
-                        CreatedBy: action.payload.CreatedBy,
-                        Icon: action.payload.Icon,
-                        IsSystem: action.payload.IsSystem
-                    }
-                ].sort((a,b) => a.Id > b.Id)
+
+            let newCat = {
+                Id: action.payload.Id,
+                Name: action.payload.Name,
+                IsSpendingCategory: action.payload.IsSpendingCategory,
+                CreatedBy: action.payload.CreatedBy,
+                Icon: action.payload.Icon,
+                IsSystem: action.payload.IsSystem
             }
+
+            if (action.payload.IsSpendingCategory) {
+                return {...state,
+                    Error: '',
+                    isLoad: false,
+                    Expense: [
+                        ...state.Expense,
+                        newCat
+                    ].sort((a,b) => a.Id > b.Id)
+                }
+            } else {
+                return {...state,
+                    Error: '',
+                    isLoad: false,
+                    Income: [
+                        ...state.Income,
+                        newCat
+                    ].sort((a,b) => a.Id > b.Id)
+                } 
+            }
+
         default:
             return state
     }

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Image } from 'react-native'
 import { Svg } from 'expo'
 import { PieChart } from 'react-native-svg-charts'
 import { Container, Body, Content, Picker, ListItem, Text, List, Card, Left, Icon, Right, Spinner, Segment } from 'native-base'
@@ -30,11 +30,9 @@ class Graphics extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Графики расходов',
-      headerStyle: main.bgIvan,
-      headerTitleStyle: main.clWhite,
       headerRight: (
         <FontAwesome name='repeat' size={18} style={[main.clWhite, main.mr_20]} button onPress={navigation.getParam('refreshData')} />
-      ),
+      )
     }
   }
 

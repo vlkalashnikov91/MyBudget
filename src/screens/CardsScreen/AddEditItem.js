@@ -8,6 +8,7 @@ import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import { TargetActions } from '../../actions/TargetActions'
 import { TARGET, OWEME, IDEBT, EDIT } from '../../constants/TargetDebts'
+import ModalLoading from '../../components/ModalLoading';
 
 const headerText = (type) => {
   switch(type) {
@@ -48,10 +49,7 @@ class AddEditItem extends Component {
   static navigationOptions = ({ navigation }) => {
     let type = navigation.getParam('type', TARGET) /* target - в случае если тип будет не определен */
     return {
-      title: headerText(type),
-      headerStyle: main.bgIvan,
-      headerTitleStyle: main.clWhite,
-      headerTintColor: 'white'
+      title: headerText(type)
     }
   }
 
@@ -198,9 +196,8 @@ class AddEditItem extends Component {
                   </CardItem>
                   */}
               </Card>
-              {(Loading)
-              ? <Spinner />
-              : <Card transparent>
+              
+              <Card transparent>
                   <CardItem>
                       <Body>
                           <Button style={main.bgGreen} block onPress={this._saveItem}>
@@ -209,8 +206,10 @@ class AddEditItem extends Component {
                       </Body>
                   </CardItem>
               </Card>
-              }
           </Content>
+
+          <ModalLoading isActive={Loading}/>
+
       </Container>
     )
   }

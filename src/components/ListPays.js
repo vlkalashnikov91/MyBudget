@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Alert, ListView } from 'react-native'
+import { Alert, ListView, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import { Body, Left, Button, Text, ListItem, List, Icon, Right, Spinner } from 'native-base'
@@ -18,6 +18,9 @@ class ListPays extends Component {
       this.state = {
         planedPay: -1,
       }
+
+      this._definePayCat = this._definePayCat.bind(this)
+
     }
 
     componentWillReceiveProps() {
@@ -47,8 +50,21 @@ class ListPays extends Component {
         )
     }
 
+    _definePayCat(item) {
+      if (item.CategoryId == null) {
+        return { Name:'Не указано', IsSpendingCategory: item.IsSpending } 
+      } else {
+        let CatDesc = this.props.categories.Income.find(el => el.Id === item.CategoryId)
+
+        if (CatDesc == undefined) {
+          CatDesc = this.props.categories.Expense.find(el => el.Id === item.CategoryId)
+        }
+        return CatDesc
+      }
+    }
+
     render() {
-      const { categories, user, payments } = this.props
+      const { user, payments } = this.props
 
       return (
         <List 
@@ -61,13 +77,10 @@ class ListPays extends Component {
                 </Button>
             }
             renderRow={value => {
-                let CatDesc = (value.CategoryId == null) 
-                  ? {Name:'Не указано', IsSpendingCategory: value.IsSpending} 
-                  : categories.Categories.find(el => el.Id === value.CategoryId)
+                let CatDesc = this._definePayCat(value)
 
                 return (
-                <ListItem key={value.Id} icon button onPress={_=> this.props.GoToEdit(value.Id)}
-                >
+                <ListItem key={value.Id} icon >
                   <Left button onPress={_=> this._choosePayments(value)}>
                       {(this.state.planedPay === value.Id)
                       ? <Button rounded light style={main.ml_10} ><Spinner size="small" /></Button>
@@ -77,18 +90,20 @@ class ListPays extends Component {
                       }
                   </Left>
                   <Body>
+                    <TouchableOpacity onPress={_=> this.props.GoToEdit(value.Id)}>
                       {((value.Name==null) || (value.Name.length === 0))
                       ? <Text style={main.clGrey}>---</Text>
                       : <Text style={main.clGrey} numberOfLines={1}>{value.Name}</Text>
                       }
                       <Text note>{CatDesc.Name}</Text>
+                    </TouchableOpacity>
                   </Body>
-                  <Right style={[main.fD_C, {alignItems:'flex-end', justifyContent:'space-between'}]}>
+                  <Right style={[main.fD_C, {alignItems:'flex-end'}]}>
                     {(CatDesc.IsSpendingCategory) 
                     ? <Text style={main.clIvanD}> - {SummMask(value.Amount)} {user.DefCurrency}</Text>
                     : <Text style={main.clIvanG}> + {SummMask(value.Amount)} {user.DefCurrency}</Text>
                     }
-                    <Text style={{fontSize:10}}>{moment(value.TransDate).format('DD.MM.YYYY')}</Text>
+                    <Text note>{moment(value.TransDate).format('DD.MM.YYYY')}</Text>
                   </Right>
                 </ListItem>
                 )

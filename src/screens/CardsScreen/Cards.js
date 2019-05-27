@@ -153,7 +153,7 @@ class Cards extends Component {
           >
             <View style={main.modalOverlay} />
             <Card transparent style={styles.modalWindow}>
-              <CardItem header bordered>
+              <CardItem bordered>
                 <Text>Пополнение</Text>
                 <Icon button name="close" onPress={this._hideModalIncrease} style={[main.mr_0, main.ml_auto, main.clGrey]}/>
               </CardItem>
@@ -168,7 +168,7 @@ class Cards extends Component {
               </CardItem>
               <CardItem>
                 <Body>
-                  <Button block success onPress={this._increaseItem}>
+                  <Button block style={main.bgGreen} onPress={this._increaseItem}>
                     <Text>Пополнить</Text>
                   </Button>
                 </Body>
@@ -189,9 +189,9 @@ class Cards extends Component {
             </CardItem>
             <CardItem>
               <Body>
-                <Button transparent onPress={this._showModalIncrease}><Text uppercase={false} style={main.clGrey}>Пополнить</Text></Button>
-                <Button disabled transparent><Text uppercase={false} style={main.clGrey}>Погасить полностью</Text></Button>
-                <Button transparent onPress={this._deleteItem}><Text uppercase={false} style={main.clGrey}>Удалить</Text></Button>
+                <Button transparent onPress={this._showModalIncrease}><Text uppercase={false} style={[main.clGrey, {fontSize:15}]}>Пополнить</Text></Button>
+                <Button transparent disabled><Text uppercase={false} style={[main.clGrey, {fontSize:15}]}>Погасить полностью</Text></Button>
+                <Button transparent onPress={this._deleteItem}><Text uppercase={false} style={[main.clGrey, {fontSize:15}]}>Удалить</Text></Button>
               </Body>
             </CardItem>
           </Card>

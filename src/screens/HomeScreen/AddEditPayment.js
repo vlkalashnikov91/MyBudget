@@ -6,6 +6,7 @@ import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, La
 
 import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
+import ModalLoading from '../../components/ModalLoading'
 import { PaymentActions } from '../../actions/PaymentActions'
 import { INCOME, EXPENSE, EDIT } from '../../constants/Payment'
 
@@ -47,12 +48,8 @@ class AddEditPayment extends Component {
 
   static navigationOptions = ({ navigation }) => {
     let type = navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
-
     return {
-      title: headerText(type),
-      headerStyle: main.bgIvan,
-      headerTitleStyle: main.clWhite,
-      headerTintColor: 'white'
+      title: headerText(type)
     }
   }
 
@@ -82,21 +79,23 @@ class AddEditPayment extends Component {
 
   _getCategoryList() {
     const type = this.props.navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
-    var cat = Array.isArray(this.props.categories.Categories) ? this.props.categories.Categories : []
+    const income = this.props.categories.Income
+    const expense = this.props.categories.Expense
 
     if (type === INCOME) {
-        cat = cat.filter(item => item.IsSpendingCategory === false )
+        return income
     } else if (type === EXPENSE) {
-        cat = cat.filter(item => item.IsSpendingCategory === true )
+        return expense
     } else if (type === EDIT) {
-        /*Если было выбрано "Редактировать" - то нужно определить к какой категории относится платеж и сформировать список*/
-        let itemCat = cat.find(el => el.Id === this.state.CategoryId)
-  
-        if (itemCat !== undefined) {
-          cat = cat.filter(item => item.IsSpendingCategory === itemCat.IsSpendingCategory )
-        }
+      /*Если было выбрано "Редактировать" - то нужно определить к какой категории относится платеж и сформировать список*/
+      let CatDesc = income.find(el => el.Id === this.state.CategoryId)
+
+      if (CatDesc == undefined) {
+        return expense
+      } else {
+        return income
+      }
     }
-    return cat
   }
 
   _changeDesc = value => {
@@ -147,7 +146,7 @@ class AddEditPayment extends Component {
 
   render() {
     const { user } = this.props
-    const { Amount, errAmount, CategoryId, Name, TransDate, Loading} = this.state
+    const { Amount, errAmount, CategoryId, Name, TransDate, Loading } = this.state
 
     return <Container>
             <Content padder>
@@ -219,20 +218,18 @@ class AddEditPayment extends Component {
                 </CardItem>
               </Card>
 
-              {(Loading)
-              ? <Spinner />
-              : <Card transparent>
-                  <CardItem>
-                    <Body>
-                      <Button style={main.bgGreen} block onPress={this._editPayment}>
-                        <Text>Сохранить</Text>
-                      </Button>
-                    </Body>
-                  </CardItem>
-                </Card>
-              }
-
+              <Card transparent>
+                <CardItem>
+                  <Body>
+                    <Button style={main.bgGreen} block onPress={this._editPayment}>
+                      <Text>Сохранить</Text>
+                    </Button>
+                  </Body>
+                </CardItem>
+              </Card>
             </Content>
+
+            <ModalLoading isActive={Loading} />
           </Container>
         }
 }

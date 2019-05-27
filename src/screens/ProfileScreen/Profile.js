@@ -126,10 +126,9 @@ class Profile extends Component {
                       <Picker.Item label="€" value="€" />
                     </Picker>
                   </Item>
-
                   <Item picker>
                     <Label>Перенос остатка</Label>
-                    <Icon name='ios-information-circle' style={{color: '#808080'}} button onPress={this.setModalVisible} />
+                    <Icon name='ios-information-circle' style={main.clGrey} button onPress={this.setModalVisible} />
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
                       style={{ width: undefined }}
@@ -142,7 +141,6 @@ class Profile extends Component {
                       <Picker.Item label="Нет" value={false} />
                     </Picker>
                   </Item>
-
                   <Item picker>
                     <Label>Ежемесячные платежи</Label>
                     <Picker mode="dropdown"
@@ -158,9 +156,9 @@ class Profile extends Component {
                       <Picker.Item label="Нет" value={false} />
                     </Picker>
                   </Item>
-
                 </Body>
               </CardItem>
+              
               <CardItem footer>
                 <Button onPress={this._saveSettings} disabled={this.state.isChange} iconRight>
                   <Text>Сохранить изменения</Text>

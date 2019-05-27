@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Alert, StyleSheet, Modal, RefreshControl } from 'react-native'
+import { Alert, StyleSheet, Modal, RefreshControl, Image } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Content, Button, Text, Icon, Card, CardItem, H2, View, Spinner, Segment, Left, Right } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
@@ -40,8 +40,6 @@ class HomeScreen extends Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      headerStyle: main.bgIvan,
-      headerTitleStyle: main.clWhite,
       headerTitle: <BalanceInfo />,
       headerRight: (
         <Icon android='md-information-circle' 
@@ -51,7 +49,7 @@ class HomeScreen extends Component {
         />
       ),
       headerLeft: (
-        <Left style={main.ml_15} />
+        <Image resizeMode='contain' resizeMethod='scale' style={main.imageForHeader} source={require('../../../assets/Logo_min2.png')}></Image>
       )
     }
   }

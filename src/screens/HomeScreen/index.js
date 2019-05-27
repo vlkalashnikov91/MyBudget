@@ -4,6 +4,9 @@ import { fromRight } from 'react-navigation-transitions'
 import HomeScreen from './HomeScreen'
 import AddEditPayment from './AddEditPayment'
 
+import { styles as main } from '../../Style'
+
+
 const HomeScreenNav = createStackNavigator(
   {
     HomeScreen: HomeScreen,
@@ -11,7 +14,12 @@ const HomeScreenNav = createStackNavigator(
   },
   {
     initialRouteName: 'HomeScreen',
-    transitionConfig: () => fromRight()
+    transitionConfig: () => fromRight(),
+    defaultNavigationOptions: {
+      headerStyle: main.bgIvan,
+      headerTitleStyle: main.clWhite,
+      headerTintColor: 'white'
+    }
   }
 )
 

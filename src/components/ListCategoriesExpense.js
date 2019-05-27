@@ -13,14 +13,14 @@ export default class ListCategoriesExpense extends Component {
         refreshing: false,
       }
     }
-
+/*
     shouldComponentUpdate(nextProps, nextState) {
       if (JSON.stringify(nextProps.categories) == JSON.stringify(this.state.categories)) {
         return false
       }
       return true
     }
-
+*/
     render() {
       const { navigation, categories, dropcategory, refreshdata } = this.props
 

@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { Alert } from 'react-native'
-import { Container, Icon, Fab, Spinner, Tabs, Tab } from 'native-base'
+import { Alert, RefreshControl } from 'react-native'
+import { Container, Icon, Fab, Tabs, Tab, ListItem, List, Body, Text } from 'native-base'
 
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
-import ListCategoriesIncome from '../../components/ListCategoriesIncome'
-import ListCategoriesExpense from '../../components/ListCategoriesExpense'
+import { ADD, EDIT } from '../../constants/Categories'
 import { styles as main } from '../../Style'
 
 
@@ -15,9 +14,7 @@ class Category extends Component {
     super(props)
 
     this.state = {
-      CategoryType: false,
-      choosenCat: -1, 
-      visibleModal: true,
+      CategoryType: false
     }
 
     this._addCategory = this._addCategory.bind(this)
@@ -37,7 +34,11 @@ class Category extends Component {
   }
 
   _addCategory() {
-    this.props.navigation.navigate('AddEditCategory', {type:'add', CatType: this.state.CategoryType})
+    this.props.navigation.navigate('AddEditCategory', {type: ADD, CatType: this.state.CategoryType})
+  }
+
+  _editCategory(item) {
+    this.props.navigation.navigate('AddEditCategory', {type: EDIT, itemid: item.Id})
   }
 
   _deleteCategory = (item) => {
@@ -58,46 +59,40 @@ class Category extends Component {
     this.props.getcategories(this.props.user.UserId)
   }
 
-  _showModal = () => {
-    this.setState({ visibleModal: true })
-  }
-
-  _hideModal = () => {
-    this.setState({ visibleModal: false })
-  }
-
-
   render() {
-    const { navigation, categories } = this.props
-
-    var income = []
-    var expense = []
-
-    if (!categories.isLoad) {
-      categories.Categories.map(item => {
-        if (!item.IsSystem) {
-            if(item.IsSpendingCategory) {
-              expense.push(item)
-            } else {
-              income.push(item)
-            }
-          }
-      })
-    }
+    const { categories } = this.props
+    const income = categories.Income.filter(item => item.IsSystem != true)
+    const expense = categories.Expense.filter(item => item.IsSystem != true)
 
     return (
         <Container>
-          <Tabs tabBarUnderlineStyle={main.bgIvan} initialPage={0} onChangeTab={({ i }) => this._defineCatType(i)}>
+          <Tabs tabBarUnderlineStyle={main.bgIvan} 
+            initialPage={0} 
+            onChangeTab={({ i }) => this._defineCatType(i)}
+          >
             <Tab heading="Доход" 
               tabStyle={main.bgWhite} 
               activeTabStyle={main.bgWhite} 
               textStyle={main.clGrey}
               activeTextStyle={[main.clGrey, main.fontW_N]}
             >
-              {(categories.isLoad)
-                ? <Spinner />
-                : <ListCategoriesIncome categories={income} dropcategory={this._deleteCategory} navigation={navigation} refreshdata={this._refreshData} />
-              }
+              <List dataArray = {income}
+                refreshControl={
+                  <RefreshControl refreshing={categories.isLoad} onRefresh={this._refreshData} />
+                }
+                renderRow= {value => {
+                    return (
+                    <ListItem key={value.Id} button
+                      onPress={_=> this._editCategory(value)}
+                      onLongPress={_=> this._deleteCategory(value)}
+                    >
+                      <Body>
+                        <Text style={main.clGrey}>{value.Name}</Text>
+                      </Body>
+                    </ListItem>
+                    )
+                }}
+              />
             </Tab>
             <Tab heading="Расход" 
               tabStyle={main.bgWhite} 
@@ -105,12 +100,27 @@ class Category extends Component {
               textStyle={main.clGrey}
               activeTextStyle={[main.clGrey, main.fontW_N]}
             >
-              {(categories.isLoad)
-                ? <Spinner />
-                : <ListCategoriesExpense categories={expense} dropcategory={this._deleteCategory} navigation={navigation} refreshdata={this._refreshData} />
-              }
+              <List dataArray = {expense}
+                refreshControl={
+                  <RefreshControl refreshing={categories.isLoad} onRefresh={this._refreshData} />
+                }
+
+                renderRow={value => {
+                  return (
+                    <ListItem key={value.Id} button
+                      onPress={_=> this._editCategory(value)}
+                      onLongPress={_=> this._deleteCategory(value)}
+                    >
+                      <Body>
+                        <Text style={main.clGrey}>{value.Name}</Text>
+                      </Body>
+                    </ListItem>
+                    )
+                }}
+              />
             </Tab>
-          </Tabs>          
+          </Tabs>
+
           <Fab style={main.bgGreen} position="bottomRight" onPress={this._addCategory} >
             <Icon ios="ios-add" android="md-add" />
           </Fab>

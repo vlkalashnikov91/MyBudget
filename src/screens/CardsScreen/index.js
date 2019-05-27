@@ -1,3 +1,5 @@
+import React from 'react'
+import { Image } from 'react-native'
 import { createStackNavigator } from 'react-navigation'
 import { fromRight } from 'react-navigation-transitions'
 
@@ -11,15 +13,18 @@ const CardsNav = createStackNavigator(
       screen: Cards,
       navigationOptions: () => ({
         title: 'MyBudget',
-        headerStyle: main.bgIvan,
-        headerTitleStyle: main.clWhite,
       })
     },
     AddEditItem: AddEditItem
   },
   {
     initialRouteName: 'Cards',
-    transitionConfig: () => fromRight()
+    transitionConfig: () => fromRight(),
+    defaultNavigationOptions: {
+      headerStyle: main.bgIvan,
+      headerTitleStyle: main.clWhite,
+      headerTintColor: 'white'
+    }
   }
 )
 
