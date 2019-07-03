@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { RefreshControl, Modal, StyleSheet, Alert } from 'react-native'
+import { RefreshControl, Modal, StyleSheet, Alert, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Content, Spinner, View, Button, Text, CardItem, Card, Body, Item, Label, Input, H3, Icon } from 'native-base'
 import moment from 'moment'
@@ -140,6 +140,7 @@ class Cards extends Component {
           <Content refreshControl = {
               <RefreshControl refreshing={this.state.refreshing} onRefresh={this._refreshData} />
             }
+            enableOnAndroid
           >
             <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} editItem={this._editItem} addItem={this._addTarget} showModalMenu={this._showModalMenu} />
             <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} editItem={this._editItem} addItem={this._addMyDebt} showModalMenu={this._showModalMenu} />
@@ -150,30 +151,33 @@ class Cards extends Component {
             transparent={true}
             visible={this.state.visibleModalIncrease}
             onRequestClose={this._hideModalIncrease}
+            avoidKeyboard
           >
             <View style={main.modalOverlay} />
-            <Card transparent style={styles.modalWindow}>
-              <CardItem bordered>
-                <Text>Пополнение</Text>
-                <Icon button name="close" onPress={this._hideModalIncrease} style={[main.mr_0, main.ml_auto, main.clGrey]}/>
-              </CardItem>
-              <CardItem>
-                <Body style={[main.fD_R, main.aI_C]}>
-                  <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
-                    <Label>Сумма</Label>
-                    <Input style={main.clGrey} keyboardType="number-pad" onChangeText={this._chngIncreaseAmount} value={this.state.Amount} />
-                  </Item>
-                  <H3 style={main.clGrey}>{user.DefCurrency}</H3>
-                </Body>
-              </CardItem>
-              <CardItem>
-                <Body>
-                  <Button block style={main.bgGreen} onPress={this._increaseItem}>
-                    <Text>Пополнить</Text>
-                  </Button>
-                </Body>
-              </CardItem>
-            </Card>
+            <Content enableOnAndroid extraHeight={Platform.select({ android: 150 })}>
+              <Card transparent style={styles.modalWindow}>
+                <CardItem bordered>
+                  <Text>Пополнение</Text>
+                  <Icon button name="close" onPress={this._hideModalIncrease} style={[main.mr_0, main.ml_auto, main.clGrey]}/>
+                </CardItem>
+                <CardItem>
+                  <Body style={[main.fD_R, main.aI_C]}>
+                    <Item floatingLabel style={main.width_90prc} error={this.state.errAmount}>
+                      <Label>Сумма</Label>
+                      <Input style={main.clGrey} keyboardType="number-pad" onChangeText={this._chngIncreaseAmount} value={this.state.Amount} onSubmitEditing={this._increaseItem}/>
+                    </Item>
+                    <H3 style={main.clGrey}>{user.DefCurrency}</H3>
+                  </Body>
+                </CardItem>
+                <CardItem>
+                  <Body>
+                    <Button block style={main.bgGreen} onPress={this._increaseItem}>
+                      <Text>Пополнить</Text>
+                    </Button>
+                  </Body>
+                </CardItem>
+              </Card>
+            </Content>
           </Modal>
 
           <Modal animationType="fade"
@@ -204,10 +208,10 @@ class Cards extends Component {
 
 const styles = StyleSheet.create({
   modalWindow: {
-    ...main.fl_1,
     ...main.bgWhite,
     marginHorizontal: 15,
     marginTop: screenHeight / 1.8,
+    height: screenHeight / 3.5, 
     marginBottom: 45
   },
   modalMenu: {

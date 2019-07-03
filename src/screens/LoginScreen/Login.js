@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Container, View, Button, Text, Card, CardItem, Item, Input, Body, Form, Icon, CheckBox } from 'native-base'
+import { Container, View, Button, Text, Card, CardItem, Item, Input, Body, Form, Icon, CheckBox, Content } from 'native-base'
 import { Image } from 'react-native'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { connect } from 'react-redux'
@@ -91,53 +91,55 @@ class Login extends Component {
 
     return (
       <Container>
-        <Grid style={[main.fD_C, {height:screenHeight}]}>
-          <Row size={40}>
-            <Col style={[main.jC_C, main.aI_C]}>
-              <Image resizeMode='contain' resizeMethod='scale' style={{ width:screenWidth/1.8, height: 55}} source={require('../../../assets/Logo.png')}></Image>
-            </Col>
-          </Row>
-          <Row size={60}>
-            <Col style={[main.pdR_50, main.pdL_50]}>
-              <Form style={{padding:10}}>
-                <Item error={this.state.errlogin}>
-                  <Icon ios='ios-man' android='md-man' style={main.clIvan}/>
-                  <Input placeholder='Логин'value={this.state.login} maxLength={20} placeholderTextColor={ivanGray} style={[main.ml_10, main.clGrey]} onChangeText={this._changeLogin}/>
-                </Item>
-                <Item error={this.state.errpassword}>
-                  <Icon android='md-key' ios='ios-key' style={main.clIvan}/>
-                  <Input placeholder='Пароль' value={this.state.password} maxLength={20} placeholderTextColor={ivanGray} style={main.clGrey} secureTextEntry={true} onChangeText={this._changePassword}/>
-                </Item>
+        <Content enableOnAndroid>
+          <Grid style={[main.fD_C, {height:screenHeight}]}>
+            <Row size={40}>
+              <Col style={[main.jC_C, main.aI_C]}>
+                <Image resizeMode='contain' resizeMethod='scale' style={{ width:screenWidth/1.8, height: 55}} source={require('../../../assets/Logo.png')}></Image>
+              </Col>
+            </Row>
+            <Row size={60}>
+              <Col style={[main.pdR_50, main.pdL_50]}>
+                <Form style={{padding:10}}>
+                  <Item error={this.state.errlogin}>
+                    <Icon ios='ios-man' android='md-man' style={main.clIvan}/>
+                    <Input placeholder='Логин'value={this.state.login} maxLength={20} placeholderTextColor={ivanGray} style={[main.ml_10, main.clGrey]} onChangeText={this._changeLogin}/>
+                  </Item>
+                  <Item error={this.state.errpassword}>
+                    <Icon android='md-key' ios='ios-key' style={main.clIvan}/>
+                    <Input placeholder='Пароль' value={this.state.password} maxLength={20} placeholderTextColor={ivanGray} style={main.clGrey} secureTextEntry={true} onChangeText={this._changePassword} onSubmitEditing={this._login} />
+                  </Item>
 
-                <View style={[main.fD_R, main.mt_10]}>
-                  <CheckBox checked={this.state.saveMe} color={ivanColor} onPress={this._saveMe} />
-                  <Text button onPress={this._saveMe} style={main.ml_20}>Запомнить меня</Text>
-                </View>
-              </Form>
+                  <View style={[main.fD_R, main.mt_10]}>
+                    <CheckBox checked={this.state.saveMe} color={ivanColor} onPress={this._saveMe} />
+                    <Text button onPress={this._saveMe} style={main.ml_20}>Запомнить меня</Text>
+                  </View>
+                </Form>
 
-              <Card transparent style={{paddingTop:30}}>
-                <CardItem>
-                  <Body>
-                    <Button block onPress={this._login} style={main.bgGreen}>
-                      <Text>Войти</Text>
-                    </Button>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Body>
-                    <Button block transparent onPress={this._forgotPass}>
-                      <Text uppercase={false} note>Забыли пароль?</Text>
-                    </Button>
+                <Card transparent style={{paddingTop:30}}>
+                  <CardItem>
+                    <Body>
+                      <Button block onPress={this._login} style={main.bgGreen}>
+                        <Text>Войти</Text>
+                      </Button>
+                    </Body>
+                  </CardItem>
+                  <CardItem>
+                    <Body>
+                      <Button block transparent onPress={this._forgotPass}>
+                        <Text uppercase={false} note>Забыли пароль?</Text>
+                      </Button>
 
-                    <Button block transparent onPress={this._goToRegForm}>
-                      <Text uppercase={false} note >Зарегистрироваться</Text>
-                    </Button>
-                  </Body>
-                </CardItem>
-              </Card>
-            </Col>
-          </Row>
-        </Grid>
+                      <Button block transparent onPress={this._goToRegForm}>
+                        <Text uppercase={false} note >Зарегистрироваться</Text>
+                      </Button>
+                    </Body>
+                  </CardItem>
+                </Card>
+              </Col>
+            </Row>
+          </Grid>
+        </Content>
 
         <ModalLoading isActive={user.isLoad} />
 
