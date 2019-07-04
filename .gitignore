@@ -10,3 +10,4 @@ notUsed/*
 .expo-source/*
 *.log
 *.bak
+android/*
