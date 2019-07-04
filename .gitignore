@@ -8,6 +8,3 @@ npm-debug.*
 notUsed/*
 .vscode/*
 .expo-source/*
-*.log
-*.bak
-android/*

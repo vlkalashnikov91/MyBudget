@@ -95,7 +95,7 @@ class AddEditCategory extends Component {
               <Card>
                 <CardItem>
                   <Body>
-                    <Item floatingLabel >
+                    <Item floatingLabel>
                       <Label>Наименование</Label>
                       <Input onChangeText={this._changeName} value={this.state.Name} style={main.clGrey}/>
                     </Item>

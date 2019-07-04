@@ -12,7 +12,7 @@ const CardsNav = createStackNavigator(
     Cards: {
       screen: Cards,
       navigationOptions: () => ({
-        title: 'MyBudget',
+        title: 'Мои цели',
       })
     },
     AddEditItem: AddEditItem
