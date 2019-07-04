@@ -77,9 +77,9 @@ class ListPays extends Component {
                 </Button>
             }
             renderRow={value => {
-                let CatDesc = this._definePayCat(value)
+              let CatDesc = this._definePayCat(value)
 
-                return (
+              return (
                 <ListItem key={value.Id} icon >
                   <Left button onPress={_=> this._choosePayments(value)}>
                       {(this.state.planedPay === value.Id)

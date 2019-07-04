@@ -27,6 +27,9 @@
     },
     "android": {
       "package": "com.mybudget.mybudgetapp"
-    }
+    },
+    "isDetached": true,
+    "detach": {},
+    "scheme": "expb170090e69d54d13be7a3bf9105ce9e9"
   }
 }

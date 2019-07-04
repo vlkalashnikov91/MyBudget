@@ -18,16 +18,16 @@ export default class ModalLoading extends Component {
 
   render() {
     return (
-        <Modal animationType="fade"
-          transparent={true}
-          visible={this.props.isActive}
-          onRequestClose={this._hideModalLoad}
-        >
-          <View style={main.modalOverlay} />
-            <View style={[main.jC_C, main.aI_C, main.fl_1]} >
-              <Spinner size='large'/>
-          </View>
-        </Modal>
+      <Modal animationType="fade"
+        transparent={true}
+        visible={this.props.isActive}
+        onRequestClose={this._hideModalLoad}
+      >
+        <View style={main.modalOverlay} />
+          <View style={[main.jC_C, main.aI_C, main.fl_1]} >
+            <Spinner size='large'/>
+        </View>
+      </Modal>
     )
   }
 }

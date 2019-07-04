@@ -5,7 +5,7 @@ import { Container, Content, Spinner, View, Button, Text, CardItem, Card, Body, 
 import moment from 'moment'
 
 import { ToastTr } from '../../components/Toast'
-import CardInfo from '../../components/CardInfo'
+import { CardInfo } from '../../components/CardInfo'
 import { TargetActions } from '../../actions/TargetActions'
 import { PaymentActions } from '../../actions/PaymentActions'
 import { TARGET, IDEBT, OWEME, EDIT } from '../../constants/TargetDebts'
@@ -24,7 +24,8 @@ class Cards extends Component {
       Amount:'',
       IncreaseId: -1,
       errAmount: false,
-      choosenItem: {}
+      choosenItem: {},
+      Loading: false
     }
 
     this._refreshData = this._refreshData.bind(this)
@@ -49,12 +50,21 @@ class Cards extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.targets.Error.length > 0) {
       ToastTr.Danger(nextProps.targets.Error)
+      this.setState({ Loading: false })
+
     } else {
-      setTimeout(() => {
-        let currMonth = moment().month()+1
-        let currYear = moment().year()
-        this.props.getpaymentlist(this.props.user.UserId, currYear, currMonth)
-      }, 200)
+      if (this.state.Loading) {
+        setTimeout(() => {
+          this.setState({ Loading: false })
+          
+          let currMonth = moment().month()+1
+          let currYear = moment().year()
+          this.props.getpaymentlist(this.props.user.UserId, currYear, currMonth)
+        }, 200)
+
+        this._hideModalIncrease()
+        this._hideModalMenu()
+      }
     }
   }
 
@@ -111,8 +121,8 @@ class Cards extends Component {
       this.setState({ errAmount: true })
     } else {
       this.props.increaseTarget(st.choosenItem.Id, Number(st.Amount))
-      this._hideModalIncrease()
-      this._hideModalMenu()
+
+      this.setState({ Loading: true })
     }
   }
 
@@ -137,10 +147,9 @@ class Cards extends Component {
 
     return (
         <Container>
-          <Content refreshControl = {
+          <Content enableOnAndroid refreshControl = {
               <RefreshControl refreshing={this.state.refreshing} onRefresh={this._refreshData} />
             }
-            enableOnAndroid
           >
             <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} editItem={this._editItem} addItem={this._addTarget} showModalMenu={this._showModalMenu} />
             <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} editItem={this._editItem} addItem={this._addMyDebt} showModalMenu={this._showModalMenu} />
@@ -158,7 +167,7 @@ class Cards extends Component {
               <Card transparent style={styles.modalWindow}>
                 <CardItem bordered>
                   <Text>Пополнение</Text>
-                  <Icon button name="close" onPress={this._hideModalIncrease} style={[main.mr_0, main.ml_auto, main.clGrey]}/>
+                  <Icon button name="close" onPress={this._hideModalIncrease} style={[main.mr_0, main.ml_auto, main.clGrey]} disabled={this.state.Loading}/>
                 </CardItem>
                 <CardItem>
                   <Body style={[main.fD_R, main.aI_C]}>
@@ -171,9 +180,12 @@ class Cards extends Component {
                 </CardItem>
                 <CardItem>
                   <Body>
-                    <Button block style={main.bgGreen} onPress={this._increaseItem}>
+                  {(this.state.Loading)
+                  ? <Spinner />
+                  : <Button block style={main.bgGreen} onPress={this._increaseItem}>
                       <Text>Пополнить</Text>
                     </Button>
+                  }
                   </Body>
                 </CardItem>
               </Card>
@@ -222,7 +234,6 @@ const styles = StyleSheet.create({
     marginLeft: (screenWidth - (screenWidth / 1.2)) / 2
   }
 })
-
 
 
 const mapStateToProps = state => {

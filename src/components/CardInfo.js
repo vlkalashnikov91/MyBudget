@@ -1,5 +1,6 @@
-import React, {Component} from 'react'
-import { Text, Icon, Card, Button, ListItem, List, Right, Left } from 'native-base'
+import React from 'react'
+import { FlatList } from 'react-native'
+import { Text, Icon, Card, Button, ListItem, Right, Left } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { Svg } from 'expo'
 
@@ -7,70 +8,50 @@ import { styles as main, IDebtColor, TargetColor, DebtColor, screenWidth } from 
 import { capitalize } from '../utils/utils'
 import { TARGET, IDEBT, OWEME } from '../constants/TargetDebts'
 
-export default class CardInfo extends Component {
-  constructor(props) {
-    super(props)
-
-    this._addNewItem = this._addNewItem.bind(this)
-    this._description = this._description.bind(this)
-    this._cardstyle = this._cardstyle.bind(this)
-    this._showModal = this._showModal.bind(this)
+function defineDesc (itemtype) {
+  switch(itemtype) {
+    case TARGET:
+      return 'Цели'
+    case IDEBT:
+      return 'Я должен'
+    case OWEME:
+      return 'Мне должны'
+    default:
+      return 'ERROR'
   }
+}
 
-  _description() {
-    switch(this.props.itemtype) {
-      case TARGET:
-        return 'Цели'
-      case IDEBT:
-        return 'Я должен'
-      case OWEME:
-        return 'Мне должны'
-      default:
-        return 'ERROR'
-    }
+function defineCardStyle (itemtype) {
+  switch(itemtype) {
+    case TARGET:
+      return {
+        Color: TargetColor
+      }
+    case IDEBT:
+      return {
+        Color: IDebtColor
+      }
+    case OWEME:
+      return {
+        Color: DebtColor
+      }
   }
+}
 
-  _cardstyle() {
-    switch(this.props.itemtype) {
-      case TARGET:
-        return {
-          Color: TargetColor
-        }
-      case IDEBT:
-        return {
-          Color: IDebtColor
-        }
-      case OWEME:
-        return {
-          Color: DebtColor
-        }
-    }
-  }
 
-  _addNewItem() {
-    this.props.addItem()
-  }
-
-  _editItem(id) {
-    this.props.editItem(id)
-  }
-
-  _showModal(item) {
-    this.props.showModalMenu(item)
-  }
-
-  render() {
-    const { data, currency } = this.props
-    const { Color } = this._cardstyle()
+export const CardInfo = (props) => {
+    const { data, currency, itemtype, addItem, editItem, showModalMenu } = props
+    const { Color } = defineCardStyle(itemtype)
+    const Desc = defineDesc(itemtype)
 
     return (
       <Grid style={[main.mt_10, (data.length === 0) && {marginBottom:10}]}>
         <Row>
           <Left style={main.ml_15}>
-            <Text style={{color: Color}} >{this._description()}</Text>
+            <Text style={{color: Color}}>{Desc}</Text>
           </Left>
           <Right>
-            <Button small rounded onPress={this._addNewItem} style={[main.mr_15, main.ml_auto, {backgroundColor: Color}]}>
+            <Button small rounded onPress={addItem} style={[main.mr_15, main.ml_auto, {backgroundColor: Color}]}>
               <Icon name="add" fontSize={20}/>
             </Button>
           </Right>
@@ -78,16 +59,18 @@ export default class CardInfo extends Component {
         
         {(data.length > 0) &&
         <Card>
-          <List
-            dataArray={data}
-            renderRow={item => {
+          <FlatList
+            data={data}
+            keyExtractor = {(item, index) => 'key-'+item.GoalName + index}
+            renderItem={({item}) => {
+
               let progressCnt = (Number(item.CurAmount) * 100) / Number(item.Amount).toFixed(1)
               
               return (
-              <ListItem key={item.Id}
+              <ListItem key={'target-'+item.Id + item.GoalName}
                 button 
-                onPress={_=> this._editItem(item.Id)} 
-                onLongPress={_ => this._showModal(item)}
+                onPress={_=> editItem(item.Id)} 
+                onLongPress={_ => showModalMenu(item)}
               >
                 <Grid>
                   <Row>
@@ -106,11 +89,9 @@ export default class CardInfo extends Component {
               </ListItem>
               )
             }}
-          >
-          </List>
+          />
         </Card>
         }
       </Grid>
     )
   }
-}

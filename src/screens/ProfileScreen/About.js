@@ -1,13 +1,15 @@
 import React, {Component} from 'react'
 import { Image, StyleSheet, Clipboard } from 'react-native'
 import { Container, Button, Text } from 'native-base'
-import { Col, Row, Grid } from 'react-native-easy-grid'
+import { Row, Grid } from 'react-native-easy-grid'
 import { styles as main, screenHeight, screenWidth } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 
+const mail = 'T2k.ivan@gmail.com'
+
 export default class About extends Component {
     _copyMail() {
-        Clipboard.setString('T2k.ivan@gmail.com')
+        Clipboard.setString(mail)
         ToastTr.Default('Скопировано в буфер')
     }
 
@@ -21,8 +23,8 @@ export default class About extends Component {
                 </Row>
                 <Row size={25} style={[main.jC_C, main.aI_C, main.fD_C]}>
                     <Text>Мы на связи</Text>
-                    <Button info transparent block onPress={this._copyMail}>
-                        <Text uppercase={false}>T2k.ivan@gmail.com</Text>
+                    <Button transparent block onPress={this._copyMail}>
+                        <Text uppercase={false}>{mail}</Text>
                     </Button>
                 </Row>
             </Grid>
