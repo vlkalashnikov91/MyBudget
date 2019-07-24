@@ -19,7 +19,7 @@ class Login extends Component {
 
     this.state = {
       login: '',
-      password: '',
+      password: '123456789',
       saveMe: false,
       errlogin: false,
       errpassword: false
@@ -112,7 +112,7 @@ class Login extends Component {
 
                   <View style={[main.fD_R, main.mt_10]}>
                     <CheckBox checked={this.state.saveMe} color={ivanColor} onPress={this._saveMe} />
-                    <Text button onPress={this._saveMe} style={main.ml_20}>Запомнить меня</Text>
+                    <Text button onPress={this._saveMe} style={[main.ml_20, main.fontFam]}>Запомнить меня</Text>
                   </View>
                 </Form>
 
@@ -120,18 +120,21 @@ class Login extends Component {
                   <CardItem>
                     <Body>
                       <Button block onPress={this._login} style={main.bgGreen}>
-                        <Text>Войти</Text>
+                        {(user.isLoad)
+                        ? <Text style={main.fontFam}>Загрузка...</Text>
+                        : <Text style={main.fontFam}>Войти</Text>
+                        }
                       </Button>
                     </Body>
                   </CardItem>
                   <CardItem>
                     <Body>
                       <Button block transparent onPress={this._forgotPass}>
-                        <Text uppercase={false} note>Забыли пароль?</Text>
+                        <Text style={main.fontFam} uppercase={false} note>Забыли пароль?</Text>
                       </Button>
 
                       <Button block transparent onPress={this._goToRegForm}>
-                        <Text uppercase={false} note >Зарегистрироваться</Text>
+                        <Text style={main.fontFam} uppercase={false} note >Зарегистрироваться</Text>
                       </Button>
                     </Body>
                   </CardItem>

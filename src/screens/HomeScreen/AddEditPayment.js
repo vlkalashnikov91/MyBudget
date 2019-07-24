@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { StyleSheet } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Spinner, Form } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Grid, Form, View } from 'native-base'
 
 import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
@@ -152,68 +152,58 @@ class AddEditPayment extends Component {
             <Content padder>
               <Card>
                 <CardItem>
-                  <Body style={[main.fD_R, main.aI_C]}>
-                      <Item floatingLabel style={main.width_90prc} error={errAmount}>
-                        <Label>Сумма</Label>
-                        <Input
-                          onChangeText={this._changeAmount}
-                          value={Amount}
-                          keyboardType="number-pad"
-                          style={main.clGrey}
-                          maxLength={10}
-                        />
+                  <Body>
+                    <Form style={{alignSelf: 'stretch'}}>
+
+                      <Grid style={[main.fD_R, main.aI_C]}>
+                        <Item stackedLabel style={main.width_90prc} error={errAmount}>
+                          <Label>Сумма</Label>
+                          <Input
+                            onChangeText={this._changeAmount}
+                            value={Amount}
+                            keyboardType="number-pad"
+                            style={main.clGrey}
+                            maxLength={10}
+                          />
+                        </Item>
+                        <H3 style={main.clGrey}>{user.DefCurrency}</H3>
+                      </Grid>
+
+                      <View style={[main.ml_10, main.mr_10, main.mt_20]}> 
+                        <Picker mode="dropdown"
+                          iosIcon={<Icon name="arrow-down" />}
+                          placeholderStyle={{ color: "#bfc6ea" }}
+                          placeholderIconColor="#007aff"
+                          selectedValue={CategoryId}
+                          onValueChange={this._changeCat}
+                        >
+                        {
+                          this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
+                        }
+                        </Picker>
+                      </View>
+
+                      <Item style={[main.mt_20, main.mb_20]}>
+                        <Input placeholder='Описание' onChangeText={this._changeDesc} value={Name} style={main.clGrey} multiline={true}/>
                       </Item>
-                      <H3 style={main.clGrey}>{user.DefCurrency}</H3>
-                  </Body>
-                </CardItem>
 
-                <CardItem>
-                  <Body style={[main.fD_R, main.aI_C]}>
-                    <Item picker style={{width:'85%'}}>
-                      <Picker mode="dropdown"
-                        iosIcon={<Icon name="arrow-down" />}
-                        style={{ width: undefined }}
-                        placeholderStyle={{ color: "#bfc6ea" }}
-                        placeholderIconColor="#007aff"
-                        selectedValue={CategoryId}
-                        onValueChange={this._changeCat}
-                      >
-                      {
-                        this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
-                      }
-                      </Picker>
-                    </Item>
-                    <Icon name="ios-settings" button style={styles.AddCatButton} onPress={this._addNewCat}/>
-                  </Body>
-                </CardItem>
-
-                <CardItem>
-                  <Body>
-                    <Item floatingLabel>
-                      <Label>Описание</Label>
-                      <Input onChangeText={this._changeDesc} value={Name} style={main.clGrey} multiline={true}/>
-                    </Item>
-                  </Body>
-                </CardItem>
-
-                <CardItem>
-                  <Body>
-                    <DatePicker
-                      formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
-                      defaultDate={TransDate}
-                      minimumDate={new Date(2016, 1, 1)}
-                      maximumDate={new Date(2040, 12, 31)}
-                      locale="ru"
-                      timeZoneOffsetInMinutes={undefined}
-                      modalTransparent={false}
-                      animationType={"fade"}
-                      androidMode="calendar"
-                      placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
-                      textStyle={main.clGrey}
-                      placeHolderTextStyle={main.clGrey}
-                      onDateChange={this._changeDate}
-                      disabled={false}
-                    />
+                      <DatePicker
+                        formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
+                        defaultDate={TransDate}
+                        minimumDate={new Date(2016, 1, 1)}
+                        maximumDate={new Date(2040, 12, 31)}
+                        locale="ru"
+                        timeZoneOffsetInMinutes={undefined}
+                        modalTransparent={false}
+                        animationType={"fade"}
+                        androidMode="calendar"
+                        placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
+                        textStyle={main.clGrey}
+                        placeHolderTextStyle={main.clGrey}
+                        onDateChange={this._changeDate}
+                        disabled={false}
+                      />
+                    </Form>
                   </Body>
                 </CardItem>
               </Card>
@@ -222,7 +212,7 @@ class AddEditPayment extends Component {
                 <CardItem>
                   <Body>
                     <Button style={main.bgGreen} block onPress={this._editPayment}>
-                      <Text>Сохранить</Text>
+                      <Text style={main.fontFam}>Сохранить</Text>
                     </Button>
                   </Body>
                 </CardItem>

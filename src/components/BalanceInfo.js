@@ -36,24 +36,24 @@ class BalanceInfo extends Component {
                 <Row>
                     <Col style={main.clWhite}>
                         <Row style={[main.jC_C, main.aI_C]}>
-                            <Text style={[main.clWhite, {fontSize:13}]}>Баланс</Text>
+                            <Text style={[main.clWhite, main.fontFam, {fontSize:13}]}>Баланс</Text>
                         </Row>
                     </Col>
                     <Col>
                         <Row style={[main.jC_C, main.aI_C]}>
-                            <Text style={[main.clWhite, {fontSize:13}]}>Плановый</Text>
+                            <Text style={[main.clWhite, main.fontFam, {fontSize:13}]}>Плановый</Text>
                         </Row>
                     </Col>
                 </Row>
                 <Row>
                     <Col>
                         <Row style={[main.jC_C, main.aI_C]}>
-                            <Text style={[main.clWhite, main.fontW_B]}>{SummMask(balance)} {user.DefCurrency}</Text>
+                            <Text style={[main.clWhite, main.fontFam, main.fontW_B]}>{SummMask(balance)} {user.DefCurrency}</Text>
                         </Row>
                     </Col>
                     <Col>
                         <Row style={[main.jC_C, main.aI_C]}>
-                            <Text style={main.clWhite}>{SummMask(planed)} {user.DefCurrency}</Text>
+                            <Text style={[main.clWhite, main.fontFam]}>{SummMask(planed)} {user.DefCurrency}</Text>
                         </Row>
                     </Col>
                 </Row>

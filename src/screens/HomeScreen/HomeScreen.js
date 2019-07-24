@@ -138,7 +138,7 @@ class HomeScreen extends Component {
     
     if (!isLoad) {
       if (payments.Payments.length == 0) {
-        Pays = <Grid><Col><Row style={[main.jC_C, main.fD_R]}><Text style={main.clGrey}>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
+        Pays = <Grid><Col><Row style={[main.jC_C, main.fD_R]}><Text style={[main.clGrey, main.fontFam]}>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
       } else {
         Pays = <ListPays payments={payments.Payments} GoToEdit={this._navigateToEdit} />
       }
@@ -153,7 +153,7 @@ class HomeScreen extends Component {
                 <FontAwesome name="angle-left" size={27} />
               </Button>
             </Left>
-            <H2 style={[{ marginTop:11}, main.clGrey]} button onPress={this._showModalCalendar}>
+            <H2 style={[{ marginTop:11}, main.clGrey, main.fontFam]} button onPress={this._showModalCalendar}>
               {capitalize(moment(this.state.selectedDate).format("MMMM YYYY"))}
             </H2>
             <Right>
@@ -179,14 +179,14 @@ class HomeScreen extends Component {
                       <Row style={[main.jC_C, main.aI_C]}>
                         <Button iconLeft disabled={(isLoad)} style={(!isLoad)? main.bgGreen : {}} rounded onPress={this._navigateToIncome}>
                           <Icon ios="ios-add" android="md-add" />
-                          <Text>Доход</Text>
+                          <Text style={main.fontFam}>Доход</Text>
                         </Button>
                       </Row>
                     </Col>
                     <Col>
                       <Row style={[main.jC_C, main.aI_C]}>
                         <Button iconRight disabled={(isLoad)} style={(!isLoad)? main.bgDanger : {}} rounded onPress={this._navigateToExpense}>
-                          <Text>Расход</Text>
+                          <Text style={main.fontFam}>Расход</Text>
                           <Icon ios="ios-remove" android="md-remove" />
                         </Button>
                       </Row>
@@ -233,7 +233,7 @@ class HomeScreen extends Component {
 
 const styles = StyleSheet.create({
   modalCalendarText: {
-    fontFamily:'Roboto',
+    fontFamily:'HelveticaNeueMedium',
     fontSize:15
   },
   prevMonthBtn: {

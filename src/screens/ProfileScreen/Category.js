@@ -112,7 +112,7 @@ class Category extends Component {
                       onLongPress={_=> this._deleteCategory(value)}
                     >
                       <Body>
-                        <Text style={main.clGrey}>{value.Name}</Text>
+                        <Text style={[main.clGrey, main.fontFam]}>{value.Name}</Text>
                       </Body>
                     </ListItem>
                     )

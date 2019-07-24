@@ -21,7 +21,9 @@ export default class App extends Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      'Roboto': require('native-base/Fonts/Roboto.ttf'),
+      'SegoeUIRegular': require('native-base/Fonts/SegoeUIRegular.ttf'),
+      'SegoeUIBold': require('native-base/Fonts/SegoeUIBold.ttf'),
+      /*'Roboto': require('native-base/Fonts/Roboto.ttf'),*/
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
     });
 

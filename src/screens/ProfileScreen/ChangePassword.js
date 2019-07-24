@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form } from 'native-base'
 
 import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
@@ -20,28 +20,24 @@ export default class ChangePassword extends Component {
     return <Container>
             <Content padder>
               <Card>
-                <CardItem >
+                <CardItem>
                   <Body>
-                    <Item floatingLabel>
-                      <Label>Текущий пароль</Label>
-                      <Input secureTextEntry={true} style={main.clGrey}/>
-                    </Item>
-                  </Body>
-                </CardItem>
-                <CardItem >
-                  <Body>
-                    <Item floatingLabel>
-                      <Label>Новый пароль</Label>
-                      <Input secureTextEntry={true} style={main.clGrey}/>
-                    </Item>
-                  </Body>
-                </CardItem>
-                <CardItem >
-                  <Body>
-                    <Item floatingLabel>
-                      <Label>Подтверждение пароля</Label>
-                      <Input secureTextEntry={true} style={main.clGrey}/>
-                    </Item>
+                    <Form style={{alignSelf: 'stretch'}}>
+                      <Item stackedLabel>
+                        <Label>Текущий пароль</Label>
+                        <Input secureTextEntry={true} style={main.clGrey}/>
+                      </Item>
+
+                      <Item stackedLabel>
+                        <Label>Новый пароль</Label>
+                        <Input secureTextEntry={true} style={main.clGrey}/>
+                      </Item>
+
+                      <Item stackedLabel>
+                        <Label>Подтверждение пароля</Label>
+                        <Input secureTextEntry={true} style={main.clGrey}/>
+                      </Item>
+                    </Form>
                   </Body>
                 </CardItem>
               </Card>
@@ -50,7 +46,7 @@ export default class ChangePassword extends Component {
                 <CardItem>
                   <Body>
                     <Button block onPress={this._changePass} style={main.bgGreen}>
-                      <Text>Сохранить</Text>
+                      <Text style={main.fontFam}>Сохранить</Text>
                     </Button>
                   </Body>
                 </CardItem>

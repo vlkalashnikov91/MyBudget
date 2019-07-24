@@ -40,7 +40,7 @@ export default class ListCategoriesIncome extends Component {
                 onLongPress={_=> dropcategory(value)}
               >
                 <Body>
-                  <Text style={main.clGrey}>{value.Name}</Text>
+                  <Text style={[main.clGrey, main.fontFam]}>{value.Name}</Text>
                 </Body>
               </ListItem>
               )

@@ -2,13 +2,13 @@ import React, {Component} from 'react'
 import { Alert } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, H3, DatePicker, Spinner, Grid, Row } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, H3, DatePicker, Grid, Row, Form } from 'native-base'
 
 import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import { TargetActions } from '../../actions/TargetActions'
 import { TARGET, OWEME, IDEBT, EDIT } from '../../constants/TargetDebts'
-import ModalLoading from '../../components/ModalLoading';
+import ModalLoading from '../../components/ModalLoading'
 
 const headerText = (type) => {
   switch(type) {
@@ -141,71 +141,72 @@ class AddEditItem extends Component {
       return (
         <Container>
           <Content padder>
-              <Card>
-                  <CardItem>
-                      <Body>
-                          <Item floatingLabel error={errGoalName}>
-                            <Label>Наименование</Label>
-                            <Input onChangeText={this._changeName} value={GoalName} style={main.clGrey}/>
-                          </Item>
-                      </Body>
-                  </CardItem>
-                  <CardItem>
-                      <Body style={[main.fD_R, main.aI_C]}>
-                          <Item floatingLabel style={main.width_90prc} error={errAmount}>
-                              <Label>Полная сумма</Label>
-                              <Input style={main.clGrey} onChangeText={this._changeAmount} value={Amount} maxLength={10} keyboardType="number-pad"/>
-                          </Item>
-                          <H3 style={main.clGrey}>{user.DefCurrency}</H3>
-                      </Body>
-                  </CardItem>
-                  <CardItem>
-                        <Body style={[main.fD_R, main.aI_C]}>
-                          <Item floatingLabel style={main.width_90prc} error={errCurAmount}>
-                              <Label>Текущая сумма</Label>
-                              <Input style={main.clGrey} onChangeText={this._changeCurAmount} value={CurAmount} maxLength={10} keyboardType="number-pad"/>
-                          </Item>
-                          <H3 style={main.clGrey}>{user.DefCurrency}</H3>
-                      </Body>
-                  </CardItem>
+            <Card >
+              <CardItem >
+                <Body>
+                  <Form style={{alignSelf: 'stretch'}}>
+
+                    <Item stackedLabel error={errGoalName}>
+                      <Label>Наименование</Label>
+                      <Input onChangeText={this._changeName} value={GoalName} style={main.clGrey}/>
+                    </Item>
+
+                    <Grid style={[main.fD_R, main.aI_C]}>
+                      <Item stackedLabel style={main.width_90prc} error={errAmount}>
+                        <Label>Полная сумма</Label>
+                        <Input style={main.clGrey} onChangeText={this._changeAmount} value={Amount} maxLength={10} keyboardType="number-pad"/>
+                      </Item>
+                      <H3 style={main.clGrey}>{user.DefCurrency}</H3>
+                    </Grid>
+
+                    <Grid style={[main.fD_R, main.aI_C]}>
+                      <Item stackedLabel style={main.width_90prc} error={errCurAmount}>
+                        <Label>Текущая сумма</Label>
+                        <Input style={main.clGrey} onChangeText={this._changeCurAmount} value={CurAmount} maxLength={10} keyboardType="number-pad"/>
+                      </Item>
+                      <H3 style={main.clGrey}>{user.DefCurrency}</H3>
+                    </Grid>
                   {/* временно
                   <CardItem>
-                      <Body>
-                          <Grid>
-                            <Row style={[main.jC_C, main.aI_C]}>
-                                <DatePicker
-                                    formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
-                                    defaultDate={CompleteDate}
-                                    minimumDate={new Date(2016, 1, 1)}
-                                    maximumDate={new Date(2040, 12, 31)}
-                                    locale="ru"
-                                    timeZoneOffsetInMinutes={undefined}
-                                    modalTransparent={false}
-                                    animationType={"fade"}
-                                    androidMode="calendar"
-                                    placeHolderText={(CompleteDate) ? moment(CompleteDate).format('DD.MM.YYYY') : "Дата окончания"}
-                                    textStyle={main.clGrey}
-                                    placeHolderTextStyle={main.clGrey}
-                                    onDateChange={this._changeDate}
-                                    disabled={false}
-                                />
-                                <Icon name='ios-information-circle' style={[main.clGrey, main.ml_20]} button onPress={this._setModalVisible} />
-                            </Row>
-                          </Grid>
-                      </Body>
+                    <Body>
+                      <Grid>
+                        <Row style={[main.jC_C, main.aI_C]}>
+                          <DatePicker
+                            formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
+                            defaultDate={CompleteDate}
+                            minimumDate={new Date(2016, 1, 1)}
+                            maximumDate={new Date(2040, 12, 31)}
+                            locale="ru"
+                            timeZoneOffsetInMinutes={undefined}
+                            modalTransparent={false}
+                            animationType={"fade"}
+                            androidMode="calendar"
+                            placeHolderText={(CompleteDate) ? moment(CompleteDate).format('DD.MM.YYYY') : "Дата окончания"}
+                            textStyle={main.clGrey}
+                            placeHolderTextStyle={main.clGrey}
+                            onDateChange={this._changeDate}
+                            disabled={false}
+                          />
+                          <Icon name='ios-information-circle' style={[main.clGrey, main.ml_20]} button onPress={this._setModalVisible} />
+                        </Row>
+                      </Grid>
+                    </Body>
                   </CardItem>
                   */}
-              </Card>
-              
-              <Card transparent>
-                  <CardItem>
-                      <Body>
-                          <Button style={main.bgGreen} block onPress={this._saveItem}>
-                              <Text>Сохранить</Text>
-                          </Button>
-                      </Body>
-                  </CardItem>
-              </Card>
+                  </Form>
+                </Body>
+              </CardItem>
+            </Card>
+            
+            <Card transparent>
+              <CardItem>
+                <Body>
+                  <Button style={main.bgGreen} block onPress={this._saveItem}>
+                    <Text style={main.fontFam}>Сохранить</Text>
+                  </Button>
+                </Body>
+              </CardItem>
+            </Card>
           </Content>
 
           <ModalLoading isActive={Loading}/>

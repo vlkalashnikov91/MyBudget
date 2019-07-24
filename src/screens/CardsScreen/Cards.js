@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { RefreshControl, Modal, StyleSheet, Alert, Platform } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, Spinner, View, Button, Text, CardItem, Card, Body, Item, Label, Input, H3, Icon } from 'native-base'
+import { Container, Content, Spinner, View, Button, Text, CardItem, Card, Body, Item, Label, Input, H3, Icon, Fab } from 'native-base'
 import moment from 'moment'
 
 import { ToastTr } from '../../components/Toast'
@@ -9,7 +9,7 @@ import { CardInfo } from '../../components/CardInfo'
 import { TargetActions } from '../../actions/TargetActions'
 import { PaymentActions } from '../../actions/PaymentActions'
 import { TARGET, IDEBT, OWEME, EDIT } from '../../constants/TargetDebts'
-import { styles as main, screenHeight, screenWidth } from '../../Style'
+import { styles as main, screenHeight, screenWidth, TargetColor, IDebtColor, DebtColor } from '../../Style'
 import { capitalize } from '../../utils/utils'
 
 
@@ -25,14 +25,15 @@ class Cards extends Component {
       IncreaseId: -1,
       errAmount: false,
       choosenItem: {},
-      Loading: false
+      Loading: false,
+      fabState: false,
+      
     }
 
     this._refreshData = this._refreshData.bind(this)
+    this._toggleAdd = this._toggleAdd.bind(this)
     this._editItem = this._editItem.bind(this)
     this._addTarget = this._addTarget.bind(this)
-    this._addMyDebt = this._addMyDebt.bind(this)
-    this._addOweme = this._addOweme.bind(this)
     this._increaseItem = this._increaseItem.bind(this)
     this._hideModalIncrease = this._hideModalIncrease.bind(this)
     this._showModalIncrease = this._showModalIncrease.bind(this)
@@ -72,16 +73,12 @@ class Cards extends Component {
     this.props.getTargetDebtList(this.props.user.UserId)
   }
 
-  _addTarget() {
-    this.props.navigation.navigate('AddEditItem', {type: TARGET})
+  _addTarget(type) {
+    this.props.navigation.navigate('AddEditItem', {type: type})
   }
 
-  _addMyDebt() {
-    this.props.navigation.navigate('AddEditItem', {type: IDEBT})
-  }
-
-  _addOweme() {
-    this.props.navigation.navigate('AddEditItem', {type: OWEME})
+  _toggleAdd() {
+    this.setState({ fabState: !this.state.fabState })
   }
 
   _editItem(itemId){
@@ -151,9 +148,9 @@ class Cards extends Component {
               <RefreshControl refreshing={this.state.refreshing} onRefresh={this._refreshData} />
             }
           >
-            <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} editItem={this._editItem} addItem={this._addTarget} showModalMenu={this._showModalMenu} />
-            <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} editItem={this._editItem} addItem={this._addMyDebt} showModalMenu={this._showModalMenu} />
-            <CardInfo itemtype={OWEME} currency={user.DefCurrency} data={oweme} editItem={this._editItem} addItem={this._addOweme} showModalMenu={this._showModalMenu} />
+            <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} editItem={this._editItem} showModalMenu={this._showModalMenu} />
+            <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} editItem={this._editItem} showModalMenu={this._showModalMenu} />
+            <CardInfo itemtype={OWEME} currency={user.DefCurrency} data={oweme} editItem={this._editItem} showModalMenu={this._showModalMenu} />
           </Content>
 
           <Modal animationType="slide"
@@ -213,7 +210,19 @@ class Cards extends Component {
           </Card>
         </Modal>
 
-      </Container>
+          <Fab
+            active={this.state.fabState}
+            direction="up"
+            style={main.bgGreen}
+            position="bottomRight"
+            onPress={_=> this._toggleAdd()}
+          >
+            <Icon name="add" />
+            <Button style={{ backgroundColor: DebtColor }} onPress={_=> this._addTarget(OWEME)}><Icon name="add" /></Button>
+            <Button style={{ backgroundColor: IDebtColor }} onPress={_=> this._addTarget(IDEBT)}><Icon name="add" /></Button>
+            <Button style={{ backgroundColor: TargetColor }} onPress={_=> this._addTarget(TARGET)}><Icon name="add" /></Button>
+          </Fab>
+        </Container>
     )
   }
 }
@@ -234,7 +243,6 @@ const styles = StyleSheet.create({
     marginLeft: (screenWidth - (screenWidth / 1.2)) / 2
   }
 })
-
 
 const mapStateToProps = state => {
   return {

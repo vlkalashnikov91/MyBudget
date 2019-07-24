@@ -19,12 +19,12 @@ export default class About extends Component {
             <Grid style={[main.jC_C, {height: screenHeight/2.5}]}>
                 <Row size={20} style={[main.jC_C, main.aI_C, main.fD_C]}>
                     <Image resizeMode='contain' resizeMethod='scale' style={styles.Logo} source={require('../../../assets/Logo.png')}></Image>
-                    <Text>Версия 1.0.1</Text>
+                    <Text style={main.fontFam}>Версия 1.0.1</Text>
                 </Row>
                 <Row size={25} style={[main.jC_C, main.aI_C, main.fD_C]}>
-                    <Text>Мы на связи</Text>
+                    <Text style={main.fontFam}>Мы на связи</Text>
                     <Button transparent block onPress={this._copyMail}>
-                        <Text uppercase={false}>{mail}</Text>
+                        <Text style={main.fontFam} uppercase={false}>{mail}</Text>
                     </Button>
                 </Row>
             </Grid>

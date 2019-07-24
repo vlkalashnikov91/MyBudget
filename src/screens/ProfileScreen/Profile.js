@@ -89,7 +89,7 @@ class Profile extends Component {
 
               <CardItem bordered button onPress={this._gotoChangePass}>
                 <Body>
-                  <Text style={main.clGrey}>Изменить пароль</Text>
+                  <Text style={[main.clGrey, main.fontFam]}>Изменить пароль</Text>
                 </Body>
                 <Right>
                   <FontAwesome name="angle-right" size={20}/>
@@ -99,11 +99,11 @@ class Profile extends Component {
 
             <Card>
               <CardItem header bordered>
-                <Text style={main.clIvan}>Персональные настройки</Text>
+                <Text style={[main.clIvan, main.fontFam]}>Персональные настройки</Text>
               </CardItem>
               <CardItem bordered button onPress={this._gotoChangeCat}>
                 <Body>
-                  <Text style={main.clGrey}>Мои категории</Text>
+                  <Text style={[main.clGrey, main.fontFam]}>Мои категории</Text>
                 </Body>
                 <Right>
                   <FontAwesome name="angle-right" size={20}/>
@@ -112,7 +112,7 @@ class Profile extends Component {
               <CardItem bordered>
                 <Body>
                   <Item picker>
-                    <Label>Валюта по умолчанию</Label>
+                    <Label style={main.fontFam}>Валюта по умолчанию</Label>
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
                       style={{ width: undefined }}
@@ -127,11 +127,12 @@ class Profile extends Component {
                     </Picker>
                   </Item>
                   <Item picker>
-                    <Label>Перенос остатка</Label>
+                    <Label style={main.fontFam}>Перенос остатка</Label>
                     <Icon name='ios-information-circle' style={main.clGrey} button onPress={this.setModalVisible} />
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
                       style={{ width: undefined }}
+                      itemTextStyle={main.fontFam}
                       placeholderStyle={{ color: "#bfc6ea" }}
                       placeholderIconColor="#007aff"
                       selectedValue={this.state.CarryOverRests}
@@ -142,7 +143,7 @@ class Profile extends Component {
                     </Picker>
                   </Item>
                   <Item picker>
-                    <Label>Ежемесячные платежи</Label>
+                    <Label style={main.fontFam}>Ежемесячные платежи</Label>
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
                       style={{ width: undefined }}
@@ -161,19 +162,19 @@ class Profile extends Component {
               
               <CardItem footer>
                 <Button onPress={this._saveSettings} disabled={this.state.isChange} iconRight>
-                  <Text>Сохранить изменения</Text>
+                  <Text style={main.fontFam}>Сохранить изменения</Text>
                 </Button>
               </CardItem>
             </Card>
 
             <Card>
               <CardItem button onPress={this._gotoAbout}> 
-                  <Text>О приложении</Text>
+                  <Text style={main.fontFam}>О приложении</Text>
               </CardItem>
             </Card>
 
             <Button block danger onPress={this.logout} style={main.mt_20}>
-              <Text>Выход</Text>
+              <Text style={main.fontFam}>Выход</Text>
             </Button>
           </Content>
         </Container>

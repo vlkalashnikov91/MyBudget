@@ -17,7 +17,7 @@ export default class ErrContainer extends Component {
                             </Button>
                         </Row>
                         <Row style={main.jC_C}>
-                            <Text style={{color:'#609AD3'}}>Упс, что-то пошло не так...</Text>
+                            <Text style={[main.fontFam, {color:'#609AD3'}]}>Упс, что-то пошло не так...</Text>
                         </Row>
                     </Grid>
                 </Content>

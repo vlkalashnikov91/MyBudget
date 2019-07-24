@@ -54,7 +54,7 @@ render() {
               <Content>
                 <Card transparent style={main.aI_C}>
                   <CardItem>
-                    <Text style={main.txtAl_c}>Для комфортного использования предлагаем установить первоначальные настройки</Text>
+                    <Text style={[main.txtAl_c, main.fontFam]}>Для комфортного использования предлагаем установить первоначальные настройки</Text>
                   </CardItem>
                  </Card>
                  <Card transparent style={main.aI_C}>
@@ -99,7 +99,7 @@ render() {
                     </CardItem>
                     <CardItem>
                         <Body>
-                            <Text style={main.txtAl_c} note>* вы можете изменить эти настройки в любой момент в личном кабинете</Text>
+                            <Text style={[main.txtAl_c, main.fontFam]} note>* вы можете изменить эти настройки в любой момент в личном кабинете</Text>
                         </Body>
                     </CardItem>
                 </Card>
@@ -107,7 +107,7 @@ render() {
                     <CardItem>
                         <Body>
                             <Button block style={main.bgGreen} onPress={this._saveSettings}>
-                                <Text>Продолжить</Text>
+                                <Text style={main.fontFam}>Продолжить</Text>
                             </Button>
                         </Body>
                     </CardItem>

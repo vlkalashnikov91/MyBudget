@@ -1,11 +1,10 @@
 import React from 'react'
 import { FlatList } from 'react-native'
-import { Text, Icon, Card, Button, ListItem, Right, Left, CardItem } from 'native-base'
+import { Text, Card, ListItem } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
-import { Svg } from 'expo'
 
-import { styles as main, IDebtColor, TargetColor, DebtColor, screenWidth } from '../Style'
-import { capitalize } from '../utils/utils'
+import { styles as main, IDebtColor, TargetColor, DebtColor } from '../Style'
+import { capitalize, SummMask } from '../utils/utils'
 import { TARGET, IDEBT, OWEME } from '../constants/TargetDebts'
 
 function defineDesc (itemtype) {
@@ -25,37 +24,39 @@ function defineCardStyle (itemtype) {
   switch(itemtype) {
     case TARGET:
       return {
-        Color: TargetColor
+        mainColor: TargetColor,
+        fillFull: '#4c799c',
+        prcColor:'#5383a9'
       }
     case IDEBT:
       return {
-        Color: IDebtColor
+        mainColor: IDebtColor,
+        fillFull: '#c35353',
+        prcColor:'#de5b5b'
       }
     case OWEME:
       return {
-        Color: DebtColor
+        mainColor: DebtColor,
+        fillFull: '#498c84',
+        prcColor:'#4e968e'
       }
   }
 }
 
 
 export const CardInfo = (props) => {
-    const { data, currency, itemtype, addItem, editItem, showModalMenu } = props
-    const { Color } = defineCardStyle(itemtype)
+    const { data, currency, itemtype, editItem, showModalMenu } = props
+    const { mainColor, fillFull, prcColor } = defineCardStyle(itemtype)
     const Desc = defineDesc(itemtype)
 
+    if (data.length === 0 ) {
+      return <></>
+    }
+
     return (
-      <Card>
-        <CardItem header bordered>
-          <Left>
-            <Text style={{color: Color}}>{Desc}</Text>
-          </Left>
-          <Right>
-            <Button small rounded onPress={addItem} style={[main.ml_auto, {backgroundColor: Color}]}>
-              <Icon name="add" fontSize={20}/>
-            </Button>
-          </Right>
-        </CardItem>
+      <>
+      <Text style={[main.fontFam, main.mt_10, main.ml_10, main.fontW_B, main.clIvan, {marginBottom:6}]}>{Desc}</Text>
+      <Card style={{backgroundColor: mainColor}}>
         <FlatList
           data={data}
           keyExtractor = {(item, index) => 'key-'+item.GoalName + index}
@@ -67,26 +68,24 @@ export const CardInfo = (props) => {
             <ListItem key={'target-'+item.Id + item.GoalName}
               button 
               onPress={_=> editItem(item.Id)} 
-              onLongPress={_ => showModalMenu(item)}
+              onLongPress={_=> showModalMenu(item)}
             >
-              <Grid>
-                <Row>
-                  <Col>
-                    <Text style={main.clGrey}>{capitalize(item.GoalName)}</Text>
-                  </Col>
-                </Row>
-                <Row>
-                  <Svg width={screenWidth/1.12} height="26">
-                    <Svg.Rect x="0" y="0" width="100%" height="26" fill='#d9d9d9' />
-                    <Svg.Rect x="0" y="0" width={`${progressCnt}%`} height="26" fill={Color} />
-                    <Text style={main.clWhite}>{item.CurAmount} из {item.Amount} {currency}</Text>
-                  </Svg>
-                </Row>
-              </Grid>
+              <Row style={{backgroundColor: fillFull, borderRadius:4}}>
+                <Row style={{backgroundColor: prcColor, borderRadius:4, width:`${progressCnt}%`, height:50}}></Row>
+                <Grid style={{position:'absolute', top:0, left:0, width:'100%'}}>
+                  <Row style={[main.pdL_10, main.pdR_10]}>
+                    <Text style={[main.clWhite, main.mr_auto, main.ml_auto, main.fontFam]}>{capitalize(item.GoalName)}</Text>
+                  </Row>
+                  <Row style={[main.pdL_10, main.pdR_10]}>
+                    <Text style={[main.clWhite, main.ml_auto, main.mr_0, main.fontFam]}>{SummMask(item.CurAmount)} {currency} из {SummMask(item.Amount)} {currency}</Text>
+                  </Row>
+                </Grid>
+              </Row>
             </ListItem>
             )
           }}
         />
       </Card>
+      </>
     ) 
   }

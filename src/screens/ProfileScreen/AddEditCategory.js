@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form } from 'native-base'
 
 import { styles as main } from '../../Style'
 import { CategoriesActions } from '../../actions/CategoriesActions'
@@ -95,10 +95,12 @@ class AddEditCategory extends Component {
               <Card>
                 <CardItem>
                   <Body>
-                    <Item floatingLabel>
-                      <Label>Наименование</Label>
-                      <Input onChangeText={this._changeName} value={this.state.Name} style={main.clGrey}/>
-                    </Item>
+                    <Form style={{alignSelf: 'stretch'}}>
+                      <Item stackedLabel last>
+                        <Label>Наименование</Label>
+                        <Input onChangeText={this._changeName} value={this.state.Name} style={main.clGrey}/>
+                      </Item>
+                    </Form>
                   </Body>
                 </CardItem>
               </Card>
@@ -106,7 +108,7 @@ class AddEditCategory extends Component {
                 <CardItem>
                   <Body>
                     <Button disabled={this.state.notValid} style={(this.state.notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
-                      <Text>Сохранить</Text>
+                      <Text style={main.fontFam}>Сохранить</Text>
                     </Button>
                   </Body>
                 </CardItem>

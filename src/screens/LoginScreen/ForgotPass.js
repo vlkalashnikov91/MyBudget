@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Spinner } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form } from 'native-base'
 import { styles as main } from '../../Style'
 
 export default class ForgotPass extends Component {
@@ -9,10 +9,12 @@ export default class ForgotPass extends Component {
                 <Card>
                   <CardItem>
                     <Body>
-                      <Item floatingLabel>
-                        <Label>Email</Label>
-                        <Input/>
-                      </Item>
+                      <Form style={{alignSelf: 'stretch'}}>
+                        <Item stackedLabel>
+                          <Label>Email</Label>
+                          <Input />
+                        </Item>
+                      </Form>
                     </Body>
                   </CardItem>
                 </Card>
@@ -20,7 +22,7 @@ export default class ForgotPass extends Component {
                   <CardItem>
                     <Body>
                       <Button block style={main.bgGreen}>
-                        <Text>Отправить</Text>
+                        <Text style={main.fontFam}>Отправить</Text>
                       </Button>
                     </Body>
                   </CardItem>

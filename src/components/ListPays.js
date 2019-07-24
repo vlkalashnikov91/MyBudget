@@ -92,18 +92,18 @@ class ListPays extends Component {
                   <Body>
                     <TouchableOpacity onPress={_=> this.props.GoToEdit(value.Id)}>
                       {((value.Name==null) || (value.Name.length === 0))
-                      ? <Text style={main.clGrey}>---</Text>
-                      : <Text style={main.clGrey} numberOfLines={1}>{value.Name}</Text>
+                      ? <Text style={[main.clGrey, main.fontFamBold]}>---</Text>
+                      : <Text style={[main.clGrey, main.fontFamBold]} numberOfLines={1}>{value.Name}</Text>
                       }
-                      <Text note>{CatDesc.Name}</Text>
+                      <Text note style={main.fontFamBold}>{CatDesc.Name}</Text>
                     </TouchableOpacity>
                   </Body>
                   <Right style={[main.fD_C, {alignItems:'flex-end'}]}>
                     {(CatDesc.IsSpendingCategory) 
-                    ? <Text style={main.clIvanD}> - {SummMask(value.Amount)} {user.DefCurrency}</Text>
-                    : <Text style={main.clIvanG}> + {SummMask(value.Amount)} {user.DefCurrency}</Text>
+                    ? <Text style={[main.clIvanD, main.fontFamBold]}> - {SummMask(value.Amount)} {user.DefCurrency}</Text>
+                    : <Text style={[main.clIvanG, main.fontFamBold]}> + {SummMask(value.Amount)} {user.DefCurrency}</Text>
                     }
-                    <Text note>{moment(value.TransDate).format('DD.MM.YYYY')}</Text>
+                    <Text note style={main.fontFamBold}>{moment(value.TransDate).format('DD.MM.YYYY')}</Text>
                   </Right>
                 </ListItem>
                 )

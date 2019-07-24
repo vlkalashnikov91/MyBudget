@@ -4,7 +4,7 @@ import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, La
 
 import { ToastTr } from '../../components/Toast'
 import { UserAuth } from '../../actions/UserActions'
-import { validateEmail } from '../../utils/validation.js'
+import { validateEmail } from '../../utils/utils.js'
 import { styles as main } from '../../Style'
 
 
@@ -139,7 +139,7 @@ class Registration extends Component {
                   <CardItem>
                     <Body>
                       <Button block onPress={this._registration} style={main.bgGreen}>
-                        <Text>Далее</Text>
+                        <Text style={main.fontFam}>Далее</Text>
                       </Button>
                     </Body>
                   </CardItem>

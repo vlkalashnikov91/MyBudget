@@ -11,6 +11,12 @@ export const ivanDanger = '#F04124'
 export const ivanGray = '#a7a7a7'
 
 export const styles = StyleSheet.create({
+  fontFam: {
+    fontFamily: 'SegoeUIRegular'
+  },
+  fontFamBold: {
+    fontFamily: 'SegoeUIBold'
+  },
   fl_1: {
     flex: 1
   },
@@ -65,6 +71,9 @@ export const styles = StyleSheet.create({
   mt_20: {
     marginTop:20
   },
+  mb_20: {
+    marginBottom:20
+  },
   ml_auto: {
     marginLeft:'auto'
   },
@@ -85,6 +94,9 @@ export const styles = StyleSheet.create({
   },
   mr_0: {
     marginRight:0
+  },
+  mr_10: {
+    marginRight: 10
   },
   mr_15: {
     marginRight:15

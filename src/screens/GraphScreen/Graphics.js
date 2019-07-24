@@ -169,10 +169,10 @@ class Graphics extends Component {
                               </Svg>
                           </Left>
                           <Body>
-                              <Text style={[main.clGrey, (selectedPie === data.key) && {color:'#62B1F6'}]}>{data.description}</Text>
+                              <Text style={[main.clGrey, main.fontFam, (selectedPie === data.key) && {color:'#62B1F6'}]}>{data.description}</Text>
                           </Body>
                           <Right>
-                              <Text note>{SummMask(data.value)} {user.DefCurrency}</Text>
+                              <Text note style={main.fontFam}>{SummMask(data.value)} {user.DefCurrency}</Text>
                           </Right>
                         </ListItem>
                       )}
