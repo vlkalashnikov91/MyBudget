@@ -4,7 +4,7 @@ import { StyleSheet, Image } from 'react-native'
 import { Svg } from 'expo'
 import { PieChart } from 'react-native-svg-charts'
 import { Container, Body, Content, Picker, ListItem, Text, List, Card, Left, Icon, Right, Spinner, Segment } from 'native-base'
-import { FontAwesome } from '@expo/vector-icons'
+import FontAwesome from '@expo/vector-icons/FontAwesome'
  
 import { styles as main } from '../../Style'
 import { SummMask } from '../../utils/utils'

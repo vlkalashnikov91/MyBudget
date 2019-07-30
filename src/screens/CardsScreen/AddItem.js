@@ -7,8 +7,10 @@ import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, La
 import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import { TargetActions } from '../../actions/TargetActions'
-import { TARGET, OWEME, IDEBT, EDIT } from '../../constants/TargetDebts'
+import { TARGET, OWEME, IDEBT } from '../../constants/TargetDebts'
 import ModalLoading from '../../components/ModalLoading'
+import { SummMask, ClearNums } from '../../utils/utils'
+
 
 const headerText = (type) => {
   switch(type) {
@@ -18,14 +20,12 @@ const headerText = (type) => {
       return 'Дать в долг'
     case IDEBT:
       return 'Взять в долг'
-    case EDIT:
-      return 'Редактировать'
     default:
       return 'ERROR'
   }
 }
 
-class AddEditItem extends Component {
+class AddItem extends Component {
   constructor(props) {
     super(props)
 
@@ -33,12 +33,11 @@ class AddEditItem extends Component {
       GoalName: '',
       Type: '',
       Amount: '',
-      CurAmount: '',
+      CurAmount: '0',
       //CompleteDate: undefined,
       CompleteDate: null, //временно
       errGoalName: false,
       errAmount: false,
-      errCurAmount: false,
       Loading: false,
     }
 
@@ -53,25 +52,11 @@ class AddEditItem extends Component {
     }
   }
 
-  componentDidMount() {
-    nav = this.props.navigation
-    targets = this.props.targets.Targets
-
-    if ((nav.getParam('type', TARGET) === EDIT) && (nav.getParam('itemid', -1) !== -1)) {
-      let item = this.props.targets.Targets.find(el => el.Id === nav.getParam('itemid'))
-
-      if (item != undefined) {
-        this.setState({Id: item.Id, GoalName: item.GoalName, Amount: item.Amount.toString(), CurAmount: item.CurAmount.toString(), Type: item.Type, CompleteDate: item.CompleteDate })
-      }
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
     this.setState({ Loading: false })
-    let txt = this.props.navigation.getParam('type', 1) == 1 ? 'Добавлено' : 'Изменено'
 
-    if (nextProps.targets.Error.length == 0) {
-      ToastTr.Success(txt)
+    if (nextProps.targets.Error.length === 0) {
+      ToastTr.Success('Добавлено')
     }
 
     this.props.navigation.goBack()
@@ -82,11 +67,7 @@ class AddEditItem extends Component {
   }
 
   _changeAmount = value => {
-    this.setState({ Amount: value })
-  }
-
-  _changeCurAmount = value => {
-    this.setState({ CurAmount: value })
+    this.setState({ Amount: ClearNums(value) })
   }
 
   _changeDate = value => {
@@ -96,12 +77,12 @@ class AddEditItem extends Component {
   _checkParams() {
     st = this.state
 
-    if ((st.Amount.length == 0) || Number(st.Amount <= 0)) {
-      this.setState({ errAmount: true })
-      return false
-    }
     if (st.GoalName.length == 0) {
       this.setState({ errGoalName: true })
+      return false
+    }
+    if ((st.Amount.length == 0) || Number(st.Amount <= 0)) {
+      this.setState({ errAmount: true })
       return false
     }
 
@@ -115,12 +96,7 @@ class AddEditItem extends Component {
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
-
-      if (type === EDIT) {
-        this.props.edititem(UserId, st.Id, st.GoalName, st.Type, Number(st.Amount), Number(st.CurAmount), st.CompleteDate)
-      } else {
-        this.props.additem(UserId, st.GoalName, type, Number(st.Amount), Number(st.CurAmount), st.CompleteDate)    
-      }
+      this.props.additem(UserId, st.GoalName, type, Number(st.Amount), Number(st.CurAmount), st.CompleteDate)    
     }
   }
 
@@ -136,7 +112,7 @@ class AddEditItem extends Component {
 
   render() {
       const { user } = this.props
-      const { GoalName, Amount, CurAmount, CompleteDate, errGoalName, errAmount, errCurAmount, Loading } = this.state
+      const { GoalName, Amount, CompleteDate, errGoalName, errAmount, Loading } = this.state
 
       return (
         <Container>
@@ -146,26 +122,19 @@ class AddEditItem extends Component {
                 <Body>
                   <Form style={{alignSelf: 'stretch'}}>
 
-                    <Item stackedLabel error={errGoalName}>
-                      <Label>Наименование</Label>
-                      <Input onChangeText={this._changeName} value={GoalName} style={main.clGrey}/>
+                    <Item floatingLabel error={errGoalName} style={{marginTop:0}}>
+                      <Label style={main.fontFam}>Наименование</Label>
+                      <Input onChangeText={this._changeName} value={GoalName} style={[main.clGrey, main.fontFam, main.mt_5]}/>
                     </Item>
 
-                    <Grid style={[main.fD_R, main.aI_C]}>
-                      <Item stackedLabel style={main.width_90prc} error={errAmount}>
-                        <Label>Полная сумма</Label>
-                        <Input style={main.clGrey} onChangeText={this._changeAmount} value={Amount} maxLength={10} keyboardType="number-pad"/>
+                    <Grid style={main.width_90prc}>
+                      <Item floatingLabel style={{width:'80%'}} error={errAmount}>
+                        <Label style={main.fontFam}>Полная сумма</Label>
+                        <Input style={[main.clGrey, main.fontFam, main.mt_5]} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
                       </Item>
-                      <H3 style={main.clGrey}>{user.DefCurrency}</H3>
+                      <H3 style={[main.clGrey, {position:'absolute', right:0, bottom:5}]}>{user.DefCurrency}</H3>
                     </Grid>
 
-                    <Grid style={[main.fD_R, main.aI_C]}>
-                      <Item stackedLabel style={main.width_90prc} error={errCurAmount}>
-                        <Label>Текущая сумма</Label>
-                        <Input style={main.clGrey} onChangeText={this._changeCurAmount} value={CurAmount} maxLength={10} keyboardType="number-pad"/>
-                      </Item>
-                      <H3 style={main.clGrey}>{user.DefCurrency}</H3>
-                    </Grid>
                   {/* временно
                   <CardItem>
                     <Body>
@@ -202,7 +171,10 @@ class AddEditItem extends Component {
               <CardItem>
                 <Body>
                   <Button style={main.bgGreen} block onPress={this._saveItem}>
-                    <Text style={main.fontFam}>Сохранить</Text>
+                  {(Loading)
+                    ? <Text style={main.fontFam}>Загрузка</Text>
+                    : <Text style={main.fontFam}>Создать</Text>
+                  }
                   </Button>
                 </Body>
               </CardItem>
@@ -228,10 +200,7 @@ const mapDispatchToProps = dispatch => {
     additem:(UserId, GoalName, Type, Amount, CurAmount, CompleteDate) => {
         dispatch(TargetActions.Add(UserId, GoalName, Type, Amount, CurAmount, CompleteDate))
     },
-    edititem:(UserId, Id, GoalName, Type, Amount, CurAmount, CompleteDate) => {
-      dispatch(TargetActions.Edit(UserId, Id, GoalName, Type, Amount, CurAmount, CompleteDate))
-    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddEditItem)
+export default connect(mapStateToProps, mapDispatchToProps)(AddItem)

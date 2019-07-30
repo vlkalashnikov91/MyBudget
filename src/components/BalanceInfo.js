@@ -48,7 +48,7 @@ class BalanceInfo extends Component {
                 <Row>
                     <Col>
                         <Row style={[main.jC_C, main.aI_C]}>
-                            <Text style={[main.clWhite, main.fontFam, main.fontW_B]}>{SummMask(balance)} {user.DefCurrency}</Text>
+                            <Text style={[main.clWhite, main.fontFamBold]}>{SummMask(balance)} {user.DefCurrency}</Text>
                         </Row>
                     </Col>
                     <Col>

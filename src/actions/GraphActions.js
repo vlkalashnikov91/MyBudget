@@ -36,8 +36,18 @@ export const GraphActions = {
                     axios.get(URL + `/piegraph?id=${UserId}&term=${type}`).then(res => {
                         dispatch(ActionFetchData(res.data))
                     }).catch(error => {
-                        console.log("error", error)
-                        dispatch(ActionReject(error.message))
+                        if (error.response) {
+                            /*если 404 - значит данных нет*/
+                            if(error.response.status === 404) {
+                                dispatch(ActionFetchList([]))
+                            } else {
+                                console.log("error", error)
+                                dispatch(ActionReject(error.message))
+                            }
+                        } else {
+                            console.log("error", error)
+                            dispatch(ActionReject(error.message))
+                        }
                     })
                 } else {
                     dispatch(ActionReject(NoConn))

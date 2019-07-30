@@ -55,7 +55,7 @@ export const CardInfo = (props) => {
 
     return (
       <>
-      <Text style={[main.fontFam, main.mt_10, main.ml_10, main.fontW_B, main.clIvan, {marginBottom:6}]}>{Desc}</Text>
+      <Text style={[main.fontFam, main.mt_10, main.ml_10, main.clIvan, {marginBottom:6}]} note>{Desc}</Text>
       <Card style={{backgroundColor: mainColor}}>
         <FlatList
           data={data}
@@ -72,7 +72,7 @@ export const CardInfo = (props) => {
             >
               <Row style={{backgroundColor: fillFull, borderRadius:4}}>
                 <Row style={{backgroundColor: prcColor, borderRadius:4, width:`${progressCnt}%`, height:50}}></Row>
-                <Grid style={{position:'absolute', top:0, left:0, width:'100%'}}>
+                <Grid style={[{position:'absolute', top:0, left:0, width:'100%', height:'100%'}, main.fl_1, main.fD_C, main.jC_C]}>
                   <Row style={[main.pdL_10, main.pdR_10]}>
                     <Text style={[main.clWhite, main.mr_auto, main.ml_auto, main.fontFam]}>{capitalize(item.GoalName)}</Text>
                   </Row>

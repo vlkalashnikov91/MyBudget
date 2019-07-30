@@ -2,7 +2,6 @@
 export const TARGET = 1
 export const IDEBT = 2
 export const OWEME = 3
-export const EDIT = 0
 /* Константы для редьюсеров */
 export const GET_TARGET_LIST = 'GET_TARGET_LIST'
 export const REMOVE_TARGET = 'REMOVE_TARGET'

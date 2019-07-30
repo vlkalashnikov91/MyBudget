@@ -6,10 +6,8 @@ import { styles as main } from '../../Style'
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
-import { ADD, EDIT } from '../../constants/Categories'
 
-
-class AddEditCategory extends Component {
+class AddCategory extends Component {
   constructor(props) {
     super(props)
 
@@ -25,44 +23,11 @@ class AddEditCategory extends Component {
     this._editCategory = this._editCategory.bind(this)
   }
 
-  static navigationOptions = ({ navigation }) => {
-    let title = (navigation.getParam('type') == 'edit') ? 'Редактировать' : 'Новая категория'
-    return {
-      title: title
-    }
-  }
-
-  componentDidMount() {
-    let type = this.props.navigation.getParam('type', ADD)
-    let itemid = this.props.navigation.getParam('itemid', -1)
-
-    if (type === EDIT) {
-      /* Если редактирование, то необходимо подобрать нужную категорию */
-      let item = this.props.categories.Income.find(el => el.Id === itemid)
-
-      if (item == undefined) {
-        item = this.props.categories.Expense.find(el => el.Id === itemid)
-      }
-
-      if (item != undefined) {
-        this.setState({ 
-          Id: item.Id, 
-          Name: item.Name, 
-          IsSpendingCategory: item.IsSpendingCategory, 
-          CreatedBy: item.CreatedBy, 
-          Icon: item.Icon, 
-          notValid: (item.Name.length > 0 ) ? false : true
-        })
-      }
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
     if (!nextProps.categories.isLoad) {
-      let txt = nextProps.navigation.getParam('type', ADD) === ADD ? 'Категория создана' : 'Категория изменена'
       
       if(nextProps.categories.Error.length == 0) {
-        ToastTr.Success(txt)
+        ToastTr.Success('Категория создана')
       }
       this.props.navigation.goBack()
     }
@@ -70,13 +35,7 @@ class AddEditCategory extends Component {
 
   _editCategory() {
     let st = this.state
-    let type = this.props.navigation.getParam('type', ADD)
-
-    if (type == EDIT) {
-      this.props.editcategory(st.Id, st.Name, st.IsSpendingCategory, st.CreatedBy, st.Icon)
-    } else {
-      this.props.addcategory(this.props.user.UserId, st.Name, st.IsSpendingCategory)
-    }
+    this.props.addcategory(this.props.user.UserId, st.Name, st.IsSpendingCategory)
   }
 
   _changeName = value => {
@@ -96,9 +55,9 @@ class AddEditCategory extends Component {
                 <CardItem>
                   <Body>
                     <Form style={{alignSelf: 'stretch'}}>
-                      <Item stackedLabel last>
-                        <Label>Наименование</Label>
-                        <Input onChangeText={this._changeName} value={this.state.Name} style={main.clGrey}/>
+                      <Item floatingLabel style={{marginTop:0}}>
+                        <Label style={main.fontFam}>Наименование</Label>
+                        <Input onChangeText={this._changeName} value={this.state.Name} style={[main.clGrey, main.fontFam, main.mt_5]}/>
                       </Item>
                     </Form>
                   </Body>
@@ -108,7 +67,7 @@ class AddEditCategory extends Component {
                 <CardItem>
                   <Body>
                     <Button disabled={this.state.notValid} style={(this.state.notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
-                      <Text style={main.fontFam}>Сохранить</Text>
+                      <Text style={main.fontFam}>Создать</Text>
                     </Button>
                   </Body>
                 </CardItem>
@@ -133,10 +92,7 @@ const mapDispatchToProps = dispatch => {
     addcategory:(UserId, Name, IsSpendingCategory) => {
       dispatch(CategoriesActions.Add(UserId, Name, IsSpendingCategory))
     },
-    editcategory:(Id, Name, IsSpendingCategory, CreatedBy, Icon) => {
-      dispatch(CategoriesActions.Edit(Id, Name, IsSpendingCategory, CreatedBy, Icon))
-    }
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddEditCategory)
+export default connect(mapStateToProps, mapDispatchToProps)(AddCategory)

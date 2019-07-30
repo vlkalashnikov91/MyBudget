@@ -25,7 +25,9 @@ export default class ModalLoading extends Component {
       >
         <View style={main.modalOverlay} />
           <View style={[main.jC_C, main.aI_C, main.fl_1]} >
-            <Spinner size='large'/>
+            <View style={{backgroundColor:'rgba(0, 0, 0, 0.6)', borderRadius:8, paddingLeft:20, paddingRight:20}}>
+              <Spinner/>
+            </View>
         </View>
       </Modal>
     )

@@ -83,27 +83,31 @@ class ListPays extends Component {
                 <ListItem key={value.Id} icon >
                   <Left button onPress={_=> this._choosePayments(value)}>
                       {(this.state.planedPay === value.Id)
-                      ? <Button rounded light style={main.ml_10} ><Spinner size="small" /></Button>
-                      : <Button rounded success={(!value.IsPlaned)} light={(value.IsPlaned)} onPress={_=> this._choosePayments(value)} style={main.ml_10}>
-                          <Icon ios="ios-checkmark" android="md-checkmark" />
+                      ? <Button rounded light style={main.ml_10} ><Spinner size="small"/></Button>
+                      : <Button rounded bordered
+                        success={(!value.IsPlaned)} 
+                        light={(value.IsPlaned)} 
+                        style={main.ml_10}
+                        onPress={_=> this._choosePayments(value)}>
+                          <Icon ios="ios-checkmark" android="md-checkmark"/>
                       </Button>
                       }
                   </Left>
                   <Body>
                     <TouchableOpacity onPress={_=> this.props.GoToEdit(value.Id)}>
                       {((value.Name==null) || (value.Name.length === 0))
-                      ? <Text style={[main.clGrey, main.fontFamBold]}>---</Text>
-                      : <Text style={[main.clGrey, main.fontFamBold]} numberOfLines={1}>{value.Name}</Text>
+                      ? <Text style={[main.clGrey]}>---</Text>
+                      : <Text style={[main.clGrey]} numberOfLines={1}>{value.Name}</Text>
                       }
-                      <Text note style={main.fontFamBold}>{CatDesc.Name}</Text>
+                      <Text note style={main.fontFam}>{CatDesc.Name}</Text>
                     </TouchableOpacity>
                   </Body>
                   <Right style={[main.fD_C, {alignItems:'flex-end'}]}>
                     {(CatDesc.IsSpendingCategory) 
-                    ? <Text style={[main.clIvanD, main.fontFamBold]}> - {SummMask(value.Amount)} {user.DefCurrency}</Text>
-                    : <Text style={[main.clIvanG, main.fontFamBold]}> + {SummMask(value.Amount)} {user.DefCurrency}</Text>
+                    ? <Text style={[main.clIvanD]}> - {SummMask(value.Amount)} {user.DefCurrency}</Text>
+                    : <Text style={[main.clIvanG]}> + {SummMask(value.Amount)} {user.DefCurrency}</Text>
                     }
-                    <Text note style={main.fontFamBold}>{moment(value.TransDate).format('DD.MM.YYYY')}</Text>
+                    <Text note style={main.fontFam}>{moment(value.TransDate).format('DD.MM.YYYY')}</Text>
                   </Right>
                 </ListItem>
                 )

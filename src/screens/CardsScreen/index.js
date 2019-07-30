@@ -1,10 +1,10 @@
 import React from 'react'
-import { Image } from 'react-native'
 import { createStackNavigator } from 'react-navigation'
 import { fromRight } from 'react-navigation-transitions'
 
 import Cards from './Cards'
-import AddEditItem from './AddEditItem'
+import AddItem from './AddItem'
+import EditItem from './EditItem'
 import { styles as main } from '../../Style'
 
 const CardsNav = createStackNavigator(
@@ -15,7 +15,13 @@ const CardsNav = createStackNavigator(
         title: 'Мои цели',
       })
     },
-    AddEditItem: AddEditItem
+    AddItem: AddItem,
+    EditItem: {
+      screen: EditItem,
+      navigationOptions: () => ({
+        title: 'Редактировать',
+      })
+    },
   },
   {
     initialRouteName: 'Cards',

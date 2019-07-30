@@ -83,8 +83,8 @@ class Profile extends Component {
         <Container>
           <Content padder>
             <Card>
-              <CardItem header bordered>
-                <Text style={main.clIvan}>Параметры учетной записи</Text>
+              <CardItem bordered>
+                <Text style={[main.clIvan, main.fontFamBold]}>Параметры учетной записи</Text>
               </CardItem>
 
               <CardItem bordered button onPress={this._gotoChangePass}>
@@ -98,8 +98,8 @@ class Profile extends Component {
             </Card>
 
             <Card>
-              <CardItem header bordered>
-                <Text style={[main.clIvan, main.fontFam]}>Персональные настройки</Text>
+              <CardItem bordered>
+                <Text style={[main.clIvan, main.fontFamBold]}>Персональные настройки</Text>
               </CardItem>
               <CardItem bordered button onPress={this._gotoChangeCat}>
                 <Body>
@@ -160,8 +160,8 @@ class Profile extends Component {
                 </Body>
               </CardItem>
               
-              <CardItem footer>
-                <Button onPress={this._saveSettings} disabled={this.state.isChange} iconRight>
+              <CardItem>
+                <Button onPress={this._saveSettings} disabled={this.state.isChange} style={(this.state.isChange)?{}:main.bgIvan}>
                   <Text style={main.fontFam}>Сохранить изменения</Text>
                 </Button>
               </CardItem>
@@ -173,7 +173,8 @@ class Profile extends Component {
               </CardItem>
             </Card>
 
-            <Button block danger onPress={this.logout} style={main.mt_20}>
+            <Button block danger onPress={this.logout} style={main.mt_20} iconLeft>
+              <Icon ios="ios-exit" android="md-exit" />
               <Text style={main.fontFam}>Выход</Text>
             </Button>
           </Content>

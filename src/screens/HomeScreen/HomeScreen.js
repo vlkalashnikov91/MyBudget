@@ -31,8 +31,6 @@ class HomeScreen extends Component {
 
     this._refreshData = this._refreshData.bind(this)
     this._navigateToEdit = this._navigateToEdit.bind(this)
-    this._navigateToIncome = this._navigateToIncome.bind(this)
-    this._navigateToExpense = this._navigateToExpense.bind(this)
     this._nextMonth = this._nextMonth.bind(this)
     this._prevMonth = this._prevMonth.bind(this)
     this._changeMonth = this._changeMonth.bind(this)
@@ -72,15 +70,11 @@ class HomeScreen extends Component {
   }
 
   _navigateToEdit(Id) {
-    this.props.navigation.navigate('AddEditPayment', {type: EDIT, itemid: Id})
+    this.props.navigation.navigate('EditPayment', {itemid: Id})
   }
   
-  _navigateToIncome() {
-    this.props.navigation.navigate('AddEditPayment', {type: INCOME})
-  }
-
-  _navigateToExpense() {
-    this.props.navigation.navigate('AddEditPayment', {type: EXPENSE})
+  _navigateToAdd(type) {
+    this.props.navigation.navigate('AddPayment', {type: type})
   }
 
   _setModalInfo = () => {
@@ -177,15 +171,15 @@ class HomeScreen extends Component {
                   <Row>
                     <Col>
                       <Row style={[main.jC_C, main.aI_C]}>
-                        <Button iconLeft disabled={(isLoad)} style={(!isLoad)? main.bgGreen : {}} rounded onPress={this._navigateToIncome}>
+                        <Button iconLeft disabled={(isLoad)} style={(!isLoad)? main.bgGreen : {}} rounded onPress={_=> this._navigateToAdd(INCOME)}>
                           <Icon ios="ios-add" android="md-add" />
-                          <Text style={main.fontFam}>Доход</Text>
+                          <Text style={main.fontFam}>Доход </Text>
                         </Button>
                       </Row>
                     </Col>
                     <Col>
                       <Row style={[main.jC_C, main.aI_C]}>
-                        <Button iconRight disabled={(isLoad)} style={(!isLoad)? main.bgDanger : {}} rounded onPress={this._navigateToExpense}>
+                        <Button iconRight disabled={(isLoad)} style={(!isLoad)? main.bgDanger : {}} rounded onPress={_=> this._navigateToAdd(EXPENSE)}>
                           <Text style={main.fontFam}>Расход</Text>
                           <Icon ios="ios-remove" android="md-remove" />
                         </Button>
@@ -233,7 +227,7 @@ class HomeScreen extends Component {
 
 const styles = StyleSheet.create({
   modalCalendarText: {
-    fontFamily:'HelveticaNeueMedium',
+    fontFamily:'SegoeUIRegular',
     fontSize:15
   },
   prevMonthBtn: {

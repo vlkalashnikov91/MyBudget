@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Alert, RefreshControl } from 'react-native'
-import { Container, Icon, Fab, Tabs, Tab, ListItem, List, Body, Text } from 'native-base'
+import { Container, Icon, Fab, Tabs, Tab, ListItem, List, Body, Text, Left } from 'native-base'
 
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
-import { ADD, EDIT } from '../../constants/Categories'
 import { styles as main } from '../../Style'
 
 
@@ -34,11 +33,11 @@ class Category extends Component {
   }
 
   _addCategory() {
-    this.props.navigation.navigate('AddEditCategory', {type: ADD, CatType: this.state.CategoryType})
+    this.props.navigation.navigate('AddCategory', {CatType: this.state.CategoryType})
   }
 
   _editCategory(item) {
-    this.props.navigation.navigate('AddEditCategory', {type: EDIT, itemid: item.Id})
+    this.props.navigation.navigate('EditCategory', {itemid: item.Id})
   }
 
   _deleteCategory = (item) => {
@@ -66,15 +65,15 @@ class Category extends Component {
 
     return (
         <Container>
-          <Tabs tabBarUnderlineStyle={main.bgIvan} 
+          <Tabs tabBarUnderlineStyle={(this.state.CategoryType)? main.bgDanger: main.bgGreen} 
             initialPage={0} 
             onChangeTab={({ i }) => this._defineCatType(i)}
           >
             <Tab heading="Доход" 
               tabStyle={main.bgWhite} 
               activeTabStyle={main.bgWhite} 
-              textStyle={main.clGrey}
-              activeTextStyle={[main.clGrey, main.fontW_N]}
+              textStyle={[main.clIvanG, main.fontFam]}
+              activeTextStyle={[main.clIvanG, main.fontFamBold]}
             >
               <List dataArray = {income}
                 refreshControl={
@@ -82,10 +81,13 @@ class Category extends Component {
                 }
                 renderRow= {value => {
                     return (
-                    <ListItem key={value.Id} button
+                    <ListItem key={value.Id} button icon
                       onPress={_=> this._editCategory(value)}
                       onLongPress={_=> this._deleteCategory(value)}
                     >
+                      <Left>
+                        <Icon android="md-bulb" ios="ios-bulb" style={main.clGrey}/>
+                      </Left>
                       <Body>
                         <Text style={main.clGrey}>{value.Name}</Text>
                       </Body>
@@ -97,20 +99,22 @@ class Category extends Component {
             <Tab heading="Расход" 
               tabStyle={main.bgWhite} 
               activeTabStyle={main.bgWhite} 
-              textStyle={main.clGrey}
-              activeTextStyle={[main.clGrey, main.fontW_N]}
+              textStyle={[main.clIvanD, main.fontFam]}
+              activeTextStyle={[main.clIvanD, main.fontFamBold]}
             >
               <List dataArray = {expense}
                 refreshControl={
                   <RefreshControl refreshing={categories.isLoad} onRefresh={this._refreshData} />
                 }
-
                 renderRow={value => {
                   return (
-                    <ListItem key={value.Id} button
+                    <ListItem key={value.Id} button icon
                       onPress={_=> this._editCategory(value)}
                       onLongPress={_=> this._deleteCategory(value)}
                     >
+                      <Left>
+                        <Icon android="md-bulb" ios="ios-bulb" style={main.clGrey}/>
+                      </Left>
                       <Body>
                         <Text style={[main.clGrey, main.fontFam]}>{value.Name}</Text>
                       </Body>

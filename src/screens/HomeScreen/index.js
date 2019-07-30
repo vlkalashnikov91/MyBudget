@@ -2,7 +2,8 @@ import { createStackNavigator } from 'react-navigation'
 import { fromRight } from 'react-navigation-transitions'
 
 import HomeScreen from './HomeScreen'
-import AddEditPayment from './AddEditPayment'
+import AddPayment from './AddPayment'
+import EditPayment from './EditPayment'
 
 import { styles as main } from '../../Style'
 
@@ -10,7 +11,13 @@ import { styles as main } from '../../Style'
 const HomeScreenNav = createStackNavigator(
   {
     HomeScreen: HomeScreen,
-    AddEditPayment: AddEditPayment,
+    AddPayment: AddPayment,
+    EditPayment: {
+      screen: EditPayment,
+      navigationOptions: () => ({
+        title: 'Редактировать',
+      })
+    },
   },
   {
     initialRouteName: 'HomeScreen',

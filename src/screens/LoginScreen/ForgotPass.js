@@ -5,14 +5,14 @@ import { styles as main } from '../../Style'
 export default class ForgotPass extends Component {
   render() {
       return <Container>
-              <Content>
+              <Content padder>
                 <Card>
                   <CardItem>
                     <Body>
                       <Form style={{alignSelf: 'stretch'}}>
-                        <Item stackedLabel>
-                          <Label>Email</Label>
-                          <Input />
+                        <Item floatingLabel>
+                          <Label style={main.fontFam}>Email</Label>
+                          <Input style={[main.clGrey, main.fontFam, main.mt_5]}/>
                         </Item>
                       </Form>
                     </Body>

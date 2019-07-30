@@ -8,23 +8,11 @@ import { styles as main } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { PaymentActions } from '../../actions/PaymentActions'
-import { INCOME, EXPENSE, EDIT } from '../../constants/Payment'
-
-const headerText = (type) => {
-  switch(type) {
-    case INCOME:
-      return 'Добавить доход'
-    case EXPENSE:
-      return 'Добавить расход'
-    case EDIT:
-      return 'Редактировать'
-    default:
-      return 'ERROR'
-  }
-}
+import { INCOME, EXPENSE } from '../../constants/Payment'
+import { SummMask, ClearNums } from '../../utils/utils'
 
 
-class AddEditPayment extends Component {
+class EditPayment extends Component {
   constructor(props) {
     super(props);
     
@@ -46,18 +34,11 @@ class AddEditPayment extends Component {
     this._getCategoryList = this._getCategoryList.bind(this)
   }
 
-  static navigationOptions = ({ navigation }) => {
-    let type = navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
-    return {
-      title: headerText(type)
-    }
-  }
-
   componentDidMount() {
     nav = this.props.navigation
     payments = this.props.payments.Payments
 
-    if ((nav.getParam('type', INCOME) === EDIT) && (nav.getParam('itemid', -1) !== -1 )) {
+    if (nav.getParam('itemid', -1) !== -1 ) {
       let item = payments.find(el => el.Id === nav.getParam('itemid'))
       
       if (item !== undefined) {
@@ -69,32 +50,23 @@ class AddEditPayment extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({ Loading: false })
 
-    let txt = nextProps.navigation.getParam('type', INCOME) == INCOME ? 'Платеж создан' : 'Платеж изменен'
-    
     if(nextProps.payments.Error.length === 0) {
-      ToastTr.Success(txt)
+      ToastTr.Success('Платеж изменен')
     }
     this.props.navigation.goBack()
   }
 
   _getCategoryList() {
-    const type = this.props.navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
     const income = this.props.categories.Income
     const expense = this.props.categories.Expense
 
-    if (type === INCOME) {
-        return income
-    } else if (type === EXPENSE) {
-        return expense
-    } else if (type === EDIT) {
-      /*Если было выбрано "Редактировать" - то нужно определить к какой категории относится платеж и сформировать список*/
-      let CatDesc = income.find(el => el.Id === this.state.CategoryId)
+    /*Если было выбрано "Редактировать" - то нужно определить к какой категории относится платеж и сформировать список*/
+    let CatDesc = income.find(el => el.Id === this.state.CategoryId)
 
-      if (CatDesc == undefined) {
-        return expense
-      } else {
-        return income
-      }
+    if (CatDesc == undefined) {
+      return expense
+    } else {
+      return income
     }
   }
 
@@ -107,7 +79,7 @@ class AddEditPayment extends Component {
   }
 
   _changeAmount = value => {
-    this.setState({ Amount: value })
+    this.setState({ Amount: ClearNums(value) })
   }
 
   _changeDate = value => {
@@ -130,17 +102,12 @@ class AddEditPayment extends Component {
   }
 
   _editPayment() {
-    let type = this.props.navigation.getParam('type', INCOME)
     st = this.state
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
 
-      if (type == EDIT) {
-        this.props.editpayment(st.Id, st.CategoryId, st.Amount, st.Name, st.TransDate, st.IsSpendingCategory)
-      } else {
-        this.props.addpayment(st.CategoryId, st.Amount, st.Name, st.TransDate, st.IsSpending, st.IsPlaned, this.props.user.UserId)
-      }
+      this.props.editpayment(st.Id, st.CategoryId, st.Amount, st.Name, st.TransDate, st.IsSpendingCategory)
     }
   }
 
@@ -155,36 +122,38 @@ class AddEditPayment extends Component {
                   <Body>
                     <Form style={{alignSelf: 'stretch'}}>
 
-                      <Grid style={[main.fD_R, main.aI_C]}>
-                        <Item stackedLabel style={main.width_90prc} error={errAmount}>
-                          <Label>Сумма</Label>
-                          <Input
-                            onChangeText={this._changeAmount}
-                            value={Amount}
-                            keyboardType="number-pad"
-                            style={main.clGrey}
-                            maxLength={10}
-                          />
+                      <Grid style={main.width_90prc}>
+                        <Item stackedLabel style={{width:'80%'}} error={errAmount}>
+                          <Label style={main.fontFam}>Сумма</Label>
+                          <Input style={[main.clGrey, main.fontFam]} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
                         </Item>
-                        <H3 style={main.clGrey}>{user.DefCurrency}</H3>
+                        <H3 style={[main.clGrey, {position:'absolute', right:0, bottom:15}]}>{user.DefCurrency}</H3>
                       </Grid>
 
-                      <View style={[main.ml_10, main.mr_10, main.mt_20]}> 
-                        <Picker mode="dropdown"
-                          iosIcon={<Icon name="arrow-down" />}
-                          placeholderStyle={{ color: "#bfc6ea" }}
-                          placeholderIconColor="#007aff"
-                          selectedValue={CategoryId}
-                          onValueChange={this._changeCat}
-                        >
-                        {
-                          this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
-                        }
-                        </Picker>
-                      </View>
+                      <Grid style={[main.fD_R, main.aI_C, main.mt_20, {paddingLeft:15}]}>
+                        <Item picker>
+                          <Picker mode="dropdown"
+                            iosIcon={<Icon name="arrow-down" />}
+                            placeholderStyle={{ color: "#bfc6ea" }}
+                            placeholderIconColor="#007aff"
+                            selectedValue={CategoryId}
+                            onValueChange={this._changeCat}
+                          >
+                          {
+                            this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
+                          }
+                          </Picker>
+                        </Item>
+                      </Grid>
 
-                      <Item style={[main.mt_20, main.mb_20]}>
-                        <Input placeholder='Описание' onChangeText={this._changeDesc} value={Name} style={main.clGrey} multiline={true}/>
+                      <Item stackedLabel style={[main.mb_20, main.mt_20]}>
+                        <Label style={main.fontFam}>Описание</Label>
+                        <Input
+                          onChangeText={this._changeDesc}
+                          value={Name}
+                          style={[main.clGrey, main.fontFam]}
+                          multiline={true}
+                        />
                       </Item>
 
                       <DatePicker
@@ -198,11 +167,13 @@ class AddEditPayment extends Component {
                         animationType={"fade"}
                         androidMode="calendar"
                         placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
-                        textStyle={main.clGrey}
-                        placeHolderTextStyle={main.clGrey}
+                        placeHolderTextStyle={[main.clGrey, main.fontFam, {fontSize:20, textAlign:'center'}]}
+                        textStyle={[main.clGrey, main.fontFam, {fontSize:20, textAlign:'center'}]}
                         onDateChange={this._changeDate}
                         disabled={false}
-                      />
+                      >
+                        <Text>moment(TransDate).format('DD.MM.YYYY')</Text>
+                      </DatePicker>
                     </Form>
                   </Body>
                 </CardItem>
@@ -242,12 +213,9 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
   return {
-    addpayment: (CategoryId, Amount, Name, TransDate, IsSpending, IsPlaned, UserId) => {
-      dispatch(PaymentActions.Add(CategoryId, Amount, Name, TransDate, IsSpending, IsPlaned, UserId))
-    },
     editpayment: (Id, CategoryId, Amount, Name, TransDate, IsSpendingCategory) => {
       dispatch(PaymentActions.Edit(Id, CategoryId, Amount, Name, TransDate, IsSpendingCategory))
     }
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(AddEditPayment)
+export default connect(mapStateToProps, mapDispatchToProps)(EditPayment)

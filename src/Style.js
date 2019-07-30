@@ -65,8 +65,14 @@ export const styles = StyleSheet.create({
   aI_C: {
     alignItems: 'center'
   },
+  mt_5: {
+    marginTop:5
+  },
   mt_10: {
     marginTop:10
+  },
+  mt_15: {
+    marginTop:15
   },
   mt_20: {
     marginTop:20
@@ -156,7 +162,7 @@ export const styles = StyleSheet.create({
   },
   modalOverlay: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.4)',
   },
   imageForHeader: {
     width: 40, 

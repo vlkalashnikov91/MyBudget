@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Spinner } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form } from 'native-base'
 
+import ModalLoading from '../../components/ModalLoading'
 import { ToastTr } from '../../components/Toast'
 import { UserAuth } from '../../actions/UserActions'
 import { validateEmail } from '../../utils/utils.js'
@@ -98,44 +99,36 @@ class Registration extends Component {
       const { errLogin, errEmail, errPass, errRePass } = this.state
 
       return <Container>
-              <Content>
+              <Content padder>
                 <Card>
                   <CardItem>
                     <Body>
-                      <Item floatingLabel error={errLogin}>
-                        <Label>Логин</Label>
-                        <Input onChangeText={this._changeLogin}/>
-                      </Item>
-                    </Body>
-                  </CardItem>
-                  <CardItem>
-                    <Body>
-                      <Item floatingLabel error={errEmail}>
-                        <Label>Email</Label>
-                        <Input onChangeText={this._changeEmail}/>
-                      </Item>
-                    </Body>
-                  </CardItem>
-                  <CardItem >
-                    <Body>
-                      <Item floatingLabel error={errPass}>
-                        <Label>Пароль</Label>
-                        <Input secureTextEntry={true} onChangeText={this._changePass}/>
-                      </Item>
-                    </Body>
-                  </CardItem>
-                  <CardItem style={{paddingBottom:20}}>
-                    <Body>
-                      <Item floatingLabel error={errRePass}>
-                        <Label>Подтверждение пароля</Label>
-                        <Input secureTextEntry={true} onChangeText={this._changeRePass}/>
-                      </Item>
+                      <Form style={{alignSelf: 'stretch'}}>
+                        <Item floatingLabel error={errLogin}>
+                          <Label style={main.fontFam}>Логин</Label>
+                          <Input onChangeText={this._changeLogin} style={[main.clGrey, main.fontFam, main.mt_5]}/>
+                        </Item>
+
+                        <Item floatingLabel error={errEmail}>
+                          <Label style={main.fontFam}>Email</Label>
+                          <Input onChangeText={this._changeEmail} style={[main.clGrey, main.fontFam, main.mt_5]}/>
+                        </Item>
+
+                        <Item floatingLabel error={errPass}>
+                          <Label style={main.fontFam}>Пароль</Label>
+                          <Input secureTextEntry={true} onChangeText={this._changePass} style={[main.clGrey, main.fontFam, main.mt_5]}/>
+                        </Item>
+
+                        <Item floatingLabel error={errRePass}>
+                          <Label style={main.fontFam}>Подтверждение пароля</Label>
+                          <Input secureTextEntry={true} onChangeText={this._changeRePass} style={[main.clGrey, main.fontFam, main.mt_5]}/>
+                        </Item>
+                      </Form>
                     </Body>
                   </CardItem>
                 </Card>
-                {(user.isLoad)
-                ? <Spinner />
-                : <Card transparent>
+                
+                <Card transparent>
                   <CardItem>
                     <Body>
                       <Button block onPress={this._registration} style={main.bgGreen}>
@@ -144,8 +137,11 @@ class Registration extends Component {
                     </Body>
                   </CardItem>
                  </Card>
-                }
+
               </Content>
+
+              <ModalLoading isActive={user.isLoad} />
+
             </Container>
   }
 }

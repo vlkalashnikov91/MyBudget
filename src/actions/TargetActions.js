@@ -18,8 +18,17 @@ export const TargetActions = {
                         dispatch(ActionFetchList(res.data))
                     })
                     .catch(error => {
-                        console.log("error", error)
-                        dispatch(ActionReject(error.message))
+                        if (error.response) {
+                            /*если 404 - значит данных */
+                            if(error.response.status === 404) {
+                                dispatch(ActionFetchList([]))
+                            } else {
+                                dispatch(ActionReject(error.message))
+                            }
+                        } else {
+                            console.log('Error', error.message)
+                            dispatch(ActionReject(error.message))
+                        }
                     })
                 } else {
                     dispatch(ActionReject(NoConn))

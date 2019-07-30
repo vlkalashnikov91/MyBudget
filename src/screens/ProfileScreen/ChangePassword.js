@@ -23,19 +23,19 @@ export default class ChangePassword extends Component {
                 <CardItem>
                   <Body>
                     <Form style={{alignSelf: 'stretch'}}>
-                      <Item stackedLabel>
-                        <Label>Текущий пароль</Label>
-                        <Input secureTextEntry={true} style={main.clGrey}/>
+                      <Item floatingLabel style={{marginTop:0}}>
+                        <Label style={main.fontFam}>Текущий пароль</Label>
+                        <Input secureTextEntry={true} style={[main.clGrey, main.mt_5]}/>
                       </Item>
 
-                      <Item stackedLabel>
-                        <Label>Новый пароль</Label>
-                        <Input secureTextEntry={true} style={main.clGrey}/>
+                      <Item floatingLabel>
+                        <Label style={main.fontFam}>Новый пароль</Label>
+                        <Input secureTextEntry={true} style={[main.clGrey, main.mt_5]}/>
                       </Item>
 
-                      <Item stackedLabel>
-                        <Label>Подтверждение пароля</Label>
-                        <Input secureTextEntry={true} style={main.clGrey}/>
+                      <Item floatingLabel>
+                        <Label style={main.fontFam}>Подтверждение пароля</Label>
+                        <Input secureTextEntry={true} style={[main.clGrey, main.mt_5]}/>
                       </Item>
                     </Form>
                   </Body>
