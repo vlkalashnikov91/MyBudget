@@ -20,11 +20,21 @@ export default (state = initialeState, action) => {
                 Error: '',
             }
         case GET_CATEGORY_LIST:
+
+            let NoCatIncome = action.payload.income.filter(item => item.Id === 30 || item.Id === 31)
+            let NoCatExpense = action.payload.expense.filter(item => item.Id === 30 || item.Id === 31)
+
+            let CatIncomeArr = action.payload.income.filter(item => item.Id !== 30 && item.Id !== 31).sort((a,b) => a.Name > b.Name)
+            CatIncomeArr = NoCatIncome.concat(CatIncomeArr)
+
+            let CatExpenseArr = action.payload.expense.filter(item => item.Id !== 30 && item.Id !== 31).sort((a,b) => a.Name > b.Name)
+            CatExpenseArr = NoCatExpense.concat(CatExpenseArr)
+
             return {...state,
                 isLoad: false,
                 Error: '',
-                Income: action.payload.income.sort((a,b) => a.Id > b.Id),
-                Expense: action.payload.expense.sort((a,b) => a.Id > b.Id)
+                Income: CatIncomeArr,
+                Expense: CatExpenseArr
             } 
         case REMOVE_CATEGORY:
             return {...state,

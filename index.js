@@ -3,7 +3,6 @@ import { Font, AppLoading } from 'expo'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { Root } from 'native-base'
-
 import MainApp from './src/App'
 import reducers from './src/reducers'
 import thunk from 'redux-thunk'

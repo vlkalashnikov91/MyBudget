@@ -55,7 +55,7 @@ class AddCategory extends Component {
                 <CardItem>
                   <Body>
                     <Form style={{alignSelf: 'stretch'}}>
-                      <Item floatingLabel style={{marginTop:0}}>
+                      <Item floatingLabel style={main.mt_0}>
                         <Label style={main.fontFam}>Наименование</Label>
                         <Input onChangeText={this._changeName} value={this.state.Name} style={[main.clGrey, main.fontFam, main.mt_5]}/>
                       </Item>

@@ -82,7 +82,7 @@ class AddPayment extends Component {
   }
 
   _changeAmount = value => {
-    this.setState({ Amount: ClearNums(value) })
+    this.setState({ Amount: String(Number(ClearNums(value))) })
   }
 
   _changeDate = value => {
@@ -126,7 +126,7 @@ class AddPayment extends Component {
                     <Form style={{alignSelf: 'stretch'}}>
 
                       <Grid style={main.width_90prc}>
-                        <Item floatingLabel style={{width:'80%', marginTop:0}} error={errAmount}>
+                        <Item floatingLabel style={[{width:'80%'}, main.mt_0]} error={errAmount}>
                           <Label style={main.fontFam}>Сумма</Label>
                           <Input
                             onChangeText={this._changeAmount}

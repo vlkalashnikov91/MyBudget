@@ -16,10 +16,10 @@ import ModalLoading from '../../components/ModalLoading'
 class Login extends Component {
   constructor(props) {
     super(props)
-
+    
     this.state = {
       login: '',
-      password: '123456789',
+      password: '',
       saveMe: false,
       errlogin: false,
       errpassword: false

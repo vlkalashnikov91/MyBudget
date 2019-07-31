@@ -67,7 +67,7 @@ class AddItem extends Component {
   }
 
   _changeAmount = value => {
-    this.setState({ Amount: ClearNums(value) })
+    this.setState({ Amount: String(Number(ClearNums(value))) })
   }
 
   _changeDate = value => {
@@ -122,7 +122,7 @@ class AddItem extends Component {
                 <Body>
                   <Form style={{alignSelf: 'stretch'}}>
 
-                    <Item floatingLabel error={errGoalName} style={{marginTop:0}}>
+                    <Item floatingLabel error={errGoalName} style={main.mt_0}>
                       <Label style={main.fontFam}>Наименование</Label>
                       <Input onChangeText={this._changeName} value={GoalName} style={[main.clGrey, main.fontFam, main.mt_5]}/>
                     </Item>

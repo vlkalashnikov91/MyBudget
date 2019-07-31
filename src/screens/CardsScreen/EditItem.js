@@ -60,11 +60,11 @@ class EditItem extends Component {
   }
 
   _changeAmount = value => {
-    this.setState({ Amount: ClearNums(value) })
+    this.setState({ Amount: String(Number(ClearNums(value))) })
   }
 
   _changeCurAmount = value => {
-    this.setState({ CurAmount: value.replace(/\s+/g, '') })
+    this.setState({ CurAmount: String(Number(ClearNums(value))) })
   }
 
   _changeDate = value => {

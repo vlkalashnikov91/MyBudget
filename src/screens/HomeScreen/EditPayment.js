@@ -79,7 +79,7 @@ class EditPayment extends Component {
   }
 
   _changeAmount = value => {
-    this.setState({ Amount: ClearNums(value) })
+    this.setState({ Amount: String(Number(ClearNums(value))) })
   }
 
   _changeDate = value => {

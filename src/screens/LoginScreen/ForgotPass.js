@@ -10,7 +10,7 @@ export default class ForgotPass extends Component {
                   <CardItem>
                     <Body>
                       <Form style={{alignSelf: 'stretch'}}>
-                        <Item floatingLabel>
+                        <Item floatingLabel style={main.mt_0}>
                           <Label style={main.fontFam}>Email</Label>
                           <Input style={[main.clGrey, main.fontFam, main.mt_5]}/>
                         </Item>

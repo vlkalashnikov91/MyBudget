@@ -65,6 +65,9 @@ export const styles = StyleSheet.create({
   aI_C: {
     alignItems: 'center'
   },
+  mt_0: {
+    marginTop:0
+  },
   mt_5: {
     marginTop:5
   },

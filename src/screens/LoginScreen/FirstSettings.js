@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Alert } from 'react-native'
-import { Container, Body, Content, Button, Text, Icon, Card, CardItem, Item, Label, Picker, Spinner } from 'native-base'
+import { Container, Body, Content, Button, Text, Icon, Card, CardItem, Item, Label, Picker } from 'native-base'
 
 import { UserAuth } from '../../actions/UserActions'
 import { styles as main } from '../../Style'
@@ -60,7 +60,7 @@ render() {
                  <Card transparent style={main.aI_C}>
                     <CardItem>
                         <Body style={[main.fD_R, main.aI_C]}>
-                            <Label style={main.width_65prc}>Валюта по умолчанию</Label>
+                            <Label style={[main.width_65prc, main.fontFam]}>Валюта по умолчанию</Label>
                             <Item picker style={main.width_30prc}>
                                 <Picker mode="dropdown"
                                     iosIcon={<Icon name="arrow-down" />}
@@ -79,7 +79,7 @@ render() {
                     </CardItem>
                     <CardItem>
                         <Body style={[main.fD_R, main.aI_C]}>
-                            <Label style={main.width_65prc}>
+                            <Label style={[main.width_65prc, main.fontFam]}>
                                 Перенос остатка  <Icon name='information-circle' style={main.clGrey} button onPress={this.setModalVisible} />
                             </Label>
                             <Item picker style={main.width_30prc}>

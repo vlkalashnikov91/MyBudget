@@ -114,7 +114,7 @@ class Cards extends Component {
   }
 
   _chngIncreaseAmount = value => {
-    this.setState({ Amount: ClearNums(value) })
+    this.setState({ Amount: String(Number(ClearNums(value))) })
   }
 
   _increaseItem() {

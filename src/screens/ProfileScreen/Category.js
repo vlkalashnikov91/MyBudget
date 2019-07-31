@@ -81,13 +81,10 @@ class Category extends Component {
                 }
                 renderRow= {value => {
                     return (
-                    <ListItem key={value.Id} button icon
+                    <ListItem key={value.Id} button
                       onPress={_=> this._editCategory(value)}
                       onLongPress={_=> this._deleteCategory(value)}
                     >
-                      <Left>
-                        <Icon android="md-bulb" ios="ios-bulb" style={main.clGrey}/>
-                      </Left>
                       <Body>
                         <Text style={main.clGrey}>{value.Name}</Text>
                       </Body>
@@ -108,13 +105,10 @@ class Category extends Component {
                 }
                 renderRow={value => {
                   return (
-                    <ListItem key={value.Id} button icon
+                    <ListItem key={value.Id} button
                       onPress={_=> this._editCategory(value)}
                       onLongPress={_=> this._deleteCategory(value)}
                     >
-                      <Left>
-                        <Icon android="md-bulb" ios="ios-bulb" style={main.clGrey}/>
-                      </Left>
                       <Body>
                         <Text style={[main.clGrey, main.fontFam]}>{value.Name}</Text>
                       </Body>

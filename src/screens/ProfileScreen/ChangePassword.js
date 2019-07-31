@@ -23,7 +23,7 @@ export default class ChangePassword extends Component {
                 <CardItem>
                   <Body>
                     <Form style={{alignSelf: 'stretch'}}>
-                      <Item floatingLabel style={{marginTop:0}}>
+                      <Item floatingLabel style={main.mt_0}>
                         <Label style={main.fontFam}>Текущий пароль</Label>
                         <Input secureTextEntry={true} style={[main.clGrey, main.mt_5]}/>
                       </Item>
