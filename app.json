@@ -8,6 +8,7 @@
       "ios",
       "android"
     ],
+    "primaryColor": "#FFFFFF",
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/favicon_new.png",
