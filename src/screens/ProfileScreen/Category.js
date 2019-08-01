@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { Alert, RefreshControl } from 'react-native'
-import { Container, Icon, Fab, Tabs, Tab, ListItem, List, Body, Text, Left } from 'native-base'
+import { Alert, RefreshControl, FlatList } from 'react-native'
+import { Container, Icon, Fab, Tabs, Tab, ListItem, Body, Text, Right } from 'native-base'
 
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
@@ -12,8 +12,15 @@ class Category extends Component {
   constructor(props) {
     super(props)
 
+    let incomeSYS = this.props.categories.Income.filter(item => item.IsSystem === true && item.Id!==30 && item.Id!==31 ).sort((a,b) => a.Name > b.Name)
+    let incomeUser = this.props.categories.Income.filter(item => item.IsSystem === false && item.Id!==30 && item.Id!==31 ).sort((a,b) => a.Name > b.Name)
+    let expenseSYS = this.props.categories.Expense.filter(item => item.IsSystem === true && item.Id!==30 && item.Id!==31 ).sort((a,b) => a.Name > b.Name)
+    let expenseUser = this.props.categories.Expense.filter(item => item.IsSystem === false && item.Id!==30 && item.Id!==31 ).sort((a,b) => a.Name > b.Name)
+
     this.state = {
-      CategoryType: false
+      CategoryType: false,
+      income: incomeSYS.concat(incomeUser),
+      expense: expenseSYS.concat(expenseUser)
     }
 
     this._addCategory = this._addCategory.bind(this)
@@ -37,35 +44,42 @@ class Category extends Component {
   }
 
   _editCategory(item) {
-    this.props.navigation.navigate('EditCategory', {itemid: item.Id})
+    if (item.IsSystem) {
+      ToastTr.Default('Категории со знаком "*" нельзя редактировать')
+    } else {
+      this.props.navigation.navigate('EditCategory', {itemid: item.Id})
+    }
   }
 
   _deleteCategory = (item) => {
-    Alert.alert(
-      `${item.Name}`,
-      `Удалить категорию "${item.Name}"?`,
-      [
-        {text: 'Нет'},
-        {text: 'Да', onPress: ()=> {
-          this.props.deletecategory(this.props.user.UserId, item.Id)
-        }
-        },
-      ]
-    )
+    if (item.IsSystem) {
+      ToastTr.Default('Категории со знаком "*" нельзя удалять')
+    } else {
+      Alert.alert(
+        `${item.Name}`,
+        `Удалить категорию "${item.Name}"?`,
+        [
+          {text: 'Нет'},
+          {text: 'Да', onPress: ()=> {
+            this.props.deletecategory(this.props.user.UserId, item.Id)
+          }
+          },
+        ]
+      )
+    }
   }
 
   _refreshData() {
     this.props.getcategories(this.props.user.UserId)
   }
 
+
   render() {
-    const { categories } = this.props
-    const income = categories.Income.filter(item => item.IsSystem != true)
-    const expense = categories.Expense.filter(item => item.IsSystem != true)
+    const { CategoryType, income, expense } = this.state
 
     return (
         <Container>
-          <Tabs tabBarUnderlineStyle={(this.state.CategoryType)? main.bgDanger: main.bgGreen} 
+          <Tabs tabBarUnderlineStyle={(CategoryType)? main.bgDanger: main.bgGreen} 
             initialPage={0} 
             onChangeTab={({ i }) => this._defineCatType(i)}
           >
@@ -75,21 +89,28 @@ class Category extends Component {
               textStyle={[main.clIvanG, main.fontFam]}
               activeTextStyle={[main.clIvanG, main.fontFamBold]}
             >
-              <List dataArray = {income}
+              <FlatList
+                data={income}
+                keyExtractor = {(item, index) => 'key-'+item.Name + index}
                 refreshControl={
-                  <RefreshControl refreshing={categories.isLoad} onRefresh={this._refreshData} />
+                  <RefreshControl refreshing={this.props.categories.isLoad} onRefresh={this._refreshData} />
                 }
-                renderRow= {value => {
-                    return (
-                    <ListItem key={value.Id} button
-                      onPress={_=> this._editCategory(value)}
-                      onLongPress={_=> this._deleteCategory(value)}
+                renderItem={({item}) => {
+                  return (
+                    <ListItem key={'cat-'+item.Id + item.Name} button
+                      onPress={_=> this._editCategory(item)}
+                      onLongPress={_=> this._deleteCategory(item)}
                     >
                       <Body>
-                        <Text style={main.clGrey}>{value.Name}</Text>
+                        <Text style={[main.clGrey, main.fontFam]}>{item.Name}</Text>
                       </Body>
+                      {(item.IsSystem)&&
+                      <Right>
+                        <Icon name='star'/>
+                      </Right>
+                      }
                     </ListItem>
-                    )
+                  )
                 }}
               />
             </Tab>
@@ -99,19 +120,26 @@ class Category extends Component {
               textStyle={[main.clIvanD, main.fontFam]}
               activeTextStyle={[main.clIvanD, main.fontFamBold]}
             >
-              <List dataArray = {expense}
+              <FlatList
+                data={expense}
+                keyExtractor = {(item, index) => 'key-'+item.Name + index}
                 refreshControl={
-                  <RefreshControl refreshing={categories.isLoad} onRefresh={this._refreshData} />
+                  <RefreshControl refreshing={this.props.categories.isLoad} onRefresh={this._refreshData} />
                 }
-                renderRow={value => {
+                renderItem={({item}) => {
                   return (
-                    <ListItem key={value.Id} button
-                      onPress={_=> this._editCategory(value)}
-                      onLongPress={_=> this._deleteCategory(value)}
+                    <ListItem key={'cat-'+item.Id + item.Name} button
+                      onPress={_=> this._editCategory(item)}
+                      onLongPress={_=> this._deleteCategory(item)}
                     >
                       <Body>
-                        <Text style={[main.clGrey, main.fontFam]}>{value.Name}</Text>
+                        <Text style={main.clGrey}>{item.Name}</Text>
                       </Body>
+                      {(item.IsSystem)&&
+                      <Right>
+                        <Icon name='star'/>
+                      </Right>
+                      }
                     </ListItem>
                     )
                 }}

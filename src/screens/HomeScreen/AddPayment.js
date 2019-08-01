@@ -176,8 +176,8 @@ class AddPayment extends Component {
                         animationType={"fade"}
                         androidMode="calendar"
                         placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
-                        placeHolderTextStyle={[main.clGrey, main.fontFam, {fontSize:20, textAlign:'center'}]}
-                        textStyle={[main.clGrey, main.fontFam, {fontSize:20, textAlign:'center'}]}
+                        placeHolderTextStyle={[main.clGrey, main.fontFam, main.txtAl_c, {fontSize:20}]}
+                        textStyle={[main.clGrey, main.fontFam, main.txtAl_c, {fontSize:20}]}
                         onDateChange={this._changeDate}
                         disabled={false}
                       >
@@ -192,7 +192,10 @@ class AddPayment extends Component {
                 <CardItem>
                   <Body>
                     <Button style={main.bgGreen} block onPress={this._addPayment}>
-                      <Text style={main.fontFam}>Создать</Text>
+                      {(Loading)
+                      ? <Text style={main.fontFam}>Загрузка</Text>
+                      : <Text style={main.fontFam}>Создать</Text>
+                      }
                     </Button>
                   </Body>
                 </CardItem>

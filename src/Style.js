@@ -53,6 +53,9 @@ export const styles = StyleSheet.create({
   clBlack: {
     color: 'black'
   },
+  jC_start: {
+    justifyContent: 'flex-start'
+  },
   jC_C: {
     justifyContent: 'center'
   },
@@ -134,7 +137,6 @@ export const styles = StyleSheet.create({
   pdL_50: {
     paddingLeft: 50
   },
-
   width_90prc: {
     width:'90%'
   },

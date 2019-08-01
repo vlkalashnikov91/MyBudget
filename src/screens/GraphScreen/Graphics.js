@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet, Image } from 'react-native'
+import { StyleSheet, Image, FlatList } from 'react-native'
 import { Svg } from 'expo'
 import { PieChart } from 'react-native-svg-charts'
-import { Container, Body, Content, Picker, ListItem, Text, List, Card, Left, Icon, Right, Spinner, Segment } from 'native-base'
+import { Container, Body, Content, Picker, ListItem, Text, Card, Left, Icon, Right, Spinner, Segment } from 'native-base'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
  
 import { styles as main } from '../../Style'
@@ -155,29 +155,28 @@ class Graphics extends Component {
                 animationDuration={500}
               />
               <Card style={main.mt_10}>
-                <List dataArray={pieDescData}
-                    renderRow={data => { 
-                      return (
-                        <ListItem icon button
-                          //selected={(this.state.selectedPie === data.key)}
-                          onPress={_ => this._choosPieItem(data.key)}
-                          style={main.pd_0}
-                        >
-                          <Left>
-                              <Svg width="13" height="13">
-                                <Svg.Rect x="0" y="0" width="12" height="12" fill={data.svg.fill} />
-                              </Svg>
-                          </Left>
-                          <Body>
-                              <Text style={[main.clGrey, main.fontFam, (selectedPie === data.key) && {color:'#62B1F6'}]}>{data.description}</Text>
-                          </Body>
-                          <Right>
-                              <Text note style={main.fontFam}>{SummMask(data.value)} {user.DefCurrency}</Text>
-                          </Right>
-                        </ListItem>
-                      )}
-                    }
-                  />
+                <FlatList
+                  data={pieDescData}
+                  keyExtractor = {(item, index) => 'graph-'+item.description + index}
+                  renderItem={({item}) => {
+                    <ListItem icon button
+                      onPress={_ => this._choosPieItem(item.key)}
+                      style={main.pd_0}
+                    >
+                      <Left>
+                          <Svg width="13" height="13">
+                            <Svg.Rect x="0" y="0" width="12" height="12" fill={item.svg.fill} />
+                          </Svg>
+                      </Left>
+                      <Body>
+                          <Text style={[main.clGrey, main.fontFam, (selectedPie === item.key) && {color:'#62B1F6'}]}>{item.description}</Text>
+                      </Body>
+                      <Right>
+                          <Text note style={main.fontFam}>{SummMask(item.value)} {user.DefCurrency}</Text>
+                      </Right>
+                    </ListItem>
+                  }}
+                />
               </Card>
             </Content>
           }

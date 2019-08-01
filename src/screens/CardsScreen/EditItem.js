@@ -82,7 +82,7 @@ class EditItem extends Component {
       this.setState({ errAmount: true })
       return false
     }
-    if ((st.CurAmount.length == 0) || Number(st.CurAmount <= 0)) {
+    if ((st.CurAmount.length == 0) || Number(st.CurAmount < 0)) {
       this.setState({ errCurAmount: true })
       return false
     }

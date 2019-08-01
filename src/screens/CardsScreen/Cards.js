@@ -226,7 +226,7 @@ class Cards extends Component {
           <View style={main.modalOverlay} />
           <Card transparent style={styles.modalMenu}>
             <CardItem header>
-              <Text style={{textAlign:'center'}}>{this.state.choosenItem.GoalName}</Text>
+              <Text style={main.txtAl_c}>{this.state.choosenItem.GoalName}</Text>
               <Icon button name="close" onPress={this._hideModalMenu} style={[main.mr_0, main.ml_auto, main.clGrey]}/>
             </CardItem>
             <CardItem>
@@ -252,9 +252,9 @@ class Cards extends Component {
             </CardItem>
             <CardItem>
               <Body>
-                <Button transparent onPress={_=> this._addTarget(TARGET)}><Text uppercase={false} style={[main.fontFamBold, {fontSize:16, color:TargetColor}]}>Поставить цель</Text></Button>
-                <Button transparent onPress={_=> this._addTarget(IDEBT)}><Text uppercase={false} style={[main.fontFamBold,, {fontSize:16, color:IDebtColor}]}>Взять в долг</Text></Button>
-                <Button transparent onPress={_=> this._addTarget(OWEME)}><Text uppercase={false} style={[main.fontFamBold, {fontSize:16, color:DebtColor}]}>Дать в долг</Text></Button>
+                <Button full transparent style={main.jC_start} onPress={_=> this._addTarget(TARGET)}><Text uppercase={false} style={styles.targetButt}>Поставить цель</Text></Button>
+                <Button full transparent style={main.jC_start} onPress={_=> this._addTarget(OWEME)}><Text uppercase={false} style={styles.owemeButt}>Дать в долг</Text></Button>
+                <Button full transparent style={main.jC_start} onPress={_=> this._addTarget(IDEBT)}><Text uppercase={false} style={styles.idebtButt}>Взять в долг</Text></Button>
               </Body>
             </CardItem>
           </Card>
@@ -288,6 +288,21 @@ const styles = StyleSheet.create({
     height: screenHeight / 3.5, 
     marginTop: screenHeight / 4, 
     marginLeft: (screenWidth - (screenWidth / 1.2)) / 2
+  },
+  targetButt: {
+    ...main.fontFamBold,
+    fontSize:16, 
+    color:TargetColor
+  },
+  owemeButt: {
+    ...main.fontFamBold,
+    fontSize:16, 
+    color:DebtColor
+  },
+  idebtButt: {
+    ...main.fontFamBold,
+    fontSize:16, 
+    color:IDebtColor
   }
 })
 

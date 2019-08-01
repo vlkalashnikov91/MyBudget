@@ -1,19 +1,19 @@
 import React, {Component} from 'react'
-import { Image, StyleSheet, Clipboard } from 'react-native'
+import { Image, StyleSheet, Linking  } from 'react-native'
 import { Container, Button, Text } from 'native-base'
 import { Row, Grid } from 'react-native-easy-grid'
 import { styles as main, screenHeight, screenWidth } from '../../Style'
-import { ToastTr } from '../../components/Toast'
 
 const mail = 'T2k.ivan@gmail.com'
 
+
 export default class About extends Component {
-    _copyMail() {
-        Clipboard.setString(mail)
-        ToastTr.Default('Скопировано в буфер')
+    _openMail() {
+        Linking.openURL(`mailto: ${mail}`)
     }
 
-  render() {
+
+    render() {
     return (
         <Container>
             <Grid style={[main.jC_C, {height: screenHeight/2.5}]}>
@@ -23,7 +23,7 @@ export default class About extends Component {
                 </Row>
                 <Row size={25} style={[main.jC_C, main.aI_C, main.fD_C]}>
                     <Text style={main.fontFam}>Мы на связи</Text>
-                    <Button transparent block onPress={this._copyMail}>
+                    <Button transparent block onPress={this._openMail}>
                         <Text style={main.fontFam} uppercase={false}>{mail}</Text>
                     </Button>
                 </Row>
