@@ -11,9 +11,10 @@ import 'moment/locale/ru'
 import { ToastTr } from '../../components/Toast'
 import ListPays from '../../components/ListPays'
 import BalanceInfo from '../../components/BalanceInfo'
+import YearMonthPicker from '../../components/YearMonthPicker'
 
 import { PaymentActions } from '../../actions/PaymentActions'
-import { INCOME, EXPENSE, EDIT } from '../../constants/Payment'
+import { INCOME, EXPENSE } from '../../constants/Payment'
 
 import { styles as main, ivanColor } from '../../Style'
 import { capitalize } from '../../utils/utils'
@@ -24,7 +25,6 @@ class HomeScreen extends Component {
 
     this.state = {
       selectedDate: moment(),
-      visibleCalendar: false,
       refreshing: false,
       payments: this.props.payments
     }
@@ -98,15 +98,11 @@ class HomeScreen extends Component {
   }
 
   _changeMonth(newDate){
-
     this.setState({ selectedDate: newDate })
 
     let currMonth = newDate.month()+1
     let currYear = newDate.year()
-
     this.props.getpaymentlist(this.props.user.UserId, currYear, currMonth)
-
-    this._hideModalCalendar()
   }
 
   _refreshData() {
@@ -116,13 +112,21 @@ class HomeScreen extends Component {
   }
 
   _showModalCalendar = () => {
-    this.setState({ visibleCalendar: true })
-  }
+    let selectedDate = this.state.selectedDate
 
-  _hideModalCalendar = () => {
-    this.setState({ visibleCalendar: false })
-  }
+    let startYear = Number(moment(selectedDate).subtract(5, 'years').format('YYYY'))
+    let endYear = Number(moment(selectedDate).add(5, 'years').format('YYYY'))
+    let selectedYear = Number(moment(selectedDate).format('YYYY'))
+    let selectedMonth = Number(moment(selectedDate).format('M'))-1
 
+    this.picker
+      .show({startYear, endYear, selectedYear, selectedMonth})
+      .then(({year, month}) => {
+        let newDate = moment([year, month, 1])
+
+        this._changeMonth(newDate)
+      })
+  }
 
   render() {
     const { payments, categories } = this.props
@@ -143,15 +147,15 @@ class HomeScreen extends Component {
 
           <Segment style={main.bgWhite}>
             <Left>
-              <Button transparent onPress={this._prevMonth} style={[styles.prevMonthBtn, main.clGrey]}>
+              <Button transparent onPress={this._prevMonth} style={styles.prevMonthBtn}>
                 <FontAwesome name="angle-left" size={27} />
               </Button>
             </Left>
-            <H2 style={[{ marginTop:11}, main.clGrey, main.fontFam]} button onPress={this._showModalCalendar}>
+            <H2 style={styles.monthHeader} button onPress={this._showModalCalendar}>
               {capitalize(moment(this.state.selectedDate).format("MMMM YYYY"))}
             </H2>
             <Right>
-              <Button transparent style={[styles.nextMonthBtn, main.clGrey]} onPress={this._nextMonth}>
+              <Button transparent style={styles.nextMonthBtn} onPress={this._nextMonth}>
                 <FontAwesome name="angle-right" size={27} />
               </Button>
             </Right>
@@ -194,49 +198,27 @@ class HomeScreen extends Component {
 
           </Content>
 
-          <Modal animationType="fade"
-            transparent={true}
-            visible={this.state.visibleCalendar}
-            onRequestClose={this._hideModalCalendar}
-          >
-            <View style={main.modalOverlay} />
-            <View style={main.modalCalendar}>
-              <MonthSelectorCalendar 
-                localeLanguage='ru'
-                localeSettings={moment.locale('ru')}
-                selectedDate={this.state.selectedDate}
-                onMonthTapped={this._changeMonth}
-                selectedMonthTextStyle={main.clWhite}
-                selectedBackgroundColor={ivanColor}
-                maxDate={moment(this.state.selectedDate).add(10, 'year')}
-                nextIcon={<FontAwesome name="arrow-right" size={19} style={[main.mr_15, main.clIvan]} />}
-                prevIcon={<FontAwesome name="arrow-left" size={19} style={[main.ml_15, main.clIvan]} />}
-                yearTextStyle={styles.modalCalendarText}
-                monthTextStyle={styles.modalCalendarText}
-              />
-
-              <Button block onPress={this._hideModalCalendar} style={main.bgIvan}>
-                <Text>Закрыть</Text>
-              </Button>
-          </View>
-        </Modal>
+          <YearMonthPicker ref={(picker) => this.picker=picker} />
       </Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  modalCalendarText: {
-    fontFamily:'SegoeUIRegular',
-    fontSize:15
+  monthHeader: {
+    marginTop:11,
+    ...main.clGrey,
+    ...main.fontFam
   },
   prevMonthBtn: {
+    ...main.clGrey,
     ...main.mr_auto,
     ...main.ml_0,
     ...main.pdL_25,
     ...main.pdR_10
   },
   nextMonthBtn: {
+    ...main.clGrey,
     ...main.ml_auto,
     ...main.mr_0,
     ...main.pdL_10,

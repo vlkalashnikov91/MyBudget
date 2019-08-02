@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { RefreshControl, Modal, StyleSheet, Alert, Platform } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, Spinner, View, Button, Text, CardItem, Card, Body, Item, Label, Input, H3, Icon, Fab } from 'native-base'
+import { Container, Content, Spinner, View, Button, Text, CardItem, Card, Body, Item, ActionSheet, Input, H3, Icon, Fab } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
@@ -14,6 +14,13 @@ import { TARGET, IDEBT, OWEME } from '../../constants/TargetDebts'
 
 import { styles as main, screenHeight, screenWidth, TargetColor, IDebtColor, DebtColor } from '../../Style'
 import { SummMask, ClearNums, capitalize } from '../../utils/utils'
+
+var BUTTONS = [
+  {text:"Поставить цель", icon:"add", iconColor:"#F04124"},
+  {text:"Дать в долг", icon:"calculator", iconColor:"#395971"}, 
+  {text:"Взять в долг", icon:"cash", iconColor:"#43ac6a"},
+  {text:"Отмена", icon:"close", iconColor:"#a7a7a7"}
+]
 
 
 class Cards extends Component {
@@ -83,7 +90,19 @@ class Cards extends Component {
   }
 
   _toggleAdd() {
-    this.setState({ visibleModalAdd: true })
+    //this.setState({ visibleModalAdd: true })
+
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: 3,
+        title: "Выберите:",
+        itemStyle:{color:'red'}
+      },
+      buttonIndex => {
+        this.setState({ clicked: BUTTONS[buttonIndex] });
+      }
+    )
   }
 
   _editItem(itemId){
