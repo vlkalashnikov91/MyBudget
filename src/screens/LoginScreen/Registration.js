@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form } from 'native-base'
+import { LinearGradient } from 'expo'
 
 import ModalLoading from '../../components/ModalLoading'
 import { ToastTr } from '../../components/Toast'
@@ -98,54 +99,46 @@ class Registration extends Component {
       const { user } = this.props
       const { errLogin, errEmail, errPass, errRePass } = this.state
 
-      return <Container>
-              <Content padder>
-                <Card>
-                  <CardItem>
-                    <Body>
-                      <Form style={{alignSelf: 'stretch'}}>
-                        <Item floatingLabel error={errLogin} style={main.mt_0} >
-                          <Label style={main.fontFam}>Логин</Label>
-                          <Input onChangeText={this._changeLogin} style={[main.clGrey, main.fontFam, main.mt_5]}/>
-                        </Item>
+      return (
+        <Container>
+          <LinearGradient colors={[ivanColor, ivanColor, '#30cfd0']} style={main.fl_1} >
+            <Content padder>
+              <Form style={{alignSelf: 'stretch', paddingVertical:10, paddingHorizontal:20}}>
+                <Item floatingLabel error={errLogin} style={main.mt_0} >
+                  <Label style={[main.clWhite, main.fontFam]}>Логин</Label>
+                  <Input onChangeText={this._changeLogin} style={[main.clWhite, main.fontFam, main.mt_5]}/>
+                </Item>
 
-                        <Item floatingLabel error={errEmail}>
-                          <Label style={main.fontFam}>Email</Label>
-                          <Input onChangeText={this._changeEmail} style={[main.clGrey, main.fontFam, main.mt_5]}/>
-                        </Item>
+                <Item floatingLabel error={errEmail}>
+                  <Label style={[main.clWhite, main.fontFam]}>Email</Label>
+                  <Input onChangeText={this._changeEmail} style={[main.clWhite, main.fontFam, main.mt_5]}/>
+                </Item>
 
-                        <Item floatingLabel error={errPass}>
-                          <Label style={main.fontFam}>Пароль</Label>
-                          <Input secureTextEntry={true} onChangeText={this._changePass} style={[main.clGrey, main.fontFam, main.mt_5]}/>
-                        </Item>
+                <Item floatingLabel error={errPass}>
+                  <Label style={[main.clWhite, main.fontFam]}>Пароль</Label>
+                  <Input secureTextEntry={true} onChangeText={this._changePass} style={[main.clWhite, main.fontFam, main.mt_5]}/>
+                </Item>
 
-                        <Item floatingLabel error={errRePass}>
-                          <Label style={main.fontFam}>Подтверждение пароля</Label>
-                          <Input secureTextEntry={true} onChangeText={this._changeRePass} style={[main.clGrey, main.fontFam, main.mt_5]}/>
-                        </Item>
-                      </Form>
-                    </Body>
-                  </CardItem>
-                </Card>
+                <Item floatingLabel error={errRePass}>
+                  <Label style={[main.clWhite, main.fontFam]}>Подтверждение пароля</Label>
+                  <Input secureTextEntry={true} onChangeText={this._changeRePass} style={[main.clWhite, main.fontFam, main.mt_5]}/>
+                </Item>
+
+                <Button block light onPress={this._registration} style={{marginTop: 30}}>
+                {(user.isLoad)
+                ? <Text style={main.fontFam}>Загрузка...</Text>
+                : <Text style={main.fontFam}>Далее</Text>
+                }
+                </Button>
                 
-                <Card transparent>
-                  <CardItem>
-                    <Body>
-                      <Button block onPress={this._registration} style={main.bgGreen}>
-                      {(user.isLoad)
-                      ? <Text style={main.fontFam}>Загрузка...</Text>
-                      : <Text style={main.fontFam}>Далее</Text>
-                      }
-                      </Button>
-                    </Body>
-                  </CardItem>
-                 </Card>
+              </Form>
+            </Content>
+          </LinearGradient>
 
-              </Content>
+          <ModalLoading isActive={user.isLoad} />
 
-              <ModalLoading isActive={user.isLoad} color={ivanColor} />
-
-            </Container>
+        </Container>
+      )
   }
 }
 
