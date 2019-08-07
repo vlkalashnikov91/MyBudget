@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { View,  Picker, StyleSheet, TouchableOpacity, Modal, Platform} from 'react-native'
-import { Text, Button, Card, CardItem, Body, Content, Icon } from 'native-base'
+import React, { Component } from 'react'
+import { View,  Picker, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, Button, Card, CardItem, Body } from 'native-base'
 import moment from 'moment'
 
-import { styles as main, screenHeight, screenWidth } from '../Style'
+import { styles as main } from '../Style'
 import { capitalize } from '../utils/utils'
 
 const Months = Array.apply(0, Array(12)).map(function(_,i){return {Name: capitalize(moment().month(i).format('MMMM')), Id: i}})
@@ -79,10 +79,6 @@ export default class YearMonthPicker extends Component {
         return items;
     }
 
-    onCancelPress = () => {
-        this.dismiss();
-    }
-
     onConfirmPress = () => {
         const confirm = this.confirm;
         const { selectedYear, selectedMonth } = this.state;
@@ -95,7 +91,7 @@ export default class YearMonthPicker extends Component {
 
         if (!visible) return null;
         return (
-                <TouchableOpacity style={styles.modal} onPress={this.onCancelPress}>
+                <TouchableOpacity style={styles.modal} onPress={this.dismiss}>
                     <View style={styles.modalWindow}>
                         <Card transparent>
                             <CardItem>
@@ -145,14 +141,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     toolBar: {
-        flexDirection: 'row',
         width:'100%',
-        justifyContent:'space-around'
+        justifyContent:'space-around',
+        ...main.fD_R
     },
     modalWindow: {
-        backgroundColor:'#fff',
-        marginHorizontal:5,
-        marginBottom:5,
+        ...main.bgWhite,
+        marginHorizontal: 5,
+        marginBottom: 5,
         position: 'absolute',
         left: 0,
         right: 0,

@@ -4,7 +4,7 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Grid, Form, View } from 'native-base'
 
-import { styles as main } from '../../Style'
+import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { PaymentActions } from '../../actions/PaymentActions'
@@ -110,7 +110,7 @@ class AddPayment extends Component {
     if (this._checkParams()) {
       this.setState({ Loading: true })
 
-        this.props.addpayment(st.CategoryId, st.Amount, st.Name, st.TransDate, st.IsSpending, st.IsPlaned, this.props.user.UserId)
+        this.props.addpayment(st.CategoryId, Number(st.Amount), st.Name, st.TransDate, st.IsSpending, st.IsPlaned, this.props.user.UserId)
     }
   }
 
@@ -193,7 +193,7 @@ class AddPayment extends Component {
                   <Body>
                     <Button style={main.bgGreen} block onPress={this._addPayment}>
                       {(Loading)
-                      ? <Text style={main.fontFam}>Загрузка</Text>
+                      ? <Text style={main.fontFam}>Загрузка...</Text>
                       : <Text style={main.fontFam}>Создать</Text>
                       }
                     </Button>
@@ -202,7 +202,7 @@ class AddPayment extends Component {
               </Card>
             </Content>
 
-            <ModalLoading isActive={Loading} />
+            <ModalLoading isActive={Loading} color={ivanColor} />
           </Container>
         }
 }

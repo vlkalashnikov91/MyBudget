@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form } from 'native-base'
 
-import { styles as main } from '../../Style'
+import { styles as main, ivanColor } from '../../Style'
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
@@ -88,14 +88,17 @@ class EditCategory extends Component {
                 <CardItem>
                   <Body>
                     <Button disabled={this.state.notValid} style={(this.state.notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
-                      <Text style={main.fontFam}>Сохранить</Text>
+                    {(categories.isLoad)
+                      ? <Text style={main.fontFam}>Сохранить</Text>
+                      : <Text style={main.fontFam}>Создать</Text>
+                    }
                     </Button>
                   </Body>
                 </CardItem>
               </Card>
           </Content>
 
-          <ModalLoading isActive={categories.isLoad} />
+          <ModalLoading isActive={categories.isLoad} color={ivanColor} />
 
         </Container>
       }

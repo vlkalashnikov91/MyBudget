@@ -4,7 +4,7 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, H3, DatePicker, Grid, Row, Form } from 'native-base'
 
-import { styles as main } from '../../Style'
+import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import { TargetActions } from '../../actions/TargetActions'
 import ModalLoading from '../../components/ModalLoading'
@@ -180,7 +180,7 @@ class EditItem extends Component {
                 <Body>
                   <Button style={main.bgGreen} block onPress={this._saveItem}>
                     {(Loading)
-                    ? <Text style={main.fontFam}>Загрузка</Text>
+                    ? <Text style={main.fontFam}>Загрузка...</Text>
                     : <Text style={main.fontFam}>Сохранить</Text>
                     }
                     </Button>
@@ -189,7 +189,7 @@ class EditItem extends Component {
             </Card>
           </Content>
 
-          <ModalLoading isActive={Loading}/>
+          <ModalLoading isActive={Loading} color={ivanColor} />
 
       </Container>
     )

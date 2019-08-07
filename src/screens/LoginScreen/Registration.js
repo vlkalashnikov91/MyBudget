@@ -6,7 +6,7 @@ import ModalLoading from '../../components/ModalLoading'
 import { ToastTr } from '../../components/Toast'
 import { UserAuth } from '../../actions/UserActions'
 import { validateEmail } from '../../utils/utils.js'
-import { styles as main } from '../../Style'
+import { styles as main, ivanColor } from '../../Style'
 
 
 class Registration extends Component {
@@ -132,7 +132,10 @@ class Registration extends Component {
                   <CardItem>
                     <Body>
                       <Button block onPress={this._registration} style={main.bgGreen}>
-                        <Text style={main.fontFam}>Далее</Text>
+                      {(user.isLoad)
+                      ? <Text style={main.fontFam}>Загрузка...</Text>
+                      : <Text style={main.fontFam}>Далее</Text>
+                      }
                       </Button>
                     </Body>
                   </CardItem>
@@ -140,7 +143,7 @@ class Registration extends Component {
 
               </Content>
 
-              <ModalLoading isActive={user.isLoad} />
+              <ModalLoading isActive={user.isLoad} color={ivanColor} />
 
             </Container>
   }

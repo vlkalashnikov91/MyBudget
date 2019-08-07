@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Image, StyleSheet, Linking  } from 'react-native'
+import { Image, StyleSheet, Linking } from 'react-native'
 import { Container, Button, Text } from 'native-base'
 import { Row, Grid } from 'react-native-easy-grid'
 import { styles as main, screenHeight, screenWidth } from '../../Style'

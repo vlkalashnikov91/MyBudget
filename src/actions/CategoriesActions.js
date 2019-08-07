@@ -21,8 +21,8 @@ export const CategoriesActions = {
                     })
                     .catch(error => {
                         if (error.response) {
-                        console.log('Error', error.message)
-                        dispatch(ActionReject(error.message))
+                            console.log('Error', error.message)
+                            dispatch(ActionReject(error.message))
                         }
                     })
                 } else {

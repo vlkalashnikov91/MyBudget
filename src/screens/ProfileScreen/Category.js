@@ -32,6 +32,17 @@ class Category extends Component {
     if (nextProps.categories.Error.length > 0) {
       ToastTr.Danger(nextProps.categories.Error)
     }
+
+    let incomeSYS = nextProps.categories.Income.filter(item => item.IsSystem === true && item.Id!==30 && item.Id!==31 ).sort((a,b) => a.Name > b.Name)
+    let incomeUser = nextProps.categories.Income.filter(item => item.IsSystem === false && item.Id!==30 && item.Id!==31 ).sort((a,b) => a.Name > b.Name)
+    let expenseSYS = nextProps.categories.Expense.filter(item => item.IsSystem === true && item.Id!==30 && item.Id!==31 ).sort((a,b) => a.Name > b.Name)
+    let expenseUser = nextProps.categories.Expense.filter(item => item.IsSystem === false && item.Id!==30 && item.Id!==31 ).sort((a,b) => a.Name > b.Name)
+
+    this.setState({
+      income: incomeSYS.concat(incomeUser),
+      expense: expenseSYS.concat(expenseUser)
+    })
+
   }
 
   _defineCatType(i) {

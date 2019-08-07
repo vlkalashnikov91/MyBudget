@@ -51,7 +51,7 @@ export default (state = initialeState, action) => {
                 IsSpendingCategory: action.payload.IsSpendingCategory,
                 CreatedBy: action.payload.CreatedBy,
                 Icon: action.payload.Icon,
-                IsSystem: action.payload.IsSystem
+                IsSystem: false
             }
 
             let arr = []
@@ -86,7 +86,7 @@ export default (state = initialeState, action) => {
                 IsSpendingCategory: action.payload.IsSpendingCategory,
                 CreatedBy: action.payload.CreatedBy,
                 Icon: action.payload.Icon,
-                IsSystem: action.payload.IsSystem
+                IsSystem: false
             }
 
             if (action.payload.IsSpendingCategory) {

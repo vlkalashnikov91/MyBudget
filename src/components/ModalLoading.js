@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import { Modal } from 'react-native'
-import { View, Spinner } from 'native-base'
+import { View } from 'native-base'
+import { SkypeIndicator } from 'react-native-indicators'
 import { styles as main } from '../Style'
+
 
 export default class ModalLoading extends Component {
   constructor(props) {
@@ -17,6 +19,9 @@ export default class ModalLoading extends Component {
   }
 
   render() {
+    const { color } = this.props
+    const mainColor = ((color===undefined)||(color===null)||(color.length===0))? 'white' : color
+
     return (
       <Modal animationType="fade"
         transparent={true}
@@ -24,11 +29,7 @@ export default class ModalLoading extends Component {
         onRequestClose={this._hideModalLoad}
       >
         <View style={main.modalOverlay} />
-          <View style={[main.jC_C, main.aI_C, main.fl_1]} >
-            <View style={{backgroundColor:'rgba(0, 0, 0, 0.6)', borderRadius:8, paddingLeft:20, paddingRight:20}}>
-              <Spinner/>
-            </View>
-        </View>
+        <SkypeIndicator color={mainColor} animationDuration={1000} />
       </Modal>
     )
   }

@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
 import { Alert, StyleSheet, Modal, RefreshControl, Image } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, Button, Text, Icon, Card, CardItem, H2, View, Spinner, Segment, Left, Right } from 'native-base'
+import { Container, Content, Button, Text, Icon, Card, CardItem, H2, Segment, Left, Right } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { FontAwesome } from '@expo/vector-icons'
-import MonthSelectorCalendar from 'react-native-month-selector'
 import moment from 'moment'
 import 'moment/locale/ru'
 
+import { SkypeIndicator } from 'react-native-indicators'
 import { ToastTr } from '../../components/Toast'
 import ListPays from '../../components/ListPays'
 import BalanceInfo from '../../components/BalanceInfo'
@@ -22,6 +22,8 @@ import { capitalize } from '../../utils/utils'
 class HomeScreen extends Component {
   constructor(props) {
     super(props)
+
+    this.timer = null
 
     this.state = {
       selectedDate: moment(),
@@ -55,9 +57,7 @@ class HomeScreen extends Component {
   componentDidMount() {
     this.props.navigation.setParams({ showModalInfo: this._setModalInfo })
 
-    setTimeout(() => {
-      this._refreshData()
-    }, 200)
+    this.timer = setTimeout(() => { this._refreshData() }, 200)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -67,6 +67,10 @@ class HomeScreen extends Component {
       ToastTr.Danger(nextProps.payments.Error)
     }
 
+  }
+
+  componentWillUnmount(){
+    clearTimeout(this.timer)
   }
 
   _navigateToEdit(Id) {
@@ -132,7 +136,7 @@ class HomeScreen extends Component {
     const { payments, categories } = this.props
     const isLoad = payments.isLoad || categories.isLoad
 
-    var Pays = <Spinner />
+    var Pays = <SkypeIndicator color={ivanColor} />
     
     if (!isLoad) {
       if (payments.Payments.length == 0) {
@@ -163,10 +167,7 @@ class HomeScreen extends Component {
 
           <Content
             refreshControl={
-              <RefreshControl
-                refreshing={this.state.refreshing}
-                onRefresh={this._refreshData}
-              />
+              <RefreshControl refreshing={this.state.refreshing} onRefresh={this._refreshData} />
             }
           >
             <Card transparent>
@@ -206,7 +207,7 @@ class HomeScreen extends Component {
 
 const styles = StyleSheet.create({
   monthHeader: {
-    marginTop:11,
+    marginTop: 11,
     ...main.clGrey,
     ...main.fontFam
   },

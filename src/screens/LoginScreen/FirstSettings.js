@@ -43,12 +43,14 @@ setModalVisible = () => {
 
 _saveSettings() {
     let st = this.state
-    this.props.changesettings(st.DefCurrency, st.CarryOverRests, st.UseTemplates)
+    this.props.changesettings(this.props.user.UserId, st.DefCurrency, st.CarryOverRests, st.UseTemplates)
 }
 
 render() {
     const { user } = this.props
     const { CarryOverRests, DefCurrency } = this.state
+
+    console.log(user)
 
     return <Container>
               <Content>
@@ -107,7 +109,10 @@ render() {
                     <CardItem>
                         <Body>
                             <Button block style={main.bgGreen} onPress={this._saveSettings}>
-                                <Text style={main.fontFam}>Продолжить</Text>
+                            {(user.isLoad)
+                            ? <Text style={main.fontFam}>Загрузка...</Text>
+                            : <Text style={main.fontFam}>Продолжить</Text>
+                            }
                             </Button>
                         </Body>
                     </CardItem>

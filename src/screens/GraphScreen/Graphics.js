@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet, Image, FlatList } from 'react-native'
+import { StyleSheet, FlatList } from 'react-native'
 import { Svg } from 'expo'
 import { PieChart } from 'react-native-svg-charts'
-import { Container, Body, Content, Picker, ListItem, Text, Card, Left, Icon, Right, Spinner, Segment } from 'native-base'
+import { Container, Body, Content, Picker, ListItem, Text, Card, Left, Icon, Right, Segment } from 'native-base'
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { SkypeIndicator } from 'react-native-indicators'
  
-import { styles as main } from '../../Style'
+import { styles as main, ivanColor } from '../../Style'
 import { SummMask } from '../../utils/utils'
 
 import { GraphActions } from '../../actions/GraphActions'
@@ -15,6 +16,8 @@ import { ToastTr } from '../../components/Toast'
 class Graphics extends Component {
   constructor(props) {
     super(props)
+
+    this.timer = null
 
     this.state = {
       period: 1,
@@ -63,6 +66,10 @@ class Graphics extends Component {
     }
   }
 
+  componentWillUnmount(){
+    clearTimeout(this.timer)
+  }
+
   setMenuRef = ref => this.setState({menuRef: ref});
   hideMenu = () => menuRef.hide();
   showMenu = () => menuRef.show();
@@ -70,9 +77,7 @@ class Graphics extends Component {
   _changePeriod(value) {
     this.setState({ period: value })
 
-    setTimeout(() => {
-      this._refreshData()
-      }, 200)
+    this.timer = setTimeout(() => { this._refreshData() }, 200)
   }
 
   _choosPieItem(key) {
@@ -144,42 +149,44 @@ class Graphics extends Component {
             </Picker>
           </Segment>
 
-          {(graph.isLoad)
-          ? <Spinner />
-          : <Content padder>
-              <PieChart
-                style={{height: 280}}
-                innerRadius={1}
-                data={pieGraphData}
-                animate={true}
-                animationDuration={500}
-              />
-              <Card style={main.mt_10}>
-                <FlatList
-                  data={pieDescData}
-                  keyExtractor = {(item, index) => 'graph-'+item.description + index}
-                  renderItem={({item}) => {
-                    <ListItem icon button
-                      onPress={_ => this._choosPieItem(item.key)}
-                      style={main.pd_0}
-                    >
-                      <Left>
+
+          <Content padder>
+            {(graph.isLoad)
+            ? <SkypeIndicator color={ivanColor} />
+            : <>
+                <PieChart
+                  style={{height: 280}}
+                  innerRadius={1}
+                  data={pieGraphData}
+                  animate={true}
+                  animationDuration={500}
+                />
+                <Card style={main.mt_10}>
+                  <FlatList
+                    data={pieDescData}
+                    keyExtractor = {(item, index) => 'graph-'+item.description + index}
+                    renderItem={({item}) => {
+                      <ListItem icon button
+                        onPress={_ => this._choosPieItem(item.key)}
+                        style={main.pd_0}
+                      >
+                        <Left>
                           <Svg width="13" height="13">
                             <Svg.Rect x="0" y="0" width="12" height="12" fill={item.svg.fill} />
                           </Svg>
-                      </Left>
-                      <Body>
+                        </Left>
+                        <Body>
                           <Text style={[main.clGrey, main.fontFam, (selectedPie === item.key) && {color:'#62B1F6'}]}>{item.description}</Text>
-                      </Body>
-                      <Right>
+                        </Body>
+                        <Right>
                           <Text note style={main.fontFam}>{SummMask(item.value)} {user.DefCurrency}</Text>
-                      </Right>
-                    </ListItem>
-                  }}
-                />
-              </Card>
+                        </Right>
+                      </ListItem>
+                    }}
+                  />
+                </Card>
+              </>}
             </Content>
-          }
         </Container>
     )
   }
