@@ -112,13 +112,9 @@ class Category extends Component {
                       onPress={_=> this._editCategory(item)}
                       onLongPress={_=> this._deleteCategory(item)}
                     >
-                      <Body>
-                        <Text style={[main.clGrey, main.fontFam]}>{item.Name}</Text>
-                      </Body>
+                      <Body><Text style={[main.clGrey, main.fontFam]}>{item.Name}</Text></Body>
                       {(item.IsSystem)&&
-                      <Right>
-                        <Icon name='star'/>
-                      </Right>
+                      <Right><Icon name='star'/></Right>
                       }
                     </ListItem>
                   )
@@ -143,13 +139,9 @@ class Category extends Component {
                       onPress={_=> this._editCategory(item)}
                       onLongPress={_=> this._deleteCategory(item)}
                     >
-                      <Body>
-                        <Text style={main.clGrey}>{item.Name}</Text>
-                      </Body>
+                      <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
                       {(item.IsSystem)&&
-                      <Right>
-                        <Icon name='star'/>
-                      </Right>
+                      <Right><Icon name='star'/></Right>
                       }
                     </ListItem>
                     )

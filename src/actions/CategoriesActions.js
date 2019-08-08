@@ -1,6 +1,7 @@
 import { NetInfo } from 'react-native'
 import axios from 'react-native-axios'
 import { GET_CATEGORY_LIST, REMOVE_CATEGORY, ADD_CATEGORY, EDIT_CATEGORY, ERR_CATEGORY, START_LOADING_CATS } from '../constants/Categories'
+import { Storage } from '../utils/deviceServices'
 
 const URL = `http://mybudget.somee.com/api/`
 const NoConn = "Отсутствует подключение к интернету"
@@ -11,12 +12,13 @@ export const CategoriesActions = {
         return (dispatch) => {
     
             dispatch({ type: START_LOADING_CATS })
-    
+
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
 
                     axios.get(URL + `categories?userid=${UserId}`)
                     .then(res => {
+                        StoreActions.Save(res.data)
                         dispatch(ActionFetchList(res.data))
                     })
                     .catch(error => {
@@ -47,6 +49,7 @@ export const CategoriesActions = {
                         }
                     )
                     .then(res => {
+                        StoreActions.Add(res.data, Name, IsSpendingCategory, null, UserId)
                         dispatch(ActionAddCat(res.data, Name, IsSpendingCategory, null, UserId))
                     }).catch(error => {
                         console.log("error", error)
@@ -71,6 +74,7 @@ export const CategoriesActions = {
                         "Icon" : Icon
                     })
                     .then(res => {
+                        StoreActions.Edit(Id, Name, IsSpendingCategory, CreatedBy, Icon)
                         dispatch(ActionEditCat(Id, Name, IsSpendingCategory, CreatedBy, Icon))
                     })
                     .catch(error => {
@@ -89,6 +93,7 @@ export const CategoriesActions = {
                 if (isConnected) {
                     axios.delete(URL + `categories/${Id}?userid=${UserId}`)
                     .then(res => {
+                        StoreActions.Delete(Id)
                         dispatch(ActionDeleteCategory(Id))
                     })
                     .catch(error => {
@@ -176,4 +181,65 @@ const ActionEditCat = (Id, Name, IsSpendingCategory, CreatedBy, Icon) => {
             Icon
         }
     }   
+}
+
+
+
+
+/* Действия для работы со Storage */
+const StoreActions = {
+    Get: async () => {
+        let categories = await Storage.GetItem('categories', JSON.stringify(categories))
+        if (categories.length > 0) {
+            return JSON.parse(categories)
+        }
+        return []
+    },
+    Save: async (categories) => {
+        Storage.SaveItem('categories', JSON.stringify(categories))
+    },
+    Add: async (Id, Name, IsSpendingCategory, Icon, CreatedBy) => {
+        let categories = await Storage.GetItem('categories')
+        if (categories.length > 0) {
+            let categoriesArr = JSON.parse(categories)
+
+            categoriesArr.push({
+                Id: Id,
+                Name: Name,
+                IsSpendingCategory: IsSpendingCategory,
+                CreatedBy: CreatedBy,
+                Icon: Icon,
+                IsSystem: false
+            })
+
+            Storage.SaveItem('categories', JSON.stringify(categoriesArr))
+        }
+    },
+    Edit: async (Id, Name, IsSpendingCategory, CreatedBy, Icon) => {
+        let categories = await Storage.GetItem('categories')
+        if (categories.length > 0) {
+            let categoriesArr = JSON.parse(categories)
+            let newArr = categoriesArr.filter(item => item.Id != Id)
+
+            newArr.push({
+                Id: Id,
+                Name: Name,
+                IsSpendingCategory: IsSpendingCategory,
+                CreatedBy: CreatedBy,
+                Icon: Icon,
+                IsSystem: false
+            })
+
+            Storage.SaveItem('categories', JSON.stringify(newArr))
+        }
+    },
+    Delete: async (Id) => {
+        let categories = await Storage.GetItem('categories')
+        if (categories.length > 0) {
+            let categoriesArr = JSON.parse(categories)
+            let newArr = categoriesArr.filter(item => item.Id != Id)
+
+            Storage.SaveItem('categories', JSON.stringify(newArr))
+        }
+    }
 }

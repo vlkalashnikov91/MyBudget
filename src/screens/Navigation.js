@@ -50,14 +50,13 @@ export const HomeNavigator = createBottomTabNavigator(
       }
     },
     defaultNavigationOptions: ({ navigation }) => ({
-      tabBarIcon: ({ focused, tintColor }) =>
-        getTabBarIcon(navigation, focused, tintColor),
+      tabBarIcon: ({ focused, tintColor }) => getTabBarIcon(navigation, focused, tintColor),
     }),
     tabBarOptions: {
       activeTintColor: ivanColor,
       inactiveTintColor: 'gray',
       showLabel: false,
-      style: main.bgWhite
+      style: [main.bgWhite, {borderTopColor:'#ddd', shadowColor:'#000', shadowOffset: {width: 0, height: 6}, shadowOpacity: 0.39, shadowRadius: 8.30, elevation: 13}]
     },
   }
 )

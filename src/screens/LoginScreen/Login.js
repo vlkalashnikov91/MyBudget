@@ -8,10 +8,10 @@ import { connect } from 'react-redux'
 import { UserAuth } from '../../actions/UserActions'
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
+import ModalLoading from '../../components/ModalLoading'
 import { Storage } from '../../utils/deviceServices'
 
 import { styles as main, screenHeight, screenWidth, ivanColor } from '../../Style'
-import ModalLoading from '../../components/ModalLoading'
 
 
 class Login extends Component {
@@ -40,7 +40,7 @@ class Login extends Component {
     this.setState({ login: username,  saveMe: (username.length == 0) ? false : true})
   }
 
-  componentWillReceiveProps(nextProps) {
+  async componentWillReceiveProps(nextProps) {
     if(nextProps.user.Error.length > 0) {
       ToastTr.Danger(nextProps.user.Error)
     } else if (nextProps.user.UserId.length > 0) {
@@ -93,11 +93,12 @@ class Login extends Component {
   }
 
   _saveMe() {
-    this.setState({ saveMe: !this.state.saveMe})
+    this.setState(prevState => ({ saveMe: !prevState.saveMe}))
   }
 
   render() {
     const { user } = this.props
+    const { login, errlogin, password, errpassword, isHiddenPass, icon, saveMe } = this.state
 
     return (
       <Container>
@@ -106,25 +107,25 @@ class Login extends Component {
             <Grid style={[main.fD_C, {height:screenHeight}]}>
               <Row size={40}>
                 <Col style={[main.jC_C, main.aI_C]}>
-                  <Image resizeMode='contain' resizeMethod='scale' style={{ width:screenWidth/1.8, height: 55}} source={require('../../../assets/Logo.png')}></Image>
+                  <Image resizeMode='contain' resizeMethod='scale' style={{ width:screenWidth/1.8, height: 55}} source={require('../../../assets/Logo_white.png')}></Image>
                 </Col>
               </Row>
               <Row size={60}>
                 <Col style={[main.pdR_50, main.pdL_50]}>
                   <Form style={{padding:10}}>
-                    <Item error={this.state.errlogin}>
-                      <Input placeholder='Логин' value={this.state.login} maxLength={20} placeholderTextColor='white' style={[main.fontFam, main.clWhite]} onChangeText={this._changeLogin}/>
+                    <Item error={errlogin}>
+                      <Input placeholder='Логин' value={login} maxLength={20} placeholderTextColor='white' style={[main.fontFam, main.clWhite]} onChangeText={this._changeLogin}/>
                     </Item>
-                    <Item error={this.state.errpassword}>
-                      <Input placeholder='Пароль' value={this.state.password} maxLength={20} placeholderTextColor='white' 
+                    <Item error={errpassword}>
+                      <Input placeholder='Пароль' value={password} maxLength={20} placeholderTextColor='white' 
                         style={[main.fontFam, main.clWhite]} 
-                        secureTextEntry={this.state.isHiddenPass} onChangeText={this._changePassword} onSubmitEditing={this._login}
+                        secureTextEntry={isHiddenPass} onChangeText={this._changePassword} onSubmitEditing={this._login}
                       />
-                      <Icon name={this.state.icon} onPress={_=> this._togglePass()} style={main.clWhite}/>
+                      <Icon name={icon} onPress={_=> this._togglePass()} style={main.clWhite}/>
                     </Item>
 
                     <View style={[main.fD_R, main.mt_10]}>
-                      <CheckBox checked={this.state.saveMe} color={ivanColor} onPress={this._saveMe} />
+                      <CheckBox checked={saveMe} color={ivanColor} onPress={this._saveMe} />
                       <Text button onPress={this._saveMe} style={[main.ml_20, main.fontFam, main.clWhite]}>Запомнить меня</Text>
                     </View>
 

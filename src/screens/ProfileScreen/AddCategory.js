@@ -49,38 +49,40 @@ class AddCategory extends Component {
   render() {
     const { categories } = this.props
 
-    return <Container>
-            <Content padder>
-              <Card>
-                <CardItem>
-                  <Body>
-                    <Form style={{alignSelf: 'stretch'}}>
-                      <Item floatingLabel style={main.mt_0}>
-                        <Label style={main.fontFam}>Наименование</Label>
-                        <Input onChangeText={this._changeName} value={this.state.Name} style={[main.clGrey, main.fontFam, main.mt_5]}/>
-                      </Item>
-                    </Form>
-                  </Body>
-                </CardItem>
-              </Card>
-              <Card transparent>
-                <CardItem>
-                  <Body>
-                    <Button disabled={this.state.notValid} style={(this.state.notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
-                    {(categories.isLoad)
-                      ? <Text style={main.fontFam}>Загрузка...</Text>
-                      : <Text style={main.fontFam}>Создать</Text>
-                    }
-                    </Button>
-                  </Body>
-                </CardItem>
-              </Card>
-          </Content>
+    return (
+      <Container>
+        <Content padder>
+          <Card>
+            <CardItem>
+              <Body>
+                <Form style={{alignSelf: 'stretch'}}>
+                  <Item floatingLabel style={main.mt_0}>
+                    <Label style={main.fontFam}>Наименование</Label>
+                    <Input onChangeText={this._changeName} value={this.state.Name} style={[main.clGrey, main.fontFam, main.mt_5]}/>
+                  </Item>
+                </Form>
+              </Body>
+            </CardItem>
+          </Card>
+          <Card transparent>
+            <CardItem>
+              <Body>
+                <Button disabled={this.state.notValid} style={(this.state.notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
+                {(categories.isLoad)
+                  ? <Text style={main.fontFam}>Загрузка...</Text>
+                  : <Text style={main.fontFam}>Создать</Text>
+                }
+                </Button>
+              </Body>
+            </CardItem>
+          </Card>
+        </Content>
 
-          <ModalLoading isActive={categories.isLoad} color={ivanColor} />
+        <ModalLoading isActive={categories.isLoad} color={ivanColor} />
 
-        </Container>
-      }
+      </Container>
+    )
+  }
 }
 
 const mapStateToProps = state => {

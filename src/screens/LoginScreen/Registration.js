@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
+import { StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form } from 'native-base'
+import { Container, Content, Button, Text, Input, Icon, Item, Label, Form } from 'native-base'
 import { LinearGradient } from 'expo'
 
 import ModalLoading from '../../components/ModalLoading'
@@ -22,7 +23,11 @@ class Registration extends Component {
       errLogin: false,
       errPass: false,
       errEmail: false,
-      errRePass: false
+      errRePass: false,
+      isHiddenPass: true,
+      isHiddenRePass: true,
+      iconPass: 'eye-off',
+      iconRePass: 'eye-off',
     }
 
     this._registration = this._registration.bind(this)
@@ -50,6 +55,20 @@ class Registration extends Component {
 
   _changeRePass = value => {
     this.setState({RePassword: value})
+  }
+
+  _togglePass() {
+    this.setState(prevState => ({
+      iconPass: prevState.icon === 'eye' ? 'eye-off' : 'eye',
+      isHiddenPass: !prevState.isHiddenPass
+    }))
+  }
+
+  _toggleRePass() {
+    this.setState(prevState => ({
+      iconRePass: prevState.icon === 'eye' ? 'eye-off' : 'eye',
+      isHiddenRePass: !prevState.isHiddenRePass
+    }))
   }
 
   _checkParams() {
@@ -80,8 +99,7 @@ class Registration extends Component {
     }
 
     if(st.Password != st.RePassword) {
-      this.setState({ errPass: true })
-      this.setState({ errRePass: true })
+      this.setState({ errPass: true, errRePass: true })
       ToastTr.Danger('Пароли не совпадают')
       return false 
     }
@@ -97,31 +115,33 @@ class Registration extends Component {
 
   render() {
       const { user } = this.props
-      const { errLogin, errEmail, errPass, errRePass } = this.state
+      const { errLogin, errEmail, errPass, errRePass, isHiddenPass, iconPass, isHiddenRePass, iconRePass } = this.state
 
       return (
         <Container>
           <LinearGradient colors={[ivanColor, ivanColor, '#30cfd0']} style={main.fl_1} >
             <Content padder>
-              <Form style={{alignSelf: 'stretch', paddingVertical:10, paddingHorizontal:20}}>
+              <Form style={styles.form}>
                 <Item floatingLabel error={errLogin} style={main.mt_0} >
-                  <Label style={[main.clWhite, main.fontFam]}>Логин</Label>
-                  <Input onChangeText={this._changeLogin} style={[main.clWhite, main.fontFam, main.mt_5]}/>
+                  <Label style={styles.label}>Логин</Label>
+                  <Input onChangeText={this._changeLogin} maxLength={20} style={styles.input}/>
                 </Item>
 
                 <Item floatingLabel error={errEmail}>
-                  <Label style={[main.clWhite, main.fontFam]}>Email</Label>
-                  <Input onChangeText={this._changeEmail} style={[main.clWhite, main.fontFam, main.mt_5]}/>
+                  <Label style={styles.label}>Email</Label>
+                  <Input onChangeText={this._changeEmail} style={styles.input}/>
                 </Item>
 
                 <Item floatingLabel error={errPass}>
-                  <Label style={[main.clWhite, main.fontFam]}>Пароль</Label>
-                  <Input secureTextEntry={true} onChangeText={this._changePass} style={[main.clWhite, main.fontFam, main.mt_5]}/>
+                  <Label style={styles.label}>Пароль</Label>
+                  <Input secureTextEntry={isHiddenPass} onChangeText={this._changePass} maxLength={20} style={styles.input}/>
+                  <Icon name={iconPass} onPress={_=> this._togglePass()} style={main.clWhite}/>
                 </Item>
 
                 <Item floatingLabel error={errRePass}>
-                  <Label style={[main.clWhite, main.fontFam]}>Подтверждение пароля</Label>
-                  <Input secureTextEntry={true} onChangeText={this._changeRePass} style={[main.clWhite, main.fontFam, main.mt_5]}/>
+                  <Label style={styles.label}>Подтверждение пароля</Label>
+                  <Input secureTextEntry={isHiddenRePass} onChangeText={this._changeRePass} maxLength={20} style={styles.input} onSubmitEditing={this._registration}/>
+                  <Icon name={iconRePass} onPress={_=> this._toggleRePass()} style={main.clWhite}/>
                 </Item>
 
                 <Button block light onPress={this._registration} style={{marginTop: 30}}>
@@ -141,6 +161,23 @@ class Registration extends Component {
       )
   }
 }
+
+const styles = StyleSheet.create({
+  input: {
+    ...main.clWhite,
+    ...main.fontFam,
+    ...main.mt_5
+  },
+  label: {
+    ...main.clWhite,
+    ...main.fontFam
+  },
+  form: {
+    alignSelf: 'stretch', 
+    paddingVertical:10, 
+    paddingHorizontal:20
+  }
+})
 
 const mapStateToProps = state => {
   return {
