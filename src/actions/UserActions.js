@@ -1,11 +1,9 @@
 import { NetInfo } from 'react-native'
 import axios from 'react-native-axios'
 import { USER_LOGIN, USER_LOGOUT, CHANGE_USER_SETTINGS, USER_ERR, USER_LOADING, USER_REGISTRATION } from '../constants/User'
+import { URL, NO_CONN_MESS, UN_AUTH_MESS } from '../constants/Common'
 import { Storage } from '../utils/deviceServices'
 
-const URL = `http://mybudget.somee.com/api/`
-const NoConn = "Отсутствует подключение к интернету"
-const UnAuth = "Неверный логин или пароль"
 
 export const UserAuth = {
     Login: (username, pass, saveMe) => {
@@ -29,7 +27,7 @@ export const UserAuth = {
                         dispatch(ActionReject(error.message))
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }
@@ -71,7 +69,7 @@ export const UserAuth = {
                         dispatch(ActionReject(error.message))
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }
@@ -96,7 +94,7 @@ export const UserAuth = {
                         dispatch(ActionReject(error.message))
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }
@@ -137,7 +135,7 @@ const ActionLogin = (userInfo, pass) => {
         return {
             type: USER_ERR,
             payload: {
-                err: UnAuth
+                err: UN_AUTH_MESS
             }
         } 
     }

@@ -107,6 +107,8 @@ class Cards extends Component {
   }
 
   _deleteItem(){
+    this._hideModalMenu()
+
     Alert.alert(
       `${capitalize(this.state.choosenItem.GoalName)}`,
       'Удалить цель?',
@@ -114,7 +116,6 @@ class Cards extends Component {
         {text: 'Нет'},
         {text: 'Да', onPress: () => {
             this.props.deletecard(this.state.choosenItem.Id)
-            this._hideModalMenu()
           }
         },
       ]
@@ -127,6 +128,7 @@ class Cards extends Component {
 
   _showModalIncrease() {
     this.setState({ visibleModalIncrease: true })
+    this._hideModalMenu()
   }
 
   _chngIncreaseAmount = value => {
@@ -200,7 +202,7 @@ class Cards extends Component {
             <Card transparent style={styles.modalWindow}>
               <CardItem header>
                 <Text style={[main.fontFam, main.clGrey]}>Введите сумму</Text>
-                <Icon button name="close" onPress={this._hideModalIncrease} style={[main.mr_0, main.ml_auto, main.clGrey]} disabled={this.state.Loading}/>
+                <Icon button name="close" onPress={this._hideModalIncrease} style={styles.modalCloseIcon} disabled={this.state.Loading}/>
               </CardItem>
               <CardItem>
                 <Body style={[main.fD_R, main.aI_C]}>
@@ -241,13 +243,13 @@ class Cards extends Component {
           <Card transparent style={styles.modalMenu}>
             <CardItem header>
               <Text style={main.txtAl_c}>{this.state.choosenItem.GoalName}</Text>
-              <Icon button name="close" onPress={this._hideModalMenu} style={[main.mr_0, main.ml_auto, main.clGrey]}/>
+              <Icon button name="close" onPress={this._hideModalMenu} style={styles.modalCloseIcon}/>
             </CardItem>
             <CardItem>
               <Body>
-                <Button transparent onPress={this._showModalIncrease}><Text uppercase={false} style={[main.clGrey, main.fontFam, {fontSize:15}]}>Пополнить</Text></Button>
-                <Button transparent disabled><Text uppercase={false} style={[main.clGrey, main.fontFam, {fontSize:15}]}>Погасить полностью</Text></Button>
-                <Button transparent onPress={this._deleteItem}><Text uppercase={false} style={[main.clGrey, main.fontFam, {fontSize:15}]}>Удалить</Text></Button>
+                <Button transparent onPress={this._showModalIncrease}><Text uppercase={false} style={styles.modalButt}>Пополнить</Text></Button>
+                <Button transparent disabled><Text uppercase={false} style={styles.modalButt}>Погасить полностью</Text></Button>
+                <Button transparent onPress={this._deleteItem}><Text uppercase={false} style={styles.modalButt}>Удалить</Text></Button>
               </Body>
             </CardItem>
           </Card>
@@ -282,20 +284,15 @@ const styles = StyleSheet.create({
     marginTop: screenHeight / 4, 
     marginLeft: (screenWidth - (screenWidth / 1.2)) / 2
   },
-  targetButt: {
-    ...main.fontFamBold,
-    fontSize:16, 
-    color:TargetColor
+  modalButt: {
+    ...main.clGrey, 
+    ...main.fontFam,
+    fontSize:15
   },
-  owemeButt: {
-    ...main.fontFamBold,
-    fontSize:16, 
-    color:DebtColor
-  },
-  idebtButt: {
-    ...main.fontFamBold,
-    fontSize:16, 
-    color:IDebtColor
+  modalCloseIcon: {
+    ...main.mr_0,
+    ...main.ml_auto,
+    ...main.clGrey
   }
 })
 

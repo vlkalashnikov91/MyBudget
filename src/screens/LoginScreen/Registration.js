@@ -59,14 +59,14 @@ class Registration extends Component {
 
   _togglePass() {
     this.setState(prevState => ({
-      iconPass: prevState.icon === 'eye' ? 'eye-off' : 'eye',
+      iconPass: prevState.iconPass === 'eye' ? 'eye-off' : 'eye',
       isHiddenPass: !prevState.isHiddenPass
     }))
   }
 
   _toggleRePass() {
     this.setState(prevState => ({
-      iconRePass: prevState.icon === 'eye' ? 'eye-off' : 'eye',
+      iconRePass: prevState.iconRePass === 'eye' ? 'eye-off' : 'eye',
       isHiddenRePass: !prevState.isHiddenRePass
     }))
   }

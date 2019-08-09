@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { StyleSheet, FlatList } from 'react-native'
 import { Svg } from 'expo'
 import { PieChart } from 'react-native-svg-charts'
-import { Container, Body, Content, Picker, ListItem, Text, Card, Left, Icon, Right, Segment } from 'native-base'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { Container, Body, Content, Picker, ListItem, Text, Card, Left, Icon, Right, Segment, Button, View } from 'native-base'
 import { SkypeIndicator } from 'react-native-indicators'
  
 import { styles as main, ivanColor } from '../../Style'
@@ -21,30 +20,9 @@ class Graphics extends Component {
 
     this.state = {
       period: 1,
-      selectedPie: "pie-1",
       graphArr: []
     }
 
-    this._choosPieItem = this._choosPieItem.bind(this)
-    this._refreshData = this._refreshData.bind(this)
-    this._changePeriod = this._changePeriod.bind(this)
-  }
-
-  static navigationOptions = ({ navigation }) => {
-    return {
-      title: 'Графики расходов',
-      headerRight: (
-        <FontAwesome name='repeat' size={18} style={[main.clWhite, main.mr_20]} button onPress={navigation.getParam('refreshData')} />
-      )
-    }
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({ refreshData: this._refreshData })
-    this._refreshData()
-
-    this.props.navigation.setParams({ showMenu: this.showMenu })
-    this.props.navigation.setParams({ hideMenu: this.hideMenu })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -70,28 +48,16 @@ class Graphics extends Component {
     clearTimeout(this.timer)
   }
 
-  setMenuRef = ref => this.setState({menuRef: ref});
-  hideMenu = () => menuRef.hide();
-  showMenu = () => menuRef.show();
- 
-  _changePeriod(value) {
-    this.setState({ period: value })
-
-    this.timer = setTimeout(() => { this._refreshData() }, 200)
+  choosePeriod(period) {
+    if (period === 2) {
+      this.props.navigation.navigate('Filter')
+    }
+    this.setState({period: period})
   }
-
-  _choosPieItem(key) {
-    this.setState({ selectedPie: key })
-  }
-
-  _refreshData() {
-    this.props.getgraphicdata(this.props.user.UserId, this.state.period)
-  }
-
 
   render() {
     const { user, graph } = this.props
-    const { graphArr, selectedPie} = this.state
+    const { graphArr, period } = this.state
     var pieGraphData = []
     var pieDescData = []
 
@@ -104,10 +70,8 @@ class Graphics extends Component {
             description: item.Caption,
             svg: {
               fill: item.Color,
-              onPress: () => this._choosPieItem(item.key),
               scale:0.85,
             },
-            arc: (selectedPie === item.key) ? { outerRadius: '115%', cornerRadius: 10,  } : {},
             key: item.key,
         }))
 
@@ -132,28 +96,22 @@ class Graphics extends Component {
       })
 
     }
+
     return (
         <Container>
-          <Segment style={main.bgWhite}>
-            <Picker
-              mode="dropdown"
-              placeholder="Выберите период"
-              iosIcon={<Icon name="arrow-down"/>}
-              itemStyle={styles.PickerItem}
-              style={{ width: undefined }}
-              selectedValue={this.state.period}
-              onValueChange={this._changePeriod}
-            >
-              <Picker.Item label="Текущий месяц" value={1} />
-              <Picker.Item label="Весь период" value={2} />
-            </Picker>
-          </Segment>
-
-
           <Content padder>
             {(graph.isLoad)
             ? <SkypeIndicator color={ivanColor} />
             : <>
+                <View style={[main.mt_10, main.fD_R, {justifyContent:'space-evenly', borderColor:ivanColor, borderRadius:5}]}>
+                  <Button small onPress={_=> this.choosePeriod(1)} bordered={!(period===1)} style={(period===1)? main.bgIvan: {borderColor:ivanColor}}>
+                    <Text uppercase={false} style={(period===1)?main.clWhite:main.clIvan}>Текущий месяц</Text>
+                  </Button>
+                  <Button small onPress={_=> this.choosePeriod(2)} bordered={!(period===2)} style={(period===2)? main.bgIvan : {borderColor:ivanColor}}>
+                    <Text uppercase={false} style={(period===2)? main.clWhite : main.clIvan}>Выбрать период</Text>
+                  </Button>
+                </View>
+
                 <PieChart
                   style={{height: 280}}
                   innerRadius={1}
@@ -161,22 +119,19 @@ class Graphics extends Component {
                   animate={true}
                   animationDuration={500}
                 />
-                <Card style={main.mt_10}>
+                <Card style={main.mt_10} transparent>
                   <FlatList
                     data={pieDescData}
                     keyExtractor = {(item, index) => 'graph-'+item.description + index}
                     renderItem={({item}) => {
-                      <ListItem icon button
-                        onPress={_ => this._choosPieItem(item.key)}
-                        style={main.pd_0}
-                      >
+                      <ListItem icon button style={main.pd_0}>
                         <Left>
                           <Svg width="13" height="13">
                             <Svg.Rect x="0" y="0" width="12" height="12" fill={item.svg.fill} />
                           </Svg>
                         </Left>
                         <Body>
-                          <Text style={[main.clGrey, main.fontFam, (selectedPie === item.key) && {color:'#62B1F6'}]}>{item.description}</Text>
+                          <Text style={[main.clGrey, main.fontFam]}>{item.description}</Text>
                         </Body>
                         <Right>
                           <Text note style={main.fontFam}>{SummMask(item.value)} {user.DefCurrency}</Text>
@@ -191,14 +146,6 @@ class Graphics extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  PickerItem: {
-    ...main.bgGray,
-    ...main.ml_0,
-    ...main.pdL_10
-  }
-})
 
 const mapStateToProps = state => {
   return {

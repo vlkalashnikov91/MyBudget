@@ -1,10 +1,8 @@
 import { NetInfo } from 'react-native'
 import axios from 'react-native-axios'
 import { GET_CATEGORY_LIST, REMOVE_CATEGORY, ADD_CATEGORY, EDIT_CATEGORY, ERR_CATEGORY, START_LOADING_CATS } from '../constants/Categories'
+import { URL, NO_CONN_MESS } from '../constants/Common'
 import { Storage } from '../utils/deviceServices'
-
-const URL = `http://mybudget.somee.com/api/`
-const NoConn = "Отсутствует подключение к интернету"
 
 
 export const CategoriesActions = {
@@ -28,7 +26,7 @@ export const CategoriesActions = {
                         }
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }
@@ -49,8 +47,8 @@ export const CategoriesActions = {
                         }
                     )
                     .then(res => {
-                        StoreActions.Add(res.data, Name, IsSpendingCategory, null, UserId)
-                        dispatch(ActionAddCat(res.data, Name, IsSpendingCategory, null, UserId))
+                        StoreActions.Add(res.data, Name, IsSpendingCategory, null)
+                        dispatch(ActionAddCat(res.data, Name, IsSpendingCategory, null))
                     }).catch(error => {
                         console.log("error", error)
                         dispatch(ActionReject(error.message))
@@ -61,7 +59,7 @@ export const CategoriesActions = {
             })
         }
     },
-    Edit: (Id, Name, IsSpendingCategory, CreatedBy, Icon) => {
+    Edit: (Id, Name, IsSpendingCategory, Icon) => {
         return (dispatch) => {
 
             dispatch({ type: START_LOADING_CATS })
@@ -74,8 +72,8 @@ export const CategoriesActions = {
                         "Icon" : Icon
                     })
                     .then(res => {
-                        StoreActions.Edit(Id, Name, IsSpendingCategory, CreatedBy, Icon)
-                        dispatch(ActionEditCat(Id, Name, IsSpendingCategory, CreatedBy, Icon))
+                        StoreActions.Edit(Id, Name, IsSpendingCategory, Icon)
+                        dispatch(ActionEditCat(Id, Name, IsSpendingCategory, Icon))
                     })
                     .catch(error => {
                         console.log("error", error)
@@ -156,28 +154,26 @@ const ActionDeleteCategory = (Id) => {
 }
 
 /*+++++++++++++++ Создание категории ++++++++++++++++ */
-const ActionAddCat = (Id, Name, IsSpendingCategory, Icon, CreatedBy) => {
+const ActionAddCat = (Id, Name, IsSpendingCategory, Icon) => {
     return {
         type: ADD_CATEGORY,
         payload: {
             Id,
             Name, 
             IsSpendingCategory,
-            CreatedBy,
             Icon
         }
     }
 }
 
 /*+++++++++++++++ Редактирование категории ++++++++++++++++ */
-const ActionEditCat = (Id, Name, IsSpendingCategory, CreatedBy, Icon) => { 
+const ActionEditCat = (Id, Name, IsSpendingCategory, Icon) => { 
     return {
         type: EDIT_CATEGORY,
         payload: {
             Id, 
             Name, 
             IsSpendingCategory, 
-            CreatedBy, 
             Icon
         }
     }   
@@ -198,7 +194,7 @@ const StoreActions = {
     Save: async (categories) => {
         Storage.SaveItem('categories', JSON.stringify(categories))
     },
-    Add: async (Id, Name, IsSpendingCategory, Icon, CreatedBy) => {
+    Add: async (Id, Name, IsSpendingCategory, Icon) => {
         let categories = await Storage.GetItem('categories')
         if (categories.length > 0) {
             let categoriesArr = JSON.parse(categories)
@@ -207,7 +203,6 @@ const StoreActions = {
                 Id: Id,
                 Name: Name,
                 IsSpendingCategory: IsSpendingCategory,
-                CreatedBy: CreatedBy,
                 Icon: Icon,
                 IsSystem: false
             })
@@ -215,7 +210,7 @@ const StoreActions = {
             Storage.SaveItem('categories', JSON.stringify(categoriesArr))
         }
     },
-    Edit: async (Id, Name, IsSpendingCategory, CreatedBy, Icon) => {
+    Edit: async (Id, Name, IsSpendingCategory, Icon) => {
         let categories = await Storage.GetItem('categories')
         if (categories.length > 0) {
             let categoriesArr = JSON.parse(categories)
@@ -225,7 +220,6 @@ const StoreActions = {
                 Id: Id,
                 Name: Name,
                 IsSpendingCategory: IsSpendingCategory,
-                CreatedBy: CreatedBy,
                 Icon: Icon,
                 IsSystem: false
             })

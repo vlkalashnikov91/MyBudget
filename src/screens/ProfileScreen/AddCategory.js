@@ -16,7 +16,6 @@ class AddCategory extends Component {
       Id: -1,
       Name: '',
       IsSpendingCategory: this.props.navigation.getParam('CatType', false),
-      CreatedBy: null,
       Icon: ''
     }
 

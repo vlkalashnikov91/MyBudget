@@ -20,7 +20,7 @@ class Login extends Component {
     
     this.state = {
       login: '',
-      password: '',
+      password: 'qaz123',
       saveMe: false,
       errlogin: false,
       errpassword: false,

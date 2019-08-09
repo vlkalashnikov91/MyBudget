@@ -1,10 +1,8 @@
 import { NetInfo } from 'react-native'
 import axios from 'react-native-axios'
 import moment from 'moment'
-import {  GET_PAYMENT_LIST, ADD_PAYMENT, REMOVE_PAYMENT, EDIT_PAYMENT, ERR_PAYMENT, START_LOADING_PAY } from '../constants/Payment'
-
-const URL = `http://mybudget.somee.com/api/`
-const NoConn = "Отсутствует подключение к интернету"
+import { GET_PAYMENT_LIST, ADD_PAYMENT, REMOVE_PAYMENT, EDIT_PAYMENT, ERR_PAYMENT, START_LOADING_PAY } from '../constants/Payment'
+import { URL, NO_CONN_MESS } from '../constants/Common'
 
 export const PaymentActions = {
     Get: (UserId, year, month) => {
@@ -33,7 +31,7 @@ export const PaymentActions = {
                         }
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }
@@ -51,7 +49,7 @@ export const PaymentActions = {
                         dispatch(ActionReject(error.message))
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }
@@ -79,7 +77,7 @@ export const PaymentActions = {
                         dispatch(ActionReject(error.message))
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }
@@ -105,7 +103,7 @@ export const PaymentActions = {
                         dispatch(ActionReject(error.message))
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }

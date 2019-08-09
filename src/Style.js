@@ -155,6 +155,7 @@ export const styles = StyleSheet.create({
   fontW_B: {
     fontWeight: 'bold'
   },
+  /*
   modalCalendar: {
     flex: 1,
     alignItems: 'center',
@@ -164,7 +165,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: 25,
     marginTop: screenHeight / 4,
     marginBottom: screenHeight / 4 - 10
-  },
+  },*/
   modalOverlay: {
     ...StyleSheet.absoluteFill,
     backgroundColor: 'rgba(0,0,0,0.2)',

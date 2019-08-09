@@ -20,14 +20,13 @@ export default (state = initialeState, action) => {
                 Error: '',
             }
         case GET_CATEGORY_LIST:
+            let NoCatIncome = action.payload.income.filter(item => item.Id === 1 || item.Id === 2)
+            let NoCatExpense = action.payload.expense.filter(item => item.Id === 1 || item.Id === 2)
 
-            let NoCatIncome = action.payload.income.filter(item => item.Id === 30 || item.Id === 31)
-            let NoCatExpense = action.payload.expense.filter(item => item.Id === 30 || item.Id === 31)
-
-            let CatIncomeArr = action.payload.income.filter(item => item.Id !== 30 && item.Id !== 31).sort((a,b) => a.Name > b.Name)
+            let CatIncomeArr = action.payload.income.filter(item => item.Id !== 1 && item.Id !== 2).sort((a,b) => a.Name > b.Name)
             CatIncomeArr = NoCatIncome.concat(CatIncomeArr)
 
-            let CatExpenseArr = action.payload.expense.filter(item => item.Id !== 30 && item.Id !== 31).sort((a,b) => a.Name > b.Name)
+            let CatExpenseArr = action.payload.expense.filter(item => item.Id !== 1 && item.Id !== 2).sort((a,b) => a.Name > b.Name)
             CatExpenseArr = NoCatExpense.concat(CatExpenseArr)
 
             return {...state,
@@ -49,7 +48,6 @@ export default (state = initialeState, action) => {
                 Id: action.payload.Id,
                 Name: action.payload.Name,
                 IsSpendingCategory: action.payload.IsSpendingCategory,
-                CreatedBy: action.payload.CreatedBy,
                 Icon: action.payload.Icon,
                 IsSystem: false
             }
@@ -84,7 +82,6 @@ export default (state = initialeState, action) => {
                 Id: action.payload.Id,
                 Name: action.payload.Name,
                 IsSpendingCategory: action.payload.IsSpendingCategory,
-                CreatedBy: action.payload.CreatedBy,
                 Icon: action.payload.Icon,
                 IsSystem: false
             }

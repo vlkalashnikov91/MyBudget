@@ -18,7 +18,7 @@ class EditPayment extends Component {
     
     this.state = {
       Id: -1, 
-      CategoryId: (this.props.navigation.getParam('type', INCOME) === INCOME) ? 30 : 31,
+      CategoryId: (this.props.navigation.getParam('type', INCOME) === INCOME) ? 1 : 2,
       Amount: '',
       Name:'', 
       TransDate: new Date(),

@@ -1,9 +1,7 @@
 import { NetInfo } from 'react-native'
 import axios from 'react-native-axios'
 import { GET_TARGET_LIST, REMOVE_TARGET, ADD_TARGET, EDIT_TARGET, ERR_TARGET, START_LOADING_TARGET, INCREASE_TARGET } from '../constants/TargetDebts'
-
-const URL = 'http://mybudget.somee.com/api/goals'
-const NoConn = "Отсутствует подключение к интернету"
+import { URL, NO_CONN_MESS } from '../constants/Common'
 
 export const TargetActions = {
     Get: (UserId) => {
@@ -31,7 +29,7 @@ export const TargetActions = {
                         }
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }
@@ -56,7 +54,7 @@ export const TargetActions = {
                         dispatch(ActionReject(error.message))
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }
@@ -75,7 +73,7 @@ export const TargetActions = {
                         dispatch(ActionReject(error.message))
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }
@@ -100,7 +98,7 @@ export const TargetActions = {
                         dispatch(ActionReject(error.message))
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }
@@ -119,7 +117,7 @@ export const TargetActions = {
                         dispatch(ActionReject(error.message))
                     })
                 } else {
-                    dispatch(ActionReject(NoConn))
+                    dispatch(ActionReject(NO_CONN_MESS))
                 }
             })
         }

@@ -16,7 +16,6 @@ class EditCategory extends Component {
       Id: -1,
       Name: '',
       IsSpendingCategory: this.props.navigation.getParam('CatType', false),
-      CreatedBy: null,
       Icon: ''
     }
 
@@ -38,7 +37,6 @@ class EditCategory extends Component {
         Id: item.Id, 
         Name: item.Name, 
         IsSpendingCategory: item.IsSpendingCategory, 
-        CreatedBy: item.CreatedBy, 
         Icon: item.Icon, 
         notValid: (item.Name.length > 0 ) ? false : true
       })
@@ -56,7 +54,7 @@ class EditCategory extends Component {
 
   _editCategory() {
     let st = this.state
-    this.props.editcategory(st.Id, st.Name, st.IsSpendingCategory, st.CreatedBy, st.Icon)
+    this.props.editcategory(st.Id, st.Name, st.IsSpendingCategory, st.Icon)
   }
 
   _changeName = value => {
@@ -115,8 +113,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    editcategory:(Id, Name, IsSpendingCategory, CreatedBy, Icon) => {
-      dispatch(CategoriesActions.Edit(Id, Name, IsSpendingCategory, CreatedBy, Icon))
+    editcategory:(Id, Name, IsSpendingCategory, Icon) => {
+      dispatch(CategoriesActions.Edit(Id, Name, IsSpendingCategory, Icon))
     }
   }
 }
