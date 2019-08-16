@@ -176,8 +176,8 @@ class AddPayment extends Component {
                         animationType={"fade"}
                         androidMode="calendar"
                         placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
-                        placeHolderTextStyle={[main.clGrey, main.fontFam, main.txtAl_c, {fontSize:20}]}
-                        textStyle={[main.clGrey, main.fontFam, main.txtAl_c, {fontSize:20}]}
+                        placeHolderTextStyle={styles.dateTextStyle}
+                        textStyle={styles.dateTextStyle}
                         onDateChange={this._changeDate}
                         disabled={false}
                       >
@@ -209,10 +209,11 @@ class AddPayment extends Component {
 
     
 const styles = StyleSheet.create({
-  AddCatButton: {
+  dateTextStyle: {
     ...main.clGrey,
-    ...main.ml_10,
-    fontSize:35
+    ...main.fontFam,
+    ...main.txtAl_c,
+    fontSize:20
   }
 })
 

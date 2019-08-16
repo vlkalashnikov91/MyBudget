@@ -11,7 +11,7 @@ export const TargetActions = {
 
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
-                    axios.get(URL + `?id=${UserId}`)
+                    axios.get(URL + `goals?id=${UserId}`)
                     .then(res => {
                         dispatch(ActionFetchList(res.data))
                     })

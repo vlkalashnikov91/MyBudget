@@ -11,8 +11,19 @@ import { PaymentActions } from '../../actions/PaymentActions'
 import { INCOME, EXPENSE } from '../../constants/Payment'
 import { SummMask, ClearNums } from '../../utils/utils'
 
+const headerText = (type) => {
+  switch(type) {
+    case INCOME:
+      return 'Добавить доход'
+    case EXPENSE:
+      return 'Добавить расход'
+    default:
+      return 'ERROR'
+  }
+}
 
-class EditPayment extends Component {
+
+class AddMonthPay extends Component {
   constructor(props) {
     super(props);
     
@@ -28,52 +39,36 @@ class EditPayment extends Component {
       errAmount: false
     } 
 
-    this._addNewCat = this._addNewCat.bind(this)
     this._checkParams = this._checkParams.bind(this)
-    this._editPayment = this._editPayment.bind(this)
+    this._addPayment = this._addPayment.bind(this)
     this._getCategoryList = this._getCategoryList.bind(this)
   }
 
-  componentDidMount() {
-    nav = this.props.navigation
-    payments = this.props.payments.Payments
-
-    if (nav.getParam('itemid', -1) !== -1 ) {
-      let item = payments.find(el => el.Id === nav.getParam('itemid'))
-      
-      if (item !== undefined) {
-        this.setState({ Id: item.Id, 
-          CategoryId: item.CategoryId, 
-          Amount: item.Amount.toString(), 
-          Name: item.Name, 
-          TransDate: item.TransDate, 
-          IsSpending: item.IsSpending,
-          IsPlaned: item.IsPlaned
-         })
-      }
+  static navigationOptions = ({ navigation }) => {
+    let type = navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
+    return {
+      title: headerText(type)
     }
-  } 
+  }
 
   componentWillReceiveProps(nextProps) {
     this.setState({ Loading: false })
 
     if(nextProps.payments.Error.length === 0) {
-      ToastTr.Success('Платеж изменен')
+      ToastTr.Success('Платеж создан')
     }
     this.props.navigation.goBack()
   }
 
   _getCategoryList() {
+    const type = this.props.navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
     const income = this.props.categories.Income
     const expense = this.props.categories.Expense
 
-    /*Если было выбрано "Редактировать" - то нужно определить к какой категории относится платеж и сформировать список*/
-    let CatDesc = income.find(el => el.Id === this.state.CategoryId)
-
-    if (CatDesc == undefined) {
-      return expense
-    } else {
-      return income
+    if (type === INCOME) {
+        return income
+    } else if (type === EXPENSE) {
+        return expense
     }
   }
 
@@ -93,10 +88,6 @@ class EditPayment extends Component {
     this.setState({ TransDate: value })
   }
 
-  _addNewCat() {
-    this.props.navigation.navigate('Category')
-  }
-
   _checkParams() {
     st = this.state
 
@@ -108,13 +99,13 @@ class EditPayment extends Component {
     return true
   }
 
-  _editPayment() {
+  _addPayment() {
     st = this.state
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
 
-      this.props.editpayment(st.Id, st.CategoryId, Number(st.Amount), st.Name, st.TransDate, st.IsSpending, st.IsPlaned)
+        this.props.addMonthPay(st.CategoryId, Number(st.Amount), st.Name, st.TransDate, st.IsSpending, st.IsPlaned, this.props.user.UserId)
     }
   }
 
@@ -130,11 +121,17 @@ class EditPayment extends Component {
                     <Form style={{alignSelf: 'stretch'}}>
 
                       <Grid style={main.width_90prc}>
-                        <Item stackedLabel style={{width:'80%'}} error={errAmount}>
+                        <Item floatingLabel style={[{width:'80%'}, main.mt_0]} error={errAmount}>
                           <Label style={main.fontFam}>Сумма</Label>
-                          <Input style={[main.clGrey, main.fontFam]} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
+                          <Input
+                            onChangeText={this._changeAmount}
+                            value={SummMask(Amount)}
+                            keyboardType="number-pad"
+                            style={[main.clGrey, main.fontFam, main.mt_5]} 
+                            maxLength={10}
+                          />
                         </Item>
-                        <H3 style={[main.clGrey, {position:'absolute', right:0, bottom:15}]}>{user.DefCurrency}</H3>
+                        <H3 style={[main.clGrey, {position:'absolute', right:0, bottom:5}]}>{user.DefCurrency}</H3>
                       </Grid>
 
                       <Grid style={[main.fD_R, main.aI_C, main.mt_20, {paddingLeft:15}]}>
@@ -153,12 +150,12 @@ class EditPayment extends Component {
                         </Item>
                       </Grid>
 
-                      <Item stackedLabel style={[main.mb_20, main.mt_20]}>
+                      <Item floatingLabel style={main.mb_20}>
                         <Label style={main.fontFam}>Описание</Label>
                         <Input
                           onChangeText={this._changeDesc}
                           value={Name}
-                          style={[main.clGrey, main.fontFam]}
+                          style={[main.clGrey, main.fontFam, main.mt_5]}
                           multiline={true}
                         />
                       </Item>
@@ -181,12 +178,6 @@ class EditPayment extends Component {
                       >
                         <Text>moment(TransDate).format('DD.MM.YYYY')</Text>
                       </DatePicker>
-
-                      <Button iconLeft transparent >
-                          <Icon name='star' style={{color:'yellow'}} />
-                          <Text style={[main.fontFam, main.clIvan]} uppercase={false}>Ежемесячный платеж</Text>
-                      </Button>
-
                     </Form>
                   </Body>
                 </CardItem>
@@ -195,11 +186,11 @@ class EditPayment extends Component {
               <Card transparent>
                 <CardItem>
                   <Body>
-                    <Button style={main.bgGreen} block onPress={this._editPayment}>
-                    {(Loading)
+                    <Button style={main.bgGreen} block onPress={this._addPayment}>
+                      {(Loading)
                       ? <Text style={main.fontFam}>Загрузка...</Text>
-                      : <Text style={main.fontFam}>Сохранить</Text>
-                    }
+                      : <Text style={main.fontFam}>Создать</Text>
+                      }
                     </Button>
                   </Body>
                 </CardItem>
@@ -230,9 +221,8 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => {
   return {
-    editpayment: (Id, CategoryId, Amount, Name, TransDate, IsSpending, IsPlaned) => {
-      dispatch(PaymentActions.Edit(Id, CategoryId, Amount, Name, TransDate, IsSpending, IsPlaned))
-    }
+    addMonthPay: (CategoryId, Amount, Name, TransDate, IsSpending, IsPlaned, UserId) => {
+    },
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(EditPayment)
+export default connect(mapStateToProps, mapDispatchToProps)(AddMonthPay)

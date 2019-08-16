@@ -174,7 +174,7 @@ class Cards extends Component {
         </> : (
         <Card transparent>
           <CardItem style={main.fD_C}>
-            <FontAwesome name='info-circle' size={80} style={{color:'#609AD3', marginBottom:35, marginTop:10, opacity:0.8}}/>
+            <FontAwesome name='info-circle' size={80} style={styles.infoIcon}/>
             <Text note style={[main.fontFam, main.txtAl_c]}>В этом блоке можно ставить себе финансовые цели, а также вести учёт Ваших долгов и должников.</Text>
           </CardItem>
         </Card>
@@ -293,6 +293,12 @@ const styles = StyleSheet.create({
     ...main.mr_0,
     ...main.ml_auto,
     ...main.clGrey
+  },
+  infoIcon: {
+    color:'#609AD3', 
+    marginBottom:35, 
+    marginTop:10, 
+    opacity:0.8
   }
 })
 

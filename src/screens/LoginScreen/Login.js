@@ -20,7 +20,7 @@ class Login extends Component {
     
     this.state = {
       login: '',
-      password: 'qaz123',
+      password: '',
       saveMe: false,
       errlogin: false,
       errpassword: false,
@@ -124,12 +124,12 @@ class Login extends Component {
                       <Icon name={icon} onPress={_=> this._togglePass()} style={main.clWhite}/>
                     </Item>
 
-                    <View style={[main.fD_R, main.mt_10]}>
+                    <View style={[main.fD_R, main.mt_10, main.jC_C]}>
                       <CheckBox checked={saveMe} color={ivanColor} onPress={this._saveMe} />
                       <Text button onPress={this._saveMe} style={[main.ml_20, main.fontFam, main.clWhite]}>Запомнить меня</Text>
                     </View>
 
-                    <Button block onPress={this._login} light style={main.mt_20}>
+                    <Button block onPress={this._login} style={[{marginTop:25}, main.bgIvan]}>
                       {(user.isLoad)
                       ? <Text style={main.fontFam}>Загрузка...</Text>
                       : <Text style={main.fontFam}>Войти</Text>

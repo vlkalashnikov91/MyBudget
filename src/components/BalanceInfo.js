@@ -9,7 +9,7 @@ import { SummMask } from '../utils/utils'
 
 class BalanceInfo extends Component {
     render() {
-        const {payments, user } = this.props
+        const { payments, user } = this.props
         var balance = 0
         var planed = 0
 

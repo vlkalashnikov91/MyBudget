@@ -22,16 +22,17 @@ class Profile extends Component {
     this._saveSettings = this._saveSettings.bind(this)
     this._balanceTransfer = this._balanceTransfer.bind(this)
     this._changeCurrency = this._changeCurrency.bind(this)
-    this._monthPayment = this._monthPayment.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.user.Error.length > 0) {
-      ToastTr.Danger(nextProps.user.Error)
-    } else if (nextProps.user.UserId.length > 0) {
-      ToastTr.Success('Изменено')
+    if (this.state.isChange === false) {
+      if(nextProps.user.Error.length > 0) {
+        ToastTr.Danger(nextProps.user.Error)
+      } else if (nextProps.user.UserId.length > 0) {
+        ToastTr.Success('Изменено')
+      }
+      this.setState({ isChange: true })
     }
-    this.setState({ isChange: true })
   }
 
   _changeCurrency(value) {
@@ -40,10 +41,6 @@ class Profile extends Component {
 
   _balanceTransfer(value) {
     this.setState({ CarryOverRests: value, isChange: false })
-  }
-
-  _monthPayment(value) {
-    this.setState({ UseTemplates: value, isChange: false })
   }
 
   setModalVisible = () => {
@@ -71,6 +68,10 @@ class Profile extends Component {
 
   _gotoAbout = () => {
     this.props.navigation.navigate('About')
+  }
+
+  _gotoMonthlyPays = () => {
+    this.props.navigation.navigate('MonthlyPays')
   }
 
   _saveSettings() {
@@ -109,6 +110,14 @@ class Profile extends Component {
                   <FontAwesome name="angle-right" size={20}/>
                 </Right>
               </CardItem>
+              <CardItem bordered button onPress={this._gotoMonthlyPays}>
+                <Body>
+                  <Text style={[main.clGrey, main.fontFam]}>Ежемесячные платежи</Text>
+                </Body>
+                <Right>
+                  <FontAwesome name="angle-right" size={20}/>
+                </Right>
+              </CardItem>
               <CardItem bordered>
                 <Body>
                   <Item picker>
@@ -137,21 +146,6 @@ class Profile extends Component {
                       placeholderIconColor="#007aff"
                       selectedValue={this.state.CarryOverRests}
                       onValueChange={this._balanceTransfer}
-                    >
-                      <Picker.Item label="Да" value={true} />
-                      <Picker.Item label="Нет" value={false} />
-                    </Picker>
-                  </Item>
-                  <Item picker>
-                    <Label style={main.fontFam}>Ежемесячные платежи</Label>
-                    <Picker mode="dropdown"
-                      iosIcon={<Icon name="arrow-down" />}
-                      style={{ width: undefined }}
-                      placeholderStyle={{ color: "#bfc6ea" }}
-                      placeholderIconColor="#007aff"
-                      selectedValue={this.state.UseTemplates}
-                      onValueChange={this._monthPayment}
-                      enabled={false}
                     >
                       <Picker.Item label="Да" value={true} />
                       <Picker.Item label="Нет" value={false} />

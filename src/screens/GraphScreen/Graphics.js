@@ -2,15 +2,18 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { StyleSheet, FlatList } from 'react-native'
 import { Svg } from 'expo'
+import moment from 'moment'
 import { PieChart } from 'react-native-svg-charts'
-import { Container, Body, Content, Picker, ListItem, Text, Card, Left, Icon, Right, Segment, Button, View } from 'native-base'
+import { Container, Body, Content, ListItem, Text, Card, Left, Right, CardItem, Segment} from 'native-base'
 import { SkypeIndicator } from 'react-native-indicators'
+import { FontAwesome } from '@expo/vector-icons'
  
 import { styles as main, ivanColor } from '../../Style'
 import { SummMask } from '../../utils/utils'
 
 import { GraphActions } from '../../actions/GraphActions'
 import { ToastTr } from '../../components/Toast'
+import PeriodPicker from '../../components/PeriodPicker'
 
 class Graphics extends Component {
   constructor(props) {
@@ -18,10 +21,16 @@ class Graphics extends Component {
 
     this.timer = null
 
+    let date = new Date()
+
     this.state = {
-      period: 1,
-      graphArr: []
+      graphArr: [],
+      selectedPie: '-1',
+      dateTo: date,
+      dateFrom: new Date(date.getFullYear(), date.getMonth(), 1),
     }
+
+    this._showModalCalendar = this._showModalCalendar.bind(this)
 
   }
 
@@ -31,12 +40,14 @@ class Graphics extends Component {
     } else {
       let arr = []
 
-      nextProps.graph.GraphData.map((item, index) => {
+      nextProps.graph.GraphData.filter(item => item.Amount > 0)
+      .map((item, index) => {
         let newitem = {}
         newitem.Amount = item.Amount
         newitem.Caption = item.Caption
         newitem.Color = item.Color
         newitem.key = `pie-${index}`
+        newitem.svg = { fill: item.Color, scale:0.85, onPress: () => this._choosPieItem(`pie-${index}`) },
         arr.push(newitem)
       })
 
@@ -44,108 +55,150 @@ class Graphics extends Component {
     }
   }
 
+  componentDidMount(){
+    this.props.getgraphicdata(this.props.user.UserId, moment(this.state.dateFrom).format('DD-MM-YYYY'), moment(this.state.dateTo).format('DD-MM-YYYY'))
+  }
+
   componentWillUnmount(){
     clearTimeout(this.timer)
   }
 
-  choosePeriod(period) {
-    if (period === 2) {
-      this.props.navigation.navigate('Filter')
-    }
-    this.setState({period: period})
+  _showModalCalendar() {
+    let { dateFrom, dateTo } = this.state
+
+    this.picker
+      .show({dateTo, dateFrom})
+      .then(({dateTo, dateFrom}) => {
+
+        this.setState({ dateFrom, dateTo })
+        this.props.getgraphicdata(this.props.user.UserId, moment(dateFrom).format('DD-MM-YYYY'), moment(dateTo).format('DD-MM-YYYY'))
+      })
+  }
+
+  _choosPieItem(key) {
+    this.setState({ selectedPie: key })
   }
 
   render() {
     const { user, graph } = this.props
-    const { graphArr, period } = this.state
-    var pieGraphData = []
-    var pieDescData = []
+    const { dateTo, dateFrom, selectedPie, graphArr } = this.state
+    let content = <SkypeIndicator color={ivanColor} />
 
-    if (graphArr.length > 0) {
+    if (!graph.isLoad) {
+      if (graphArr.length > 0) {
 
-      pieGraphData = graphArr
-        .filter(item => item.Amount > 0)
-        .map(item => ({
+        let arr = graphArr.map(item => ({
             value: item.Amount,
             description: item.Caption,
-            svg: {
-              fill: item.Color,
-              scale:0.85,
-            },
+            svg: item.svg,
+            arc: (selectedPie === item.key) ? { outerRadius: '115%', cornerRadius: 10,  } : {},
             key: item.key,
-        }))
+          }))
 
-      pieDescData = pieGraphData
-    } else {
-      pieGraphData = [].concat({
-        value: 1,
-        svg: {
-          fill: '#B8B7B7',
-          scale: 0.85,
-        },
-        key: 1,
-      })
-
-      pieDescData = [].concat({
-        value: 0,
-        description: "Информация отсутствует",
-        svg: {
-          fill: '#B8B7B7',
-        },
-        key: 1,
-      })
-
+        content = <>
+          <PieChart
+            style={{height: 280}}
+            innerRadius={1}
+            data={arr}
+            animate={true}
+            animationDuration={500}
+          />
+          <Card style={main.mt_10} transparent>
+            <FlatList
+              data={arr}
+              keyExtractor = {(item, index) => 'graph-'+item.description + index}
+              renderItem={({item}) => {
+                return (
+                <ListItem icon button style={main.pd_0}>
+                  <Left>
+                    <Svg width="13" height="13">
+                      <Svg.Rect x="0" y="0" width="12" height="12" fill={item.svg.fill} />
+                    </Svg>
+                  </Left>
+                  <Body>
+                    <Text style={[main.clGrey, main.fontFam, (selectedPie === item.key) && {color:'#62B1F6'}]}>{item.description}</Text>
+                  </Body>
+                  <Right>
+                    <Text note style={main.fontFam}>{SummMask(item.value)} {user.DefCurrency}</Text>
+                  </Right>
+                </ListItem>
+                )
+              }}
+            />
+          </Card>
+        </>
+      } else {
+        content = (
+          <Card transparent>
+            <CardItem style={main.fD_C}>
+              <FontAwesome name='frown-o' size={70} style={styles.notFoundIcon}/>
+                <Text note style={[main.fontFam, main.txtAl_c]}>За выбранный вами период информация не найдена.</Text>
+            </CardItem>
+          </Card>
+        )
+      }
     }
 
     return (
         <Container>
           <Content padder>
-            {(graph.isLoad)
-            ? <SkypeIndicator color={ivanColor} />
-            : <>
-                <View style={[main.mt_10, main.fD_R, {justifyContent:'space-evenly', borderColor:ivanColor, borderRadius:5}]}>
-                  <Button small onPress={_=> this.choosePeriod(1)} bordered={!(period===1)} style={(period===1)? main.bgIvan: {borderColor:ivanColor}}>
-                    <Text uppercase={false} style={(period===1)?main.clWhite:main.clIvan}>Текущий месяц</Text>
-                  </Button>
-                  <Button small onPress={_=> this.choosePeriod(2)} bordered={!(period===2)} style={(period===2)? main.bgIvan : {borderColor:ivanColor}}>
-                    <Text uppercase={false} style={(period===2)? main.clWhite : main.clIvan}>Выбрать период</Text>
-                  </Button>
-                </View>
+            <Segment style={[main.bgWhite, {marginBottom:10}]}>
+              <Text button bordered style={styles.monthHeader} onPress={this._showModalCalendar}>
+                С {moment(dateFrom).format("DD.MM.YYYY")} по {moment(dateTo).format("DD.MM.YYYY")}
+              </Text>
+            </Segment>
+          
+            {content}
+          
+          </Content>
 
-                <PieChart
-                  style={{height: 280}}
-                  innerRadius={1}
-                  data={pieGraphData}
-                  animate={true}
-                  animationDuration={500}
-                />
-                <Card style={main.mt_10} transparent>
-                  <FlatList
-                    data={pieDescData}
-                    keyExtractor = {(item, index) => 'graph-'+item.description + index}
-                    renderItem={({item}) => {
-                      <ListItem icon button style={main.pd_0}>
-                        <Left>
-                          <Svg width="13" height="13">
-                            <Svg.Rect x="0" y="0" width="12" height="12" fill={item.svg.fill} />
-                          </Svg>
-                        </Left>
-                        <Body>
-                          <Text style={[main.clGrey, main.fontFam]}>{item.description}</Text>
-                        </Body>
-                        <Right>
-                          <Text note style={main.fontFam}>{SummMask(item.value)} {user.DefCurrency}</Text>
-                        </Right>
-                      </ListItem>
-                    }}
-                  />
-                </Card>
-              </>}
-            </Content>
+          <PeriodPicker ref={(picker) => this.picker=picker} />
+
         </Container>
     )
   }
 }
+
+
+const styles = StyleSheet.create({
+  modal: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height:'100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalWindow: {
+    ...main.bgWhite,
+    marginHorizontal: 5,
+    marginBottom: 5,
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0
+  },
+  textStyle: {
+    ...main.clGrey,
+    ...main.txtAl_c,
+    ...main.fontFam,
+    fontSize:20,
+  },
+  monthHeader: {
+    marginTop: 5,
+    ...main.clGrey,
+    ...main.fontFam,
+    fontSize: 18,
+    textDecorationLine: 'underline'    
+  },
+  notFoundIcon: {
+    color:'#609AD3', 
+    marginBottom:20, 
+    opacity:0.8
+  }
+})
+
 
 const mapStateToProps = state => {
   return {
@@ -156,7 +209,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getgraphicdata: (UserId,type) => dispatch(GraphActions.Get(UserId,type))
+    getgraphicdata: (UserId, from, to) => dispatch(GraphActions.Get(UserId, from, to))
   }
 }
 

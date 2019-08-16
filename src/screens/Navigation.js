@@ -43,7 +43,7 @@ export const HomeNavigator = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Screen3',
+    initialRouteName: 'Screen1',
     contentOptions: {
       itemsContainerStyle: {
         marginVertical: 65

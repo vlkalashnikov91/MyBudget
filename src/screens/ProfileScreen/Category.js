@@ -12,15 +12,13 @@ class Category extends Component {
   constructor(props) {
     super(props)
 
-    let incomeSYS = this.props.categories.Income.filter(item => item.IsSystem === true && item.Id!==1 && item.Id!==2 ).sort((a,b) => a.Name > b.Name)
     let incomeUser = this.props.categories.Income.filter(item => item.IsSystem === false && item.Id!==1 && item.Id!==2 ).sort((a,b) => a.Name > b.Name)
-    let expenseSYS = this.props.categories.Expense.filter(item => item.IsSystem === true && item.Id!==1 && item.Id!==2 ).sort((a,b) => a.Name > b.Name)
     let expenseUser = this.props.categories.Expense.filter(item => item.IsSystem === false && item.Id!==1 && item.Id!==2 ).sort((a,b) => a.Name > b.Name)
 
     this.state = {
       CategoryType: false,
-      income: incomeSYS.concat(incomeUser),
-      expense: expenseSYS.concat(expenseUser)
+      income: incomeUser,
+      expense: expenseUser
     }
 
     this._addCategory = this._addCategory.bind(this)
@@ -33,14 +31,12 @@ class Category extends Component {
       ToastTr.Danger(nextProps.categories.Error)
     }
 
-    let incomeSYS = nextProps.categories.Income.filter(item => item.IsSystem === true && item.Id!==1 && item.Id!==2 ).sort((a,b) => a.Name > b.Name)
     let incomeUser = nextProps.categories.Income.filter(item => item.IsSystem === false && item.Id!==1 && item.Id!==2 ).sort((a,b) => a.Name > b.Name)
-    let expenseSYS = nextProps.categories.Expense.filter(item => item.IsSystem === true && item.Id!==1 && item.Id!==2 ).sort((a,b) => a.Name > b.Name)
     let expenseUser = nextProps.categories.Expense.filter(item => item.IsSystem === false && item.Id!==1 && item.Id!==2 ).sort((a,b) => a.Name > b.Name)
 
     this.setState({
-      income: incomeSYS.concat(incomeUser),
-      expense: expenseSYS.concat(expenseUser)
+      income: incomeUser,
+      expense: expenseUser
     })
 
   }
@@ -55,29 +51,21 @@ class Category extends Component {
   }
 
   _editCategory(item) {
-    if (item.IsSystem) {
-      ToastTr.Default('Категории со знаком "*" нельзя редактировать')
-    } else {
-      this.props.navigation.navigate('EditCategory', {itemid: item.Id})
-    }
+    this.props.navigation.navigate('EditCategory', {itemid: item.Id})
   }
 
   _deleteCategory = (item) => {
-    if (item.IsSystem) {
-      ToastTr.Default('Категории со знаком "*" нельзя удалять')
-    } else {
-      Alert.alert(
-        `${item.Name}`,
-        `Удалить категорию "${item.Name}"?`,
-        [
-          {text: 'Нет'},
-          {text: 'Да', onPress: ()=> {
-            this.props.deletecategory(this.props.user.UserId, item.Id)
-          }
-          },
-        ]
-      )
-    }
+    Alert.alert(
+      `${item.Name}`,
+      `Удалить категорию "${item.Name}"?`,
+      [
+        {text: 'Нет'},
+        {text: 'Да', onPress: ()=> {
+          this.props.deletecategory(this.props.user.UserId, item.Id)
+        }
+        },
+      ]
+    )
   }
 
   _refreshData() {
@@ -113,9 +101,6 @@ class Category extends Component {
                       onLongPress={_=> this._deleteCategory(item)}
                     >
                       <Body><Text style={[main.clGrey, main.fontFam]}>{item.Name}</Text></Body>
-                      {(item.IsSystem)&&
-                      <Right><Icon name='star'/></Right>
-                      }
                     </ListItem>
                   )
                 }}
@@ -140,9 +125,6 @@ class Category extends Component {
                       onLongPress={_=> this._deleteCategory(item)}
                     >
                       <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
-                      {(item.IsSystem)&&
-                      <Right><Icon name='star'/></Right>
-                      }
                     </ListItem>
                     )
                 }}

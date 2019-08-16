@@ -1,6 +1,6 @@
 import { NetInfo } from 'react-native'
 import axios from 'react-native-axios'
-import { USER_LOGIN, USER_LOGOUT, CHANGE_USER_SETTINGS, USER_ERR, USER_LOADING, USER_REGISTRATION } from '../constants/User'
+import { USER_LOGIN, USER_LOGOUT, CHANGE_USER_SETTINGS, USER_ERR, USER_LOADING, USER_REGISTRATION, CHANGE_USER_PASS } from '../constants/User'
 import { URL, NO_CONN_MESS, UN_AUTH_MESS } from '../constants/Common'
 import { Storage } from '../utils/deviceServices'
 
@@ -98,8 +98,35 @@ export const UserAuth = {
                 }
             })
         }
+    },
+    ChangePass: (UserId, oldPass, newPass) => {
+        return (dispatch) => {
+
+            dispatch({ type: USER_LOADING })
+
+            NetInfo.isConnected.fetch().then(isConnected => {
+                if (isConnected) {
+
+                    axios.post(URL + `/manage/changepassword`, {
+                        "UserId": UserId,
+                        "OldPassword": oldPass,
+                        "NewPassword": newPass
+                    })
+                    .then(res => {
+                        dispatch(ActionNewPass(UserId, oldPass, newPass))
+                    }).catch(error => {
+                        console.log("error", error)
+                        dispatch(ActionReject(error.message))
+                    })
+                } else {
+                    dispatch(ActionReject(NO_CONN_MESS))
+                }
+            })
+        }
     }
 }
+
+
 
 const SaveMe = async (username, isSave) => {
     /* Если надо сохранить, то перетираем страго пользователя
@@ -180,5 +207,13 @@ const ActionSettings = (DefCurrency, CarryOverRests, UseTemplates) => {
             CarryOverRests: CarryOverRests,
             UseTemplates: UseTemplates,
         }
+    }
+}
+
+/*+++++++++++++++ Действия при смене клиентских данных ++++++++++++++++ */
+const ActionNewPass = (UserId, oldPass, newPass) => {
+    return {
+        type: CHANGE_USER_PASS,
+        payload: {}
     }
 }

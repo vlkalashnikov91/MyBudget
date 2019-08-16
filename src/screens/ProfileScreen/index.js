@@ -1,5 +1,4 @@
 import React from 'react'
-import { Image } from 'react-native'
 import { createStackNavigator } from 'react-navigation'
 import { fromRight } from 'react-navigation-transitions'
 
@@ -8,9 +7,10 @@ import ChangePassword from './ChangePassword'
 import Category from './Category'
 import AddCategory from './AddCategory'
 import EditCategory from './EditCategory'
+import MonthlyPays from './MonthlyPays'
+import About from './About'
 
 import { styles as main } from '../../Style'
-import About from './About'
 
 const ProfileNav = createStackNavigator(
   {
@@ -46,6 +46,13 @@ const ProfileNav = createStackNavigator(
       screen: Category,
       navigationOptions: ()=>({
         title: 'Мои категории'
+      })
+    },
+
+    MonthlyPays: {
+      screen: MonthlyPays,
+      navigationOptions: ()=>({
+        title: 'Ежемесячные платежи'
       })
     },
     
