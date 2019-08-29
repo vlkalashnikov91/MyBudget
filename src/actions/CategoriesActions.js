@@ -17,7 +17,7 @@ export const CategoriesActions = {
                     axios.get(URL + `categories?userid=${UserId}`)
                     .then(res => {
                         StoreActions.Save(res.data)
-                        dispatch(ActionFetchList(res.data))
+                        dispatch(ActionFetchCategories(res.data))
                     })
                     .catch(error => {
                         if (error.response) {
@@ -103,7 +103,7 @@ export const CategoriesActions = {
                 }
             })
         }
-    }
+    },
 }
 
 
@@ -119,7 +119,7 @@ const ActionReject = err => {
 }
 
 /*+++++++++++++++ Загрузка списка категорий ++++++++++++++++ */
-const ActionFetchList = data => {
+const ActionFetchCategories = data => {
 
     let income = []
     let expense = []
@@ -185,7 +185,7 @@ const ActionEditCat = (Id, Name, IsSpendingCategory, Icon) => {
 /* Действия для работы со Storage */
 const StoreActions = {
     Get: async () => {
-        let categories = await Storage.GetItem('categories', JSON.stringify(categories))
+        let categories = await Storage.GetItem('categories')
         if (categories.length > 0) {
             return JSON.parse(categories)
         }

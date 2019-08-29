@@ -1,7 +1,9 @@
 import React from 'react'
-import { FlatList } from 'react-native'
-import { Text, Card, ListItem } from 'native-base'
+import { FlatList, StyleSheet } from 'react-native'
+import { Text, Card, ListItem, View } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
+import { FontAwesome } from '@expo/vector-icons'
+import moment from 'moment'
 
 import { styles as main, IDebtColor, TargetColor, DebtColor } from '../Style'
 import { capitalize, SummMask } from '../utils/utils'
@@ -45,11 +47,12 @@ function defineCardStyle (itemtype) {
 
 
 export const CardInfo = (props) => {
-    const { data, currency, itemtype, editItem, showModalMenu } = props
+    const { data, currency, itemtype, editItem, showModalMenu, showArchive } = props
     const { mainColor, fillFull, prcColor } = defineCardStyle(itemtype)
     const Desc = defineDesc(itemtype)
+    const filterData = showArchive ? data : data.filter(item => item.IsActive === true)
 
-    if (data.length === 0 ) {
+    if (filterData.length === 0 ) {
       return <></>
     }
 
@@ -58,12 +61,14 @@ export const CardInfo = (props) => {
       <Text style={[main.fontFam, main.mt_10, main.ml_10, main.clIvan, {marginBottom:6}]} note>{Desc}</Text>
       <Card style={{backgroundColor: mainColor}}>
         <FlatList
-          data={data}
+          data={filterData}
           keyExtractor = {(item, index) => 'key-'+item.GoalName + index}
           renderItem={({item}) => {
 
             let progressCnt = (Number(item.CurAmount) * 100) / Number(item.Amount).toFixed(1)
-            
+            let needFire = moment().diff(item.CompleteDate)
+            needFire = Math.trunc(moment.duration(needFire).asHours())
+
             return (
             <ListItem key={'target-'+item.Id + item.GoalName}
               button 
@@ -72,12 +77,16 @@ export const CardInfo = (props) => {
             >
               <Row style={{backgroundColor: fillFull, borderRadius:4}}>
                 <Row style={{backgroundColor: prcColor, borderRadius:4, width:`${progressCnt}%`, height:50}}></Row>
-                <Grid style={[{position:'absolute', top:0, left:0, width:'100%', height:'100%'}, main.fl_1, main.fD_C, main.jC_C]}>
+                <Grid style={styles.mainGrid}>
                   <Row style={[main.pdL_10, main.pdR_10]}>
-                    <Text style={[main.clWhite, main.mr_auto, main.ml_auto, main.fontFam]}>{capitalize(item.GoalName)}</Text>
+                    <View style={[main.mr_auto, main.ml_auto, main.fD_R]}>
+                      <Text style={[main.clWhite, main.fontFam]}>{capitalize(item.GoalName)}</Text>
+                      {((needFire<24)&&(needFire>0))&&<FontAwesome name='fire' size={20} style={styles.fireIcon} />}
+                      {(needFire<0)&&<FontAwesome name='hourglass-end' size={15} style={styles.hourIcon} />}
+                    </View>
                   </Row>
                   <Row style={[main.pdL_10, main.pdR_10]}>
-                    <Text style={[main.clWhite, main.ml_auto, main.mr_0, main.fontFam]}>{SummMask(item.CurAmount)} {currency} из {SummMask(item.Amount)} {currency}</Text>
+                    <Text style={styles.summStyle}>{SummMask(item.CurAmount)} {currency} из {SummMask(item.Amount)} {currency}</Text>
                   </Row>
                 </Grid>
               </Row>
@@ -89,3 +98,31 @@ export const CardInfo = (props) => {
       </>
     ) 
   }
+
+  const styles = StyleSheet.create({
+    mainGrid: {
+      position:'absolute',
+      top:0,
+      left:0,
+      width:'100%',
+      height:'100%',
+      ...main.fl_1,
+      ...main.fD_C,
+      ...main.jC_C
+    },
+    summStyle: {
+      ...main.clWhite,
+      ...main.ml_auto,
+      ...main.mr_0,
+      ...main.fontFam
+    },
+    fireIcon: {
+      ...main.ml_10, 
+      color: 'orange'
+    },
+    hourIcon: {
+      ...main.ml_10,
+      marginTop:3,
+      color: 'white'
+    }
+  })

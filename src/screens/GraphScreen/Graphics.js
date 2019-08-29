@@ -4,7 +4,7 @@ import { StyleSheet, FlatList } from 'react-native'
 import { Svg } from 'expo'
 import moment from 'moment'
 import { PieChart } from 'react-native-svg-charts'
-import { Container, Body, Content, ListItem, Text, Card, Left, Right, CardItem, Segment} from 'native-base'
+import { Container, Body, Content, ListItem, Text, Card, Left, Right, CardItem, Segment, Icon, Title, Header, Button} from 'native-base'
 import { SkypeIndicator } from 'react-native-indicators'
 import { FontAwesome } from '@expo/vector-icons'
  
@@ -116,10 +116,10 @@ class Graphics extends Component {
                     </Svg>
                   </Left>
                   <Body>
-                    <Text style={[main.clGrey, main.fontFam, (selectedPie === item.key) && {color:'#62B1F6'}]}>{item.description}</Text>
+                    <Text style={[main.clGrey, (selectedPie === item.key) && {color:'#62B1F6'}]}>{item.description}</Text>
                   </Body>
                   <Right>
-                    <Text note style={main.fontFam}>{SummMask(item.value)} {user.DefCurrency}</Text>
+                    <Text note>{SummMask(item.value)} {user.DefCurrency}</Text>
                   </Right>
                 </ListItem>
                 )
@@ -141,9 +141,17 @@ class Graphics extends Component {
 
     return (
         <Container>
+          <Header>
+            <Body>
+              <Title style={main.ml_15}>Графики расходов</Title>
+            </Body>
+            <Right>
+              <Icon android='md-calendar' ios='ios-calendar' style={[main.clWhite, main.mr_15]} button onPress={this._showModalCalendar} />
+            </Right>
+          </Header>
           <Content padder>
-            <Segment style={[main.bgWhite, {marginBottom:10}]}>
-              <Text button bordered style={styles.monthHeader} onPress={this._showModalCalendar}>
+            <Segment style={[main.bgWhite, {marginBottom:5}]}>
+              <Text button bordered style={styles.monthHeader}>
                 С {moment(dateFrom).format("DD.MM.YYYY")} по {moment(dateTo).format("DD.MM.YYYY")}
               </Text>
             </Segment>
@@ -182,15 +190,12 @@ const styles = StyleSheet.create({
   textStyle: {
     ...main.clGrey,
     ...main.txtAl_c,
-    ...main.fontFam,
     fontSize:20,
   },
   monthHeader: {
     marginTop: 5,
     ...main.clGrey,
-    ...main.fontFam,
     fontSize: 18,
-    textDecorationLine: 'underline'    
   },
   notFoundIcon: {
     color:'#609AD3', 

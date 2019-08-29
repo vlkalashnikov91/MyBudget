@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { Alert, RefreshControl, FlatList, StyleSheet } from 'react-native'
-import { Container, Icon, Fab, Tabs, Tab, ListItem, Body, Text, Right, Content, Card, CardItem } from 'native-base'
+import { Alert, RefreshControl, StyleSheet } from 'react-native'
+import { Container, Icon, Fab, Title, Left, Body, Text, Header, Content, Card, CardItem, Button } from 'native-base'
 import { FontAwesome } from '@expo/vector-icons'
 import { SkypeIndicator } from 'react-native-indicators'
 
 import ListMonthPays from '../../components/ListMonthPays'
-
 import { styles as main, ivanColor } from '../../Style'
 
 
@@ -19,12 +18,9 @@ class MonthlyPays extends Component {
     }
 
     this._navigateToEdit = this._navigateToEdit.bind(this)
-
-
   }
 
   _refreshData() {
-
   }
 
   _navigateToEdit(Id) {
@@ -36,7 +32,6 @@ class MonthlyPays extends Component {
     const { payments, categories } = this.props
     const isLoad = payments.isLoad || categories.isLoad
 
-    
     var Pays = <SkypeIndicator color={ivanColor} />
     
     if (!isLoad) {
@@ -45,7 +40,7 @@ class MonthlyPays extends Component {
           <Card transparent>
             <CardItem style={main.fD_C}>
               <FontAwesome name='info-circle' size={80} style={styles.infoIcon}/>
-              <Text note style={[main.fontFam, main.txtAl_c]}>В этом блоке можно заводить платежи, которые будут созданы автоматический в указанный день месяца</Text>
+              <Text note style={main.txtAl_c}>В этом блоке можно заводить платежи, которые будут созданы автоматический в указанный день месяца</Text>
             </CardItem>
           </Card>
         )
@@ -57,6 +52,16 @@ class MonthlyPays extends Component {
 
     return (
         <Container>
+          <Header>
+            <Left>
+              <Button transparent onPress={_=>this.props.navigation.goBack()}>
+                <Icon name='arrow-back'/>
+              </Button>
+            </Left>
+            <Body>
+              <Title>Ежемесячные платежи</Title>
+            </Body>
+          </Header>
           <Content
             refreshControl={
               <RefreshControl refreshing={this.state.refreshing} onRefresh={this._refreshData} />

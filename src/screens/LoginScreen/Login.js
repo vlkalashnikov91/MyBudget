@@ -6,10 +6,11 @@ import { Col, Row, Grid } from 'react-native-easy-grid'
 import { connect } from 'react-redux'
 
 import { UserAuth } from '../../actions/UserActions'
-import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { Storage } from '../../utils/deviceServices'
+
+import { CategoriesActions } from '../../actions/CategoriesActions'
 
 import { styles as main, screenHeight, screenWidth, ivanColor } from '../../Style'
 
@@ -19,8 +20,8 @@ class Login extends Component {
     super(props)
     
     this.state = {
-      login: '',
-      password: '',
+      login: 'demo',
+      password: 'qaz222',
       saveMe: false,
       errlogin: false,
       errpassword: false,

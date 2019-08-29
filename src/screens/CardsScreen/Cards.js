@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { RefreshControl, Modal, StyleSheet, Alert, Platform } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, View, Button, Text, CardItem, Card, Body, Item, ActionSheet, Input, H3, Icon, Fab } from 'native-base'
+import { Container, Content, View, Button, Text, CardItem, Card, Body, Item, ActionSheet, Input, H3, Icon, Fab, Header, Title, Right } from 'native-base'
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
 
@@ -12,7 +12,7 @@ import { PaymentActions } from '../../actions/PaymentActions'
 import { TARGET, IDEBT, OWEME } from '../../constants/TargetDebts'
 import { SkypeIndicator } from 'react-native-indicators'
 
-import { styles as main, screenHeight, screenWidth, TargetColor, IDebtColor, DebtColor, ivanColor } from '../../Style'
+import { styles as main, screenHeight, screenWidth, ivanColor } from '../../Style'
 import { SummMask, ClearNums, capitalize } from '../../utils/utils'
 
 var BUTTONS = [
@@ -38,10 +38,12 @@ class Cards extends Component {
       errAmount: false,
       choosenItem: {},
       Loading: false,
+      isShowArchive: false
     }
 
     this._refreshData = this._refreshData.bind(this)
     this._toggleAdd = this._toggleAdd.bind(this)
+    this._toggleShowArchive = this._toggleShowArchive.bind(this)
     this._editItem = this._editItem.bind(this)
     this._increaseItem = this._increaseItem.bind(this)
     this._hideModalIncrease = this._hideModalIncrease.bind(this)
@@ -53,7 +55,6 @@ class Cards extends Component {
   }
 
   componentDidMount(){
-    this.props.navigation.setParams({ refreshData: this._refreshData })
     this.props.getTargetDebtList(this.props.user.UserId)
   }
 
@@ -86,6 +87,10 @@ class Cards extends Component {
     this.props.getTargetDebtList(this.props.user.UserId)
   }
 
+  _toggleShowArchive() {
+    this.setState(prevState => ({ isShowArchive: !prevState.isShowArchive }))
+  }
+
   _toggleAdd() {
     ActionSheet.show(
       {
@@ -107,15 +112,16 @@ class Cards extends Component {
   }
 
   _deleteItem(){
-    this._hideModalMenu()
-
     Alert.alert(
       `${capitalize(this.state.choosenItem.GoalName)}`,
       'Удалить цель?',
       [
-        {text: 'Нет'},
+        {text: 'Нет', onPress:() => {
+          this._hideModalMenu()
+        }},
         {text: 'Да', onPress: () => {
             this.props.deletecard(this.state.choosenItem.Id)
+            this._hideModalMenu()
           }
         },
       ]
@@ -147,15 +153,16 @@ class Cards extends Component {
   }
 
   _showModalMenu(item) {
-    this.setState({ visibleModalMenu: true, choosenItem: item})
+    this.setState(prevState => ({ visibleModalMenu: true, choosenItem: item}))
   }
 
   _hideModalMenu() {
-    this.setState({ visibleModalMenu: false, choosenItem: {}})
+    this.setState(prevState => ({ visibleModalMenu: false, choosenItem: {}}))
   }
 
   render() {
     const { targets, user } = this.props
+    const { isShowArchive, refreshing, visibleModalIncrease, visibleModalMenu, choosenItem, fabState } = this.state
 
     var content = <View style={[main.fl_1, {padding:20}]}><SkypeIndicator color={ivanColor} /></View>
 
@@ -168,24 +175,34 @@ class Cards extends Component {
       content = 
         (allCnt > 0)
         ? <>
-          <CardInfo itemtype={TARGET} currency={user.DefCurrency} data={target} editItem={this._editItem} showModalMenu={this._showModalMenu} />
-          <CardInfo itemtype={IDEBT} currency={user.DefCurrency} data={mydebt} editItem={this._editItem} showModalMenu={this._showModalMenu} />
-          <CardInfo itemtype={OWEME} currency={user.DefCurrency} data={oweme} editItem={this._editItem} showModalMenu={this._showModalMenu} />
+          <CardInfo itemtype={TARGET} showArchive={isShowArchive} currency={user.DefCurrency} data={target} editItem={this._editItem} showModalMenu={this._showModalMenu} />
+          <CardInfo itemtype={IDEBT} showArchive={isShowArchive} currency={user.DefCurrency} data={mydebt} editItem={this._editItem} showModalMenu={this._showModalMenu} />
+          <CardInfo itemtype={OWEME} showArchive={isShowArchive} currency={user.DefCurrency} data={oweme} editItem={this._editItem} showModalMenu={this._showModalMenu} />
         </> : (
         <Card transparent>
           <CardItem style={main.fD_C}>
             <FontAwesome name='info-circle' size={80} style={styles.infoIcon}/>
-            <Text note style={[main.fontFam, main.txtAl_c]}>В этом блоке можно ставить себе финансовые цели, а также вести учёт Ваших долгов и должников.</Text>
+            <Text note style={main.txtAl_c}>В этом блоке можно ставить себе финансовые цели, а также вести учёт Ваших долгов и должников.</Text>
           </CardItem>
         </Card>
         )
     }
 
-
     return (
       <Container>
+        <Header>
+          <Body>
+            <Title style={main.ml_15}>Мои цели</Title>
+          </Body>
+          <Right>
+            <Icon android={(isShowArchive)?'md-eye':'md-eye-off'} ios={(isShowArchive)?'ios-eye':'ios-eye-off'} 
+              style={[main.clWhite, main.mr_15]} 
+              button onPress={this._toggleShowArchive}
+            />
+          </Right>
+        </Header>
         <Content enableOnAndroid refreshControl = {
-            <RefreshControl refreshing={this.state.refreshing} onRefresh={this._refreshData} />
+            <RefreshControl refreshing={refreshing} onRefresh={this._refreshData} />
           }
         >
           {content}
@@ -193,7 +210,7 @@ class Cards extends Component {
 
         <Modal animationType="slide"
           transparent={true}
-          visible={this.state.visibleModalIncrease}
+          visible={visibleModalIncrease}
           onRequestClose={this._hideModalIncrease}
           avoidKeyboard
         >
@@ -201,7 +218,7 @@ class Cards extends Component {
           <Content enableOnAndroid extraHeight={Platform.select({ android: 150 })}>
             <Card transparent style={styles.modalWindow}>
               <CardItem header>
-                <Text style={[main.fontFam, main.clGrey]}>Введите сумму</Text>
+                <Text style={main.clGrey}>Введите сумму</Text>
                 <Icon button name="close" onPress={this._hideModalIncrease} style={styles.modalCloseIcon} disabled={this.state.Loading}/>
               </CardItem>
               <CardItem>
@@ -236,13 +253,13 @@ class Cards extends Component {
 
         <Modal animationType="fade"
           transparent={true}
-          visible={this.state.visibleModalMenu}
+          visible={visibleModalMenu}
           onRequestClose={this._hideModalMenu}
         >
           <View style={main.modalOverlay} />
           <Card transparent style={styles.modalMenu}>
             <CardItem header>
-              <Text style={main.txtAl_c}>{this.state.choosenItem.GoalName}</Text>
+              <Text style={main.txtAl_c}>{choosenItem.GoalName}</Text>
               <Icon button name="close" onPress={this._hideModalMenu} style={styles.modalCloseIcon}/>
             </CardItem>
             <CardItem>
@@ -256,7 +273,7 @@ class Cards extends Component {
         </Modal>
 
         <Fab
-          active={this.state.fabState}
+          active={fabState}
           direction="up"
           style={main.bgGreen}
           position="bottomRight"
@@ -286,7 +303,6 @@ const styles = StyleSheet.create({
   },
   modalButt: {
     ...main.clGrey, 
-    ...main.fontFam,
     fontSize:15
   },
   modalCloseIcon: {

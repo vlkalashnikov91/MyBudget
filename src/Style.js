@@ -122,6 +122,9 @@ export const styles = StyleSheet.create({
   pdR_10: {
     paddingRight: 10
   },
+  pdR_15: {
+    paddingRight: 15
+  },
   pdR_50: {
     paddingRight: 50
   },
@@ -130,6 +133,9 @@ export const styles = StyleSheet.create({
   },
   pdL_10: {
     paddingLeft: 10
+  },
+  pdL_15: {
+    paddingLeft: 15
   },
   pdL_25: {
     paddingLeft: 25

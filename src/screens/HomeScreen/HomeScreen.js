@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Alert, StyleSheet, Modal, RefreshControl, Image } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, Button, Text, Icon, Card, CardItem, H2, Segment, Left, Right } from 'native-base'
+import { Container, Content, Button, Text, Icon, Card, CardItem, H2, Segment, Left, Right, Header, Body, View } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
@@ -10,14 +10,13 @@ import 'moment/locale/ru'
 import { SkypeIndicator } from 'react-native-indicators'
 import { ToastTr } from '../../components/Toast'
 import ListPays from '../../components/ListPays'
-import BalanceInfo from '../../components/BalanceInfo'
 import YearMonthPicker from '../../components/YearMonthPicker'
 
 import { PaymentActions } from '../../actions/PaymentActions'
 import { INCOME, EXPENSE } from '../../constants/Payment'
 
 import { styles as main, ivanColor } from '../../Style'
-import { capitalize } from '../../utils/utils'
+import { capitalize, SummMask } from '../../utils/utils'
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -38,25 +37,7 @@ class HomeScreen extends Component {
     this._changeMonth = this._changeMonth.bind(this)
   }
 
-  static navigationOptions = ({ navigation }) => {
-    return {
-      headerTitle: <BalanceInfo />,
-      headerRight: (
-        <Icon android='md-information-circle' 
-          ios='ios-information-circle' 
-          style={[main.clWhite, main.mr_15]} 
-          button onPress={navigation.getParam('showModalInfo')}
-        />
-      ),
-      headerLeft: (
-        <Image resizeMode='contain' resizeMethod='scale' style={main.imageForHeader} source={require('../../../assets/Logo_min2.png')}></Image>
-      )
-    }
-  }
-
   componentDidMount() {
-    this.props.navigation.setParams({ showModalInfo: this._setModalInfo })
-
     this.timer = setTimeout(() => { this._refreshData() }, 200)
   }
 
@@ -83,11 +64,11 @@ class HomeScreen extends Component {
 
   _setModalInfo = () => {
     Alert.alert(
-        'Планирование',
-        '"Плановый" баланс позволяет отследить остаток средств с учетом еще не проведенных, но запланированных выплат.\n   ✓ Проведенный платеж \n   ✓ Запланированный платеж\n\nЧтобы перевести платеж в статус "запланированный" нажмите на галочку перед наименованием платежа.',
-        [
-            {text: 'Ясно'},
-        ]
+      'Планирование',
+      '"Плановый" баланс позволяет отследить остаток средств с учетом еще не проведенных, но запланированных выплат.\n   ✓ Проведенный платеж \n   ✓ Запланированный платеж\n\nЧтобы перевести платеж в статус "запланированный" нажмите на галочку перед наименованием платежа.',
+      [
+        {text: 'Ясно'},
+      ]
     )
 }
 
@@ -133,22 +114,66 @@ class HomeScreen extends Component {
   }
 
   render() {
-    const { payments, categories } = this.props
-    const isLoad = payments.isLoad || categories.isLoad
+    const { payments, categories, user } = this.props
+    const isLoad = payments.isLoad || categories.isLoad || user.isLoad
 
     var Pays = <SkypeIndicator color={ivanColor} />
     
     if (!isLoad) {
       if (payments.Payments.length == 0) {
-        Pays = <Grid><Col><Row style={[main.jC_C, main.fD_R]}><Text style={[main.clGrey, main.fontFam]}>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
+        Pays = <Grid><Col><Row style={[main.jC_C, main.fD_R]}><Text style={main.clGrey}>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
       } else {
         Pays = <ListPays payments={payments.Payments} GoToEdit={this._navigateToEdit} />
       }
     }
 
+    var balance = 0
+    var planed = 0
+
+    if ((payments.Payments != undefined) && (payments.Payments.length > 0)) {
+      payments.Payments.map(item => {
+        if (item.IsPlaned == false) {
+          if (item.IsSpending) {
+            balance = balance - item.Amount
+          } else {
+            balance = balance + item.Amount
+          }
+        }
+
+        if (item.IsSpending) {
+          planed = planed - item.Amount
+        } else {
+          planed = planed + item.Amount
+        }
+      })
+    }
+
     return (
         <Container>
-
+          <Header>
+            <View style={[main.fl_1, main.fD_R, {alignSelf: 'center'}]}>
+              <Image resizeMode='contain' resizeMethod='scale' style={main.imageForHeader} source={require('../../../assets/Logo_min2.png')} />
+              <Grid style={[main.pdL_15, main.pdR_15]}>
+                <Row>
+                  <Col>
+                    <Text style={styles.balanceStyle}>Баланс</Text>
+                  </Col>
+                  <Col>
+                    <Text style={styles.balanceStyle}>Плановый</Text>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <Text style={[main.clWhite, main.txtAl_c, main.fontFamBold]}>{SummMask(balance)} {user.DefCurrency}</Text>
+                  </Col>
+                  <Col>
+                    <Text style={[main.clWhite, main.txtAl_c]}>{SummMask(planed)} {user.DefCurrency}</Text>
+                  </Col>
+                </Row>
+              </Grid>
+              <Icon android='md-information-circle' ios='ios-information-circle' style={styles.iconInfo} button onPress={this._setModalInfo} />
+            </View>
+          </Header>
           <Segment style={main.bgWhite}>
             <Left>
               <Button transparent onPress={this._prevMonth} style={styles.prevMonthBtn}>
@@ -178,14 +203,14 @@ class HomeScreen extends Component {
                       <Row style={[main.jC_C, main.aI_C]}>
                         <Button iconLeft disabled={(isLoad)} style={(!isLoad)? main.bgGreen : {}} rounded onPress={_=> this._navigateToAdd(INCOME)}>
                           <Icon ios="ios-add" android="md-add" />
-                          <Text style={main.fontFam}>Доход </Text>
+                          <Text>Доход </Text>
                         </Button>
                       </Row>
                     </Col>
                     <Col>
                       <Row style={[main.jC_C, main.aI_C]}>
                         <Button iconRight disabled={(isLoad)} style={(!isLoad)? main.bgDanger : {}} rounded onPress={_=> this._navigateToAdd(EXPENSE)}>
-                          <Text style={main.fontFam}>Расход</Text>
+                          <Text>Расход</Text>
                           <Icon ios="ios-remove" android="md-remove" />
                         </Button>
                       </Row>
@@ -208,8 +233,7 @@ class HomeScreen extends Component {
 const styles = StyleSheet.create({
   monthHeader: {
     marginTop: 11,
-    ...main.clGrey,
-    ...main.fontFam
+    ...main.clGrey
   },
   prevMonthBtn: {
     ...main.clGrey,
@@ -224,6 +248,16 @@ const styles = StyleSheet.create({
     ...main.mr_0,
     ...main.pdL_10,
     ...main.pdR_25
+  },
+  balanceStyle: {
+    ...main.clWhite, 
+    ...main.txtAl_c, 
+    fontSize: 13
+  },
+  iconInfo: {
+    ...main.clWhite, 
+    ...main.mr_15, 
+    ...main.mt_5
   }
 })
 

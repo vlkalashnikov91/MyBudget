@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form, Header, Left, Title, Icon } from 'native-base'
 
 import { styles as main, ivanColor } from '../../Style'
 import { CategoriesActions } from '../../actions/CategoriesActions'
@@ -50,14 +50,24 @@ class AddCategory extends Component {
 
     return (
       <Container>
+        <Header>
+          <Left>
+            <Button transparent onPress={_=>this.props.navigation.goBack()}>
+              <Icon name='arrow-back'/>
+            </Button>
+          </Left>
+          <Body>
+            <Title>Новая категория</Title>
+          </Body>
+        </Header>
         <Content padder>
           <Card>
             <CardItem>
               <Body>
                 <Form style={{alignSelf: 'stretch'}}>
                   <Item floatingLabel style={main.mt_0}>
-                    <Label style={main.fontFam}>Наименование</Label>
-                    <Input onChangeText={this._changeName} value={this.state.Name} style={[main.clGrey, main.fontFam, main.mt_5]}/>
+                    <Label>Наименование</Label>
+                    <Input onChangeText={this._changeName} value={this.state.Name} style={[main.clGrey, main.mt_5]}/>
                   </Item>
                 </Form>
               </Body>
@@ -68,8 +78,8 @@ class AddCategory extends Component {
               <Body>
                 <Button disabled={this.state.notValid} style={(this.state.notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
                 {(categories.isLoad)
-                  ? <Text style={main.fontFam}>Загрузка...</Text>
-                  : <Text style={main.fontFam}>Создать</Text>
+                  ? <Text>Загрузка...</Text>
+                  : <Text>Создать</Text>
                 }
                 </Button>
               </Body>

@@ -14,13 +14,20 @@ export const UserAuth = {
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
 
-                    axios.post(URL + '/login', {
+                    axios.post(URL + '/newLogin', {
                         "usr": username,
                         "pass": pass
                     })
                     .then(res => {
                         SaveMe(username, saveMe)
-                        dispatch(ActionLogin(res.data, pass))
+
+                        let { Status, Categories, Transactions, UserSettings } = res.data
+
+                        if (Status === 200) {
+                            dispatch(ActionLogin(UserSettings))
+                        } else {
+                            dispatch(ActionReject(UN_AUTH_MESS))
+                        }
                     })
                     .catch(error => {
                         console.log("error", error)
@@ -156,17 +163,9 @@ const ActionReject = err => {
     } 
 }
 
-/*+++++++++++++++ Действия при login ++++++++++++++++ */
-const ActionLogin = (userInfo, pass) => {
-    if (userInfo.Status === 401) {
-        return {
-            type: USER_ERR,
-            payload: {
-                err: UN_AUTH_MESS
-            }
-        } 
-    }
 
+/*+++++++++++++++ Действия при login ++++++++++++++++ */
+const ActionLogin = (userInfo) => {
     return {
         type: USER_LOGIN,
         payload: {

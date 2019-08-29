@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
-import { Alert } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, H3, DatePicker, Grid, Row, Form } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, H3, DatePicker, Grid, Row, Form, ListItem, CheckBox, Header, Left, Title } from 'native-base'
 
 import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
@@ -34,22 +34,16 @@ class AddItem extends Component {
       Type: '',
       Amount: '',
       CurAmount: '0',
-      //CompleteDate: undefined,
-      CompleteDate: null, //временно
+      CompleteDate: undefined,
       errGoalName: false,
       errAmount: false,
       Loading: false,
+      isShowEndDate: false,
     }
 
     this._saveItem = this._saveItem.bind(this)
     this._checkParams = this._checkParams.bind(this)
-  }
-
-  static navigationOptions = ({ navigation }) => {
-    let type = navigation.getParam('type', TARGET) /* target - в случае если тип будет не определен */
-    return {
-      title: headerText(type)
-    }
+    this.toggleEndDate = this.toggleEndDate.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -68,6 +62,10 @@ class AddItem extends Component {
 
   _changeAmount = value => {
     this.setState({ Amount: String(Number(ClearNums(value))) })
+  }
+
+  toggleEndDate() {
+    this.setState(prevState => ({isShowEndDate: !prevState.isShowEndDate, CompleteDate: undefined}))
   }
 
   _changeDate = value => {
@@ -96,7 +94,7 @@ class AddItem extends Component {
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
-      this.props.additem(UserId, st.GoalName, type, Number(st.Amount), Number(st.CurAmount), st.CompleteDate)    
+      this.props.additem(UserId, st.GoalName, type, Number(st.Amount), Number(st.CurAmount), moment(st.CompleteDate).format('YYYY.MM.DD'))    
     }
   }
 
@@ -112,68 +110,74 @@ class AddItem extends Component {
 
   render() {
       const { user } = this.props
-      const { GoalName, Amount, CompleteDate, errGoalName, errAmount, Loading } = this.state
-
+      const { GoalName, Amount, CompleteDate, errGoalName, errAmount, Loading, isShowEndDate } = this.state
+      let type = this.props.navigation.getParam('type', TARGET) /* target - в случае если тип будет не определен */
+      
       return (
         <Container>
+          <Header>
+            <Left>
+              <Button transparent onPress={_=>this.props.navigation.goBack()}>
+                <Icon name='arrow-back'/>
+              </Button>
+            </Left>
+            <Body>
+              <Title>{headerText(type)}</Title>
+            </Body>
+          </Header>
           <Content padder>
-            <Card >
-              <CardItem >
-                <Body>
-                  <Form style={{alignSelf: 'stretch'}}>
+            <Form style={{alignSelf: 'stretch'}}>
 
-                    <Item floatingLabel error={errGoalName} style={main.mt_0}>
-                      <Label style={main.fontFam}>Наименование</Label>
-                      <Input onChangeText={this._changeName} value={GoalName} style={[main.clGrey, main.fontFam, main.mt_5]}/>
-                    </Item>
+              <Item floatingLabel error={errGoalName} style={main.mt_0}>
+                <Label>Наименование</Label>
+                <Input onChangeText={this._changeName} value={GoalName} style={styles.inputStyle}/>
+              </Item>
 
-                    <Grid style={main.width_90prc}>
-                      <Item floatingLabel style={{width:'80%'}} error={errAmount}>
-                        <Label style={main.fontFam}>Полная сумма</Label>
-                        <Input style={[main.clGrey, main.fontFam, main.mt_5]} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
-                      </Item>
-                      <H3 style={[main.clGrey, {position:'absolute', right:0, bottom:5}]}>{user.DefCurrency}</H3>
-                    </Grid>
+              <Grid style={[main.width_90prc, main.mb_20]}>
+                <Item floatingLabel style={{width:'80%'}} error={errAmount}>
+                  <Label>Полная сумма</Label>
+                  <Input style={styles.inputStyle} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
+                </Item>
+                <H3 style={styles.currIcon}>{user.DefCurrency}</H3>
+              </Grid>
 
-                  {/* временно
-                  <CardItem>
-                    <Body>
-                      <Grid>
-                        <Row style={[main.jC_C, main.aI_C]}>
-                          <DatePicker
-                            formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
-                            defaultDate={CompleteDate}
-                            minimumDate={new Date(2016, 1, 1)}
-                            maximumDate={new Date(2040, 12, 31)}
-                            locale="ru"
-                            timeZoneOffsetInMinutes={undefined}
-                            modalTransparent={false}
-                            animationType={"fade"}
-                            androidMode="calendar"
-                            placeHolderText={(CompleteDate) ? moment(CompleteDate).format('DD.MM.YYYY') : "Дата окончания"}
-                            textStyle={main.clGrey}
-                            placeHolderTextStyle={main.clGrey}
-                            onDateChange={this._changeDate}
-                            disabled={false}
-                          />
-                          <Icon name='ios-information-circle' style={[main.clGrey, main.ml_20]} button onPress={this._setModalVisible} />
-                        </Row>
-                      </Grid>
-                    </Body>
-                  </CardItem>
-                  */}
-                  </Form>
-                </Body>
-              </CardItem>
-            </Card>
+              <ListItem noBorder>
+                <CheckBox checked={isShowEndDate} onPress={this.toggleEndDate}/>
+                <Body><Text>Дата окончания</Text></Body>
+              </ListItem>
+
+              {isShowEndDate &&
+              <Grid>
+                <Row style={[main.jC_C, main.aI_C]}>
+                  <DatePicker
+                    formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
+                    defaultDate={CompleteDate}
+                    minimumDate={new Date(2016, 1, 1)}
+                    maximumDate={new Date(2040, 12, 31)}
+                    locale="ru"
+                    timeZoneOffsetInMinutes={undefined}
+                    modalTransparent={false}
+                    animationType={"fade"}
+                    androidMode="calendar"
+                    placeHolderText={(CompleteDate) ? moment(CompleteDate).format('DD.MM.YYYY') : "дд.мм.гггг"}
+                    textStyle={styles.dateTextStyle}
+                    placeHolderTextStyle={styles.dateTextStyle}
+                    onDateChange={this._changeDate}
+                    disabled={false}
+                  />
+                  <Icon name='ios-information-circle' style={[main.clGrey, main.ml_20]} button onPress={this._setModalVisible} />
+                </Row>
+              </Grid>
+              }
+            </Form>
             
             <Card transparent>
               <CardItem>
                 <Body>
                   <Button style={main.bgGreen} block onPress={this._saveItem}>
                   {(Loading)
-                    ? <Text style={main.fontFam}>Загрузка...</Text>
-                    : <Text style={main.fontFam}>Создать</Text>
+                    ? <Text>Загрузка...</Text>
+                    : <Text>Создать</Text>
                   }
                   </Button>
                 </Body>
@@ -187,6 +191,24 @@ class AddItem extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  dateTextStyle: {
+    ...main.clGrey,
+    ...main.txtAl_c,
+    fontSize:20
+  },
+  currIcon: {
+    ...main.clGrey,
+    position:'absolute',
+    right:0,
+    bottom:5
+  },
+  inputStyle: {
+    ...main.clGrey,
+    ...main.mt_5
+  }
+})
 
 const mapStateToProps = state => {
   return {

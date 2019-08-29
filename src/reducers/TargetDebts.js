@@ -22,7 +22,7 @@ export default (state = initialeState, action) => {
             return {...state,
                 isLoad: false,
                 Error:'',
-                Targets: action.payload.data
+                Targets: Array.isArray(action.payload.data) ? action.payload.data : [],
             } 
         case REMOVE_TARGET:
             return {...state,

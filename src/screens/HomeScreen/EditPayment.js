@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { StyleSheet } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Grid, Form, View } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Grid, Form, Title, Header, Left } from 'native-base'
 
 import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
@@ -21,7 +21,7 @@ class EditPayment extends Component {
       CategoryId: (this.props.navigation.getParam('type', INCOME) === INCOME) ? 1 : 2,
       Amount: '',
       Name:'', 
-      TransDate: new Date(),
+      TransDate: undefined,
       IsSpending: (this.props.navigation.getParam('type', INCOME) === INCOME) ? false : true,
       IsPlaned: false,
       Loading: false,
@@ -46,7 +46,7 @@ class EditPayment extends Component {
           CategoryId: item.CategoryId, 
           Amount: item.Amount.toString(), 
           Name: item.Name, 
-          TransDate: item.TransDate, 
+          TransDate: new Date(item.TransDate), 
           IsSpending: item.IsSpending,
           IsPlaned: item.IsPlaned
          })
@@ -122,102 +122,113 @@ class EditPayment extends Component {
     const { user } = this.props
     const { Amount, errAmount, CategoryId, Name, TransDate, Loading } = this.state
 
-    return <Container>
-            <Content padder>
-              <Card>
-                <CardItem>
-                  <Body>
-                    <Form style={{alignSelf: 'stretch'}}>
+    return (
+      <Container>
+        <Header>
+          <Left>
+            <Button transparent onPress={_=> this.props.navigation.goBack()}>
+              <Icon name='arrow-back'/>
+            </Button>
+          </Left>
+          <Body>
+            <Title>Редактировать</Title>
+          </Body>
+        </Header>
+        <Content padder>
+          <Form style={{alignSelf: 'stretch'}}>
 
-                      <Grid style={main.width_90prc}>
-                        <Item stackedLabel style={{width:'80%'}} error={errAmount}>
-                          <Label style={main.fontFam}>Сумма</Label>
-                          <Input style={[main.clGrey, main.fontFam]} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
-                        </Item>
-                        <H3 style={[main.clGrey, {position:'absolute', right:0, bottom:15}]}>{user.DefCurrency}</H3>
-                      </Grid>
+            <Grid style={main.width_90prc}>
+              <Item stackedLabel style={{width:'80%'}} error={errAmount}>
+                <Label>Сумма</Label>
+                <Input style={main.clGrey} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
+              </Item>
+              <H3 style={styles.currencyIcon}>{user.DefCurrency}</H3>
+            </Grid>
 
-                      <Grid style={[main.fD_R, main.aI_C, main.mt_20, {paddingLeft:15}]}>
-                        <Item picker>
-                          <Picker mode="dropdown"
-                            iosIcon={<Icon name="arrow-down" />}
-                            placeholderStyle={{ color: "#bfc6ea" }}
-                            placeholderIconColor="#007aff"
-                            selectedValue={CategoryId}
-                            onValueChange={this._changeCat}
-                          >
-                          {
-                            this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
-                          }
-                          </Picker>
-                        </Item>
-                      </Grid>
+            <Grid style={[main.fD_R, main.aI_C, main.mt_20, {paddingLeft:15}]}>
+              <Item picker>
+                <Picker mode="dropdown"
+                  iosIcon={<Icon name="arrow-down" />}
+                  placeholderStyle={{ color: "#bfc6ea" }}
+                  placeholderIconColor="#007aff"
+                  selectedValue={CategoryId}
+                  onValueChange={this._changeCat}
+                >
+                {
+                  this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
+                }
+                </Picker>
+              </Item>
+            </Grid>
 
-                      <Item stackedLabel style={[main.mb_20, main.mt_20]}>
-                        <Label style={main.fontFam}>Описание</Label>
-                        <Input
-                          onChangeText={this._changeDesc}
-                          value={Name}
-                          style={[main.clGrey, main.fontFam]}
-                          multiline={true}
-                        />
-                      </Item>
+            <Item stackedLabel style={[main.mb_20, main.mt_20]}>
+              <Label>Описание</Label>
+              <Input
+                onChangeText={this._changeDesc}
+                value={Name}
+                style={main.clGrey}
+                multiline={true}
+              />
+            </Item>
 
-                      <DatePicker
-                        formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
-                        defaultDate={TransDate}
-                        minimumDate={new Date(2016, 1, 1)}
-                        maximumDate={new Date(2040, 12, 31)}
-                        locale="ru"
-                        timeZoneOffsetInMinutes={undefined}
-                        modalTransparent={false}
-                        animationType={"fade"}
-                        androidMode="calendar"
-                        placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
-                        placeHolderTextStyle={styles.dateTextStyle}
-                        textStyle={styles.dateTextStyle}
-                        onDateChange={this._changeDate}
-                        disabled={false}
-                      >
-                        <Text>moment(TransDate).format('DD.MM.YYYY')</Text>
-                      </DatePicker>
+            <DatePicker
+              formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
+              defaultDate={TransDate}
+              minimumDate={new Date(2016, 1, 1)}
+              maximumDate={new Date(2040, 12, 31)}
+              locale="ru"
+              timeZoneOffsetInMinutes={undefined}
+              modalTransparent={false}
+              animationType={"fade"}
+              androidMode="calendar"
+              placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
+              placeHolderTextStyle={styles.dateTextStyle}
+              textStyle={styles.dateTextStyle}
+              onDateChange={this._changeDate}
+              disabled={false}
+            >
+              <Text>moment(TransDate).format('DD.MM.YYYY')</Text>
+            </DatePicker>
 
-                      <Button iconLeft transparent >
-                          <Icon name='star' style={{color:'yellow'}} />
-                          <Text style={[main.fontFam, main.clIvan]} uppercase={false}>Ежемесячный платеж</Text>
-                      </Button>
+            <Button iconLeft transparent >
+                <Icon name='star' style={{color:'yellow'}} />
+                <Text style={main.clIvan} uppercase={false}>Ежемесячный платеж</Text>
+            </Button>
 
-                    </Form>
-                  </Body>
-                </CardItem>
-              </Card>
+          </Form>
 
-              <Card transparent>
-                <CardItem>
-                  <Body>
-                    <Button style={main.bgGreen} block onPress={this._editPayment}>
-                    {(Loading)
-                      ? <Text style={main.fontFam}>Загрузка...</Text>
-                      : <Text style={main.fontFam}>Сохранить</Text>
-                    }
-                    </Button>
-                  </Body>
-                </CardItem>
-              </Card>
-            </Content>
+          <Card transparent>
+            <CardItem>
+              <Body>
+                <Button style={main.bgGreen} block onPress={this._editPayment}>
+                {(Loading)
+                  ? <Text>Загрузка...</Text>
+                  : <Text>Сохранить</Text>
+                }
+                </Button>
+              </Body>
+            </CardItem>
+          </Card>
+        </Content>
 
-            <ModalLoading isActive={Loading} color={ivanColor} />
-          </Container>
-        }
+        <ModalLoading isActive={Loading} color={ivanColor} />
+      </Container>
+    )
+  }
 }
 
     
 const styles = StyleSheet.create({
   dateTextStyle: {
     ...main.clGrey,
-    ...main.fontFam,
     ...main.txtAl_c,
     fontSize:20
+  },
+  currencyIcon: {
+    ...main.clGrey,
+    position:'absolute',
+    right:0,
+    bottom:15
   }
 })
 

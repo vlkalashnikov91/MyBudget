@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
+import { StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form, Icon, Header, Left, Title } from 'native-base'
 import { UserAuth } from '../../actions/UserActions'
 
 import { styles as main, ivanColor } from '../../Style'
@@ -18,6 +19,12 @@ class ChangePassword extends Component {
       oldPassErr: false,
       newPassErr: false,
       newRePassErr: false,
+      isHiddenOldPass: true,
+      isHiddenNewPass: true,
+      isHiddenNewRePass: true,
+      iconOldPass: 'eye-off',
+      iconNewPass: 'eye-off',
+      iconNewRePass: 'eye-off',
       changing: false
     }
 
@@ -46,7 +53,25 @@ class ChangePassword extends Component {
     this.setState({ newRePass: value })
   }
 
-  
+  _togglePassIcon(item) {
+    if (item==='OLD') {
+      this.setState(prevState => ({
+        iconOldPass: prevState.iconOldPass === 'eye' ? 'eye-off' : 'eye',
+        isHiddenOldPass: !prevState.isHiddenOldPass
+      }))
+    } else if (item==='NEW'){
+      this.setState(prevState => ({
+        iconNewPass: prevState.iconNewPass === 'eye' ? 'eye-off' : 'eye',
+        isHiddenNewPass: !prevState.isHiddenNewPass
+      }))
+    } else if (item==='NEWRE'){
+      this.setState(prevState => ({
+        iconNewRePass: prevState.iconNewRePass === 'eye' ? 'eye-off' : 'eye',
+        isHiddenNewRePass: !prevState.isHiddenNewRePass
+      }))
+    }
+  }
+
   _checkParams() {
     st = this.state
 
@@ -84,41 +109,48 @@ class ChangePassword extends Component {
 
   render() {
     const { user } = this.props
-    const {oldPass, newPass, newRePass, oldPassErr, newPassErr, newRePassErr} = this.state
+    const { oldPass, newPass, newRePass, oldPassErr, newPassErr, newRePassErr, isHiddenOldPass, isHiddenNewPass, isHiddenNewRePass, iconOldPass, iconNewPass, iconNewRePass} = this.state
 
     return (
       <Container>
+        <Header>
+          <Left>
+            <Button transparent onPress={_=>this.props.navigation.goBack()}>
+              <Icon name='arrow-back' />
+            </Button>
+          </Left>
+          <Body>
+            <Title>Сменить пароль</Title>
+          </Body>
+        </Header>
         <Content padder>
-          <Card>
-            <CardItem>
-              <Body>
-                <Form style={{alignSelf: 'stretch'}}>
-                  <Item floatingLabel style={main.mt_0} error={oldPassErr}>
-                    <Label style={main.fontFam}>Текущий пароль</Label>
-                    <Input secureTextEntry={true} style={[main.clGrey, main.mt_5]} value={oldPass} onChangeText={this._oldPass}/>
-                  </Item>
+          <Form style={styles.form}>
+            <Item floatingLabel style={main.mt_0} error={oldPassErr}>
+              <Label>Текущий пароль</Label>
+              <Input secureTextEntry={isHiddenOldPass} style={styles.input} value={oldPass} onChangeText={this._oldPass}/>
+              <Icon name={iconOldPass} onPress={_=> this._togglePassIcon('OLD')} style={main.clIvan}/>
+            </Item>
 
-                  <Item floatingLabel error={newPassErr}>
-                    <Label style={main.fontFam}>Новый пароль</Label>
-                    <Input secureTextEntry={true} style={[main.clGrey, main.mt_5]} value={newPass} onChangeText={this._newPass}/>
-                  </Item>
+            <Item floatingLabel error={newPassErr}>
+              <Label>Новый пароль</Label>
+              <Input secureTextEntry={isHiddenNewPass} style={styles.input} value={newPass} onChangeText={this._newPass}/>
+              <Icon name={iconNewPass} onPress={_=> this._togglePassIcon('NEW')} style={main.clIvan}/>
+            </Item>
 
-                  <Item floatingLabel error={newRePassErr}>
-                    <Label style={main.fontFam}>Подтверждение пароля</Label>
-                    <Input secureTextEntry={true} style={[main.clGrey, main.mt_5]} value={newRePass} onChangeText={this._newRePass}/>
-                  </Item>
-                </Form>
-              </Body>
-            </CardItem>
-          </Card>
+            <Item floatingLabel error={newRePassErr}>
+              <Label>Подтверждение пароля</Label>
+              <Input secureTextEntry={isHiddenNewRePass} style={styles.input} value={newRePass} onChangeText={this._newRePass}/>
+              <Icon name={iconNewRePass} onPress={_=> this._togglePassIcon('NEWRE')} style={main.clIvan}/>
+            </Item>
+          </Form>
 
           <Card transparent>
             <CardItem>
               <Body>
                 <Button block onPress={this._changePass} style={main.bgGreen}>
                 {(user.isLoad)
-                  ? <Text style={main.fontFam}>Загрузка...</Text>
-                  : <Text style={main.fontFam}>Сохранить</Text>
+                  ? <Text>Загрузка...</Text>
+                  : <Text>Сохранить</Text>
                 }
                 </Button>
               </Body>
@@ -132,6 +164,19 @@ class ChangePassword extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  input: {
+    ...main.clGrey,
+    ...main.mt_5
+  },
+  form: {
+    alignSelf: 'stretch',
+    paddingVertical:10, 
+    paddingHorizontal:20
+  }
+})
+
 
 const mapStateToProps = state => {
   return {

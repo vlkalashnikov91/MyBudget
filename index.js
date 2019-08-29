@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import { Font, AppLoading } from 'expo'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
-import { Root } from 'native-base'
+import { Root, StyleProvider } from 'native-base'
 import MainApp from './src/App'
 import reducers from './src/reducers'
 import thunk from 'redux-thunk'
+import getTheme from './native-base-theme/components'
+import platform from './native-base-theme/variables/platform'
 
 const store = createStore(reducers, applyMiddleware(thunk))
 
@@ -35,11 +37,13 @@ export default class App extends Component {
     }
 
     return (
+      <StyleProvider style={getTheme(platform)}>
         <Provider store={store}>
           <Root>
             <MainApp />
           </Root>
         </Provider>
+      </StyleProvider>
     );
   }
 }

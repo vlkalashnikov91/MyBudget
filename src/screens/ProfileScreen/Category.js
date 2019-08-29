@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Alert, RefreshControl, FlatList } from 'react-native'
-import { Container, Icon, Fab, Tabs, Tab, ListItem, Body, Text, Right } from 'native-base'
+import { Container, Icon, Fab, Tabs, Tab, ListItem, Body, Text, Button, Header, Left, Title } from 'native-base'
 
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
@@ -72,12 +72,21 @@ class Category extends Component {
     this.props.getcategories(this.props.user.UserId)
   }
 
-
   render() {
     const { CategoryType, income, expense } = this.state
 
     return (
         <Container>
+          <Header>
+            <Left>
+              <Button transparent onPress={_=>this.props.navigation.goBack()}>
+                <Icon name='arrow-back'/>
+              </Button>
+            </Left>
+            <Body>
+              <Title>Мои категории</Title>
+            </Body>
+          </Header>
           <Tabs tabBarUnderlineStyle={(CategoryType)? main.bgDanger: main.bgGreen} 
             initialPage={0} 
             onChangeTab={({ i }) => this._defineCatType(i)}
@@ -85,7 +94,7 @@ class Category extends Component {
             <Tab heading="Доход" 
               tabStyle={main.bgWhite} 
               activeTabStyle={main.bgWhite} 
-              textStyle={[main.clIvanG, main.fontFam]}
+              textStyle={main.clIvanG}
               activeTextStyle={[main.clIvanG, main.fontFamBold]}
             >
               <FlatList

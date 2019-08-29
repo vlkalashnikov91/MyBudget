@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form, Header, Left, Icon, Title } from 'native-base'
 
 import { styles as main, ivanColor } from '../../Style'
 import { CategoriesActions } from '../../actions/CategoriesActions'
@@ -70,6 +70,16 @@ class EditCategory extends Component {
 
     return (
       <Container>
+        <Header>
+          <Left>
+            <Button transparent onPress={_=>this.props.navigation.goBack()}>
+              <Icon name='arrow-back'/>
+            </Button>
+          </Left>
+          <Body>
+            <Title>Редактировать</Title>
+          </Body>
+        </Header>
         <Content padder>
           <Card>
             <CardItem>
@@ -88,8 +98,8 @@ class EditCategory extends Component {
               <Body>
                 <Button disabled={this.state.notValid} style={(this.state.notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
                 {(categories.isLoad)
-                  ? <Text style={main.fontFam}>Загрузка...</Text>
-                  : <Text style={main.fontFam}>Сохранить</Text>
+                  ? <Text>Загрузка...</Text>
+                  : <Text>Сохранить</Text>
                 }
                 </Button>
               </Body>

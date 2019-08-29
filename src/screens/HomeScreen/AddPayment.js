@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { StyleSheet } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Grid, Form, View } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Grid, Form, Header, Left, Title } from 'native-base'
 
 import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
@@ -43,13 +43,6 @@ class AddPayment extends Component {
     this._checkParams = this._checkParams.bind(this)
     this._addPayment = this._addPayment.bind(this)
     this._getCategoryList = this._getCategoryList.bind(this)
-  }
-
-  static navigationOptions = ({ navigation }) => {
-    let type = navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
-    return {
-      title: headerText(type)
-    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -117,103 +110,115 @@ class AddPayment extends Component {
   render() {
     const { user } = this.props
     const { Amount, errAmount, CategoryId, Name, TransDate, Loading } = this.state
+    let type = this.props.navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
 
-    return <Container>
-            <Content padder>
-              <Card>
-                <CardItem>
-                  <Body>
-                    <Form style={{alignSelf: 'stretch'}}>
+    return (
+      <Container>
+        <Header>
+          <Left>
+            <Button transparent onPress={_=> this.props.navigation.goBack()}>
+              <Icon name='arrow-back'/>
+            </Button>
+          </Left>
+          <Body>
+            <Title>{headerText(type)}</Title>
+          </Body>
+        </Header>
+        <Content padder>
+          <Form style={{alignSelf: 'stretch'}}>
 
-                      <Grid style={main.width_90prc}>
-                        <Item floatingLabel style={[{width:'80%'}, main.mt_0]} error={errAmount}>
-                          <Label style={main.fontFam}>Сумма</Label>
-                          <Input
-                            onChangeText={this._changeAmount}
-                            value={SummMask(Amount)}
-                            keyboardType="number-pad"
-                            style={[main.clGrey, main.fontFam, main.mt_5]} 
-                            maxLength={10}
-                          />
-                        </Item>
-                        <H3 style={[main.clGrey, {position:'absolute', right:0, bottom:5}]}>{user.DefCurrency}</H3>
-                      </Grid>
+            <Grid style={main.width_90prc}>
+              <Item floatingLabel style={[{width:'80%'}, main.mt_0]} error={errAmount}>
+                <Label>Сумма</Label>
+                <Input
+                  onChangeText={this._changeAmount}
+                  value={SummMask(Amount)}
+                  keyboardType="number-pad"
+                  style={[main.clGrey, main.mt_5]} 
+                  maxLength={10}
+                />
+              </Item>
+              <H3 style={styles.currencyIcon}>{user.DefCurrency}</H3>
+            </Grid>
 
-                      <Grid style={[main.fD_R, main.aI_C, main.mt_20, {paddingLeft:15}]}>
-                        <Item picker>
-                          <Picker mode="dropdown"
-                            iosIcon={<Icon name="arrow-down" />}
-                            placeholderStyle={{ color: "#bfc6ea" }}
-                            placeholderIconColor="#007aff"
-                            selectedValue={CategoryId}
-                            onValueChange={this._changeCat}
-                          >
-                          {
-                            this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
-                          }
-                          </Picker>
-                        </Item>
-                      </Grid>
+            <Grid style={[main.fD_R, main.aI_C, main.mt_20, {paddingLeft:15}]}>
+              <Item picker>
+                <Picker mode="dropdown"
+                  iosIcon={<Icon name="arrow-down" />}
+                  placeholderStyle={{ color: "#bfc6ea" }}
+                  placeholderIconColor="#007aff"
+                  selectedValue={CategoryId}
+                  onValueChange={this._changeCat}
+                >
+                {
+                  this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
+                }
+                </Picker>
+              </Item>
+            </Grid>
 
-                      <Item floatingLabel style={main.mb_20}>
-                        <Label style={main.fontFam}>Описание</Label>
-                        <Input
-                          onChangeText={this._changeDesc}
-                          value={Name}
-                          style={[main.clGrey, main.fontFam, main.mt_5]}
-                          multiline={true}
-                        />
-                      </Item>
+            <Item floatingLabel style={main.mb_20}>
+              <Label>Описание</Label>
+              <Input
+                onChangeText={this._changeDesc}
+                value={Name}
+                style={[main.clGrey, main.mt_5]}
+                multiline={true}
+              />
+            </Item>
 
-                      <DatePicker
-                        formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
-                        defaultDate={TransDate}
-                        minimumDate={new Date(2016, 1, 1)}
-                        maximumDate={new Date(2040, 12, 31)}
-                        locale="ru"
-                        timeZoneOffsetInMinutes={undefined}
-                        modalTransparent={false}
-                        animationType={"fade"}
-                        androidMode="calendar"
-                        placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
-                        placeHolderTextStyle={styles.dateTextStyle}
-                        textStyle={styles.dateTextStyle}
-                        onDateChange={this._changeDate}
-                        disabled={false}
-                      >
-                        <Text>moment(TransDate).format('DD.MM.YYYY')</Text>
-                      </DatePicker>
-                    </Form>
-                  </Body>
-                </CardItem>
-              </Card>
+            <DatePicker
+              formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
+              defaultDate={TransDate}
+              minimumDate={new Date(2016, 1, 1)}
+              maximumDate={new Date(2040, 12, 31)}
+              locale="ru"
+              timeZoneOffsetInMinutes={undefined}
+              modalTransparent={false}
+              animationType={"fade"}
+              androidMode="calendar"
+              placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
+              placeHolderTextStyle={styles.dateTextStyle}
+              textStyle={styles.dateTextStyle}
+              onDateChange={this._changeDate}
+              disabled={false}
+            >
+              <Text>moment(TransDate).format('DD.MM.YYYY')</Text>
+            </DatePicker>
+          </Form>
 
-              <Card transparent>
-                <CardItem>
-                  <Body>
-                    <Button style={main.bgGreen} block onPress={this._addPayment}>
-                      {(Loading)
-                      ? <Text style={main.fontFam}>Загрузка...</Text>
-                      : <Text style={main.fontFam}>Создать</Text>
-                      }
-                    </Button>
-                  </Body>
-                </CardItem>
-              </Card>
-            </Content>
+          <Card transparent>
+            <CardItem>
+              <Body>
+                <Button style={main.bgGreen} block onPress={this._addPayment}>
+                  {(Loading)
+                  ? <Text>Загрузка...</Text>
+                  : <Text>Создать</Text>
+                  }
+                </Button>
+              </Body>
+            </CardItem>
+          </Card>
+        </Content>
 
-            <ModalLoading isActive={Loading} color={ivanColor} />
-          </Container>
-        }
+        <ModalLoading isActive={Loading} color={ivanColor} />
+      </Container>
+    )
+  }
 }
 
     
 const styles = StyleSheet.create({
   dateTextStyle: {
     ...main.clGrey,
-    ...main.fontFam,
     ...main.txtAl_c,
     fontSize:20
+  },
+  currencyIcon: {
+    ...main.clGrey,
+    position:'absolute',
+    right:0,
+    bottom:5
   }
 })
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Alert } from 'react-native'
-import { Container, Body, Content, Item, Button, Text, Icon, Card, CardItem, Picker, Label, Right } from 'native-base'
+import { Container, Body, Content, Item, Button, Text, Icon, Card, CardItem, Picker, Label, Right, Header, Title } from 'native-base'
 import { connect } from 'react-redux'
 import { FontAwesome } from '@expo/vector-icons'
 
@@ -58,20 +58,8 @@ class Profile extends Component {
     this.props.navigation.navigate('Login')
   }
 
-  _gotoChangePass = () => {
-    this.props.navigation.navigate('ChangePassword')
-  }
-
-  _gotoChangeCat = () => {
-    this.props.navigation.navigate('Category')
-  }
-
-  _gotoAbout = () => {
-    this.props.navigation.navigate('About')
-  }
-
-  _gotoMonthlyPays = () => {
-    this.props.navigation.navigate('MonthlyPays')
+  _goto(where){
+    this.props.navigation.navigate(where)
   }
 
   _saveSettings() {
@@ -82,15 +70,20 @@ class Profile extends Component {
   render() {
     return (
         <Container>
+          <Header>
+            <Body>
+              <Title style={main.ml_15}>Мой кабинет</Title>
+            </Body>
+          </Header>
           <Content padder>
             <Card>
               <CardItem bordered>
                 <Text style={[main.clIvan, main.fontFamBold]}>Параметры учетной записи</Text>
               </CardItem>
 
-              <CardItem bordered button onPress={this._gotoChangePass}>
+              <CardItem bordered button onPress={_=>this._goto('ChangePassword')}>
                 <Body>
-                  <Text style={[main.clGrey, main.fontFam]}>Изменить пароль</Text>
+                  <Text style={main.clGrey}>Изменить пароль</Text>
                 </Body>
                 <Right>
                   <FontAwesome name="angle-right" size={20}/>
@@ -102,17 +95,17 @@ class Profile extends Component {
               <CardItem bordered>
                 <Text style={[main.clIvan, main.fontFamBold]}>Персональные настройки</Text>
               </CardItem>
-              <CardItem bordered button onPress={this._gotoChangeCat}>
+              <CardItem bordered button onPress={_=>this._goto('Category')}>
                 <Body>
-                  <Text style={[main.clGrey, main.fontFam]}>Мои категории</Text>
+                  <Text style={main.clGrey}>Мои категории</Text>
                 </Body>
                 <Right>
                   <FontAwesome name="angle-right" size={20}/>
                 </Right>
               </CardItem>
-              <CardItem bordered button onPress={this._gotoMonthlyPays}>
+              <CardItem bordered button onPress={_=>this._goto('MonthlyPays')}>
                 <Body>
-                  <Text style={[main.clGrey, main.fontFam]}>Ежемесячные платежи</Text>
+                  <Text style={main.clGrey}>Ежемесячные платежи</Text>
                 </Body>
                 <Right>
                   <FontAwesome name="angle-right" size={20}/>
@@ -120,8 +113,8 @@ class Profile extends Component {
               </CardItem>
               <CardItem bordered>
                 <Body>
-                  <Item picker>
-                    <Label style={main.fontFam}>Валюта по умолчанию</Label>
+                  <Item>
+                    <Label>Валюта по умолчанию</Label>
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
                       style={{ width: undefined }}
@@ -135,13 +128,13 @@ class Profile extends Component {
                       <Picker.Item label="€" value="€" />
                     </Picker>
                   </Item>
-                  <Item picker>
-                    <Label style={main.fontFam}>Перенос остатка</Label>
+
+                  <Item>
+                    <Label>Перенос остатка</Label>
                     <Icon name='ios-information-circle' style={main.clGrey} button onPress={this.setModalVisible} />
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
                       style={{ width: undefined }}
-                      itemTextStyle={main.fontFam}
                       placeholderStyle={{ color: "#bfc6ea" }}
                       placeholderIconColor="#007aff"
                       selectedValue={this.state.CarryOverRests}
@@ -156,20 +149,20 @@ class Profile extends Component {
               
               <CardItem>
                 <Button onPress={this._saveSettings} disabled={this.state.isChange} style={(this.state.isChange)?{}:main.bgIvan}>
-                  <Text style={main.fontFam}>Сохранить изменения</Text>
+                  <Text>Сохранить изменения</Text>
                 </Button>
               </CardItem>
             </Card>
 
             <Card>
-              <CardItem button onPress={this._gotoAbout}> 
-                  <Text style={main.fontFam}>О приложении</Text>
+              <CardItem button onPress={_=>this._goto('About')}> 
+                <Text>О приложении</Text>
               </CardItem>
             </Card>
 
             <Button block danger onPress={this.logout} style={main.mt_20} iconLeft>
               <Icon ios="ios-exit" android="md-exit" />
-              <Text style={main.fontFam}>Выход</Text>
+              <Text>Выход</Text>
             </Button>
           </Content>
         </Container>

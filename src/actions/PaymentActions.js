@@ -15,13 +15,13 @@ export const PaymentActions = {
     
                     axios.get(URL + `mobtransactions?id=${UserId}&year=${year}&month=${month}`)
                     .then(res => {
-                        dispatch(ActionFetchList(res.data))
+                        dispatch(ActionFetchPayments(res.data))
                     })
                     .catch(function (error) {
                         if (error.response) {
                             /*если 404 - значит данных нет за этот месяц */
                             if(error.response.status === 404) {
-                                dispatch(ActionFetchList([]))
+                                dispatch(ActionFetchPayments([]))
                             } else {
                                 dispatch(ActionReject(error.message))
                             }
@@ -107,7 +107,7 @@ export const PaymentActions = {
                 }
             })
         }
-    }
+    },
 }
 
 
@@ -122,7 +122,7 @@ const ActionReject = err => {
 }
 
 /*+++++++++++++++ Загрузка списка платежей ++++++++++++++++ */
-const ActionFetchList = data => {
+const ActionFetchPayments = data => {
     return {
         type: GET_PAYMENT_LIST,
         payload: {

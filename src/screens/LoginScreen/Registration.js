@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, Button, Text, Input, Icon, Item, Label, Form } from 'native-base'
+import { Container, Content, Button, Text, Input, Icon, Item, Label, Form, Header, Left, Body, Title } from 'native-base'
 import { LinearGradient } from 'expo'
 
 import ModalLoading from '../../components/ModalLoading'
@@ -57,18 +57,18 @@ class Registration extends Component {
     this.setState({RePassword: value})
   }
 
-  _togglePass() {
-    this.setState(prevState => ({
-      iconPass: prevState.iconPass === 'eye' ? 'eye-off' : 'eye',
-      isHiddenPass: !prevState.isHiddenPass
-    }))
-  }
-
-  _toggleRePass() {
-    this.setState(prevState => ({
-      iconRePass: prevState.iconRePass === 'eye' ? 'eye-off' : 'eye',
-      isHiddenRePass: !prevState.isHiddenRePass
-    }))
+  _toggleIcon(item){
+    if (item==='PASS'){
+      this.setState(prevState => ({
+        iconPass: prevState.iconPass === 'eye' ? 'eye-off' : 'eye',
+        isHiddenPass: !prevState.isHiddenPass
+      }))
+    } else {
+      this.setState(prevState => ({
+        iconRePass: prevState.iconRePass === 'eye' ? 'eye-off' : 'eye',
+        isHiddenRePass: !prevState.isHiddenRePass
+      }))
+    }
   }
 
   _checkParams() {
@@ -119,29 +119,39 @@ class Registration extends Component {
 
       return (
         <Container>
+          <Header>
+            <Left>
+              <Button transparent onPress={_=> this.props.navigation.goBack()}>
+                <Icon name='arrow-back' />
+              </Button>
+            </Left>
+            <Body>
+              <Title>Регистрация</Title>
+            </Body>
+          </Header>
           <LinearGradient colors={[ivanColor, ivanColor, '#30cfd0']} style={main.fl_1} >
             <Content padder>
               <Form style={styles.form}>
                 <Item floatingLabel error={errLogin} style={main.mt_0} >
-                  <Label style={styles.label}>Логин</Label>
+                  <Label style={main.clWhite}>Логин</Label>
                   <Input onChangeText={this._changeLogin} maxLength={20} style={styles.input}/>
                 </Item>
 
                 <Item floatingLabel error={errEmail}>
-                  <Label style={styles.label}>Email</Label>
+                  <Label style={main.clWhite}>Email</Label>
                   <Input onChangeText={this._changeEmail} style={styles.input}/>
                 </Item>
 
                 <Item floatingLabel error={errPass}>
-                  <Label style={styles.label}>Пароль</Label>
+                  <Label style={main.clWhite}>Пароль</Label>
                   <Input secureTextEntry={isHiddenPass} onChangeText={this._changePass} maxLength={20} style={styles.input}/>
-                  <Icon name={iconPass} onPress={_=> this._togglePass()} style={main.clWhite}/>
+                  <Icon name={iconPass} onPress={_=> this._toggleIcon('PASS')} style={main.clWhite}/>
                 </Item>
 
                 <Item floatingLabel error={errRePass}>
-                  <Label style={styles.label}>Подтверждение пароля</Label>
+                  <Label style={main.clWhite}>Подтверждение пароля</Label>
                   <Input secureTextEntry={isHiddenRePass} onChangeText={this._changeRePass} maxLength={20} style={styles.input} onSubmitEditing={this._registration}/>
-                  <Icon name={iconRePass} onPress={_=> this._toggleRePass()} style={main.clWhite}/>
+                  <Icon name={iconRePass} onPress={_=> this._toggleIcon('REPASS')} style={main.clWhite}/>
                 </Item>
 
                 <Button block light onPress={this._registration} style={{marginTop: 30}}>
@@ -165,12 +175,7 @@ class Registration extends Component {
 const styles = StyleSheet.create({
   input: {
     ...main.clWhite,
-    ...main.fontFam,
     ...main.mt_5
-  },
-  label: {
-    ...main.clWhite,
-    ...main.fontFam
   },
   form: {
     alignSelf: 'stretch', 
