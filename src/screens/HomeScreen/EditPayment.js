@@ -9,7 +9,7 @@ import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { PaymentActions } from '../../actions/PaymentActions'
 import { INCOME, EXPENSE } from '../../constants/Payment'
-import { SummMask, ClearNums } from '../../utils/utils'
+import { SummMask, ClearNums, onlyNumbers } from '../../utils/utils'
 
 
 class EditPayment extends Component {
@@ -18,11 +18,11 @@ class EditPayment extends Component {
     
     this.state = {
       Id: -1, 
-      CategoryId: (this.props.navigation.getParam('type', INCOME) === INCOME) ? 1 : 2,
+      CategoryId: -1,
       Amount: '',
       Name:'', 
       TransDate: undefined,
-      IsSpending: (this.props.navigation.getParam('type', INCOME) === INCOME) ? false : true,
+      IsSpending: false,
       IsPlaned: false,
       Loading: false,
       errAmount: false
@@ -86,7 +86,10 @@ class EditPayment extends Component {
   }
 
   _changeAmount = value => {
-    this.setState({ Amount: String(Number(ClearNums(value))) })
+    var val = ClearNums(value)
+    if (onlyNumbers(val)) {
+      this.setState({ Amount: String(Number(val)) })
+    }
   }
 
   _changeDate = value => {

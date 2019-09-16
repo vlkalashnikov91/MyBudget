@@ -72,9 +72,9 @@ class ListPays extends Component {
             disableRightSwipe={true}
             dataSource={this.ds.cloneWithRows(payments)}
             renderRightHiddenRow={(data, secId, rowId, rowMap) =>
-                <Button full danger onPress={_=> this._deletePay(data, secId, rowId, rowMap) }>
-                  <Icon active name="trash" />
-                </Button>
+              <Button full danger onPress={_=> this._deletePay(data, secId, rowId, rowMap) }>
+                <Icon active name="trash" />
+              </Button>
             }
             renderRow={value => {
               let CatDesc = this._definePayCat(value)
@@ -99,7 +99,7 @@ class ListPays extends Component {
                       ? <Text style={main.clGrey}>---</Text>
                       : <Text style={main.clGrey} numberOfLines={1}>{value.Name}</Text>
                       }
-                      <Text note style={main.fontFam}>{CatDesc.Name}</Text>
+                      <Text note>{CatDesc.Name}</Text>
                     </TouchableOpacity>
                   </Body>
                   <Right style={[main.fD_C, {alignItems:'flex-end'}]}>
@@ -107,7 +107,7 @@ class ListPays extends Component {
                     ? <Text style={main.clIvanD}> - {SummMask(value.Amount)} {user.DefCurrency}</Text>
                     : <Text style={main.clIvanG}> + {SummMask(value.Amount)} {user.DefCurrency}</Text>
                     }
-                    <Text note style={main.fontFam}>{moment(value.TransDate).format('DD.MM.YYYY')}</Text>
+                    <Text note>{moment(value.TransDate).format('DD.MM.YYYY')}</Text>
                   </Right>
                 </ListItem>
               )

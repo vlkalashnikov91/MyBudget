@@ -1,0 +1,7 @@
+/* Константы для редьюсеров */
+export const GET_TEMPLATES_LIST = 'GET_TEMPLATES_LIST'
+export const ADD_TEMPLATE = 'ADD_TEMPLATE'
+export const REMOVE_TEMPLATE = 'REMOVE_TEMPLATE'
+export const EDIT_TEMPLATE = 'EDIT_TEMPLATE'
+export const START_LOADING_TEMPLATES = 'START_LOADING_TEMPLATES'
+export const ERR_TEMPLATES = 'ERR_TEMPLATES'

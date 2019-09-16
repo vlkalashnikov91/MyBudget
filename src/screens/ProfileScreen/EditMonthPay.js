@@ -8,46 +8,68 @@ import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { TemplatesActions } from '../../actions/TemplatesActions'
 import { SummMask, ClearNums, onlyNumbers } from '../../utils/utils'
-import { INCOME, EXPENSE, headerText } from '../../constants/Payment'
+import { INCOME, EXPENSE } from '../../constants/Payment'
 
-class AddMonthPay extends Component {
+class EditMonthPay extends Component {
   constructor(props) {
     super(props);
     
     this.state = {
       Id: -1, 
       Name: '',
-      CategoryId: (this.props.navigation.getParam('type', INCOME) === INCOME) ? 1 : 2,
+      CategoryId: -1,
       Amount: '',
       Day: '',
-      IsSpending: (this.props.navigation.getParam('type', INCOME) === INCOME) ? false : true,
+      IsSpending: false,
       Loading: false,
       errAmount: false
     } 
 
     this._checkParams = this._checkParams.bind(this)
-    this._addTemplate = this._addTemplate.bind(this)
+    this._editTemplate = this._editTemplate.bind(this)
     this._getCategoryList = this._getCategoryList.bind(this)
   }
+
+  componentDidMount() {
+    nav = this.props.navigation
+    templates = this.props.templates.Templates
+
+    if (nav.getParam('itemid', -1) !== -1 ) {
+      let item = templates.find(el => el.Id === nav.getParam('itemid'))
+      
+      if (item !== undefined) {
+        this.setState({
+            Id: item.Id,
+            Name: item.Name,
+            CategoryId: item.CategoryId, 
+            Amount: item.Amount.toString(), 
+            Day: item.Day.toString(), 
+            IsSpending: item.IsSpending,
+        })
+      }
+    }
+  } 
 
   componentWillReceiveProps(nextProps) {
     this.setState({ Loading: false })
 
     if(nextProps.templates.Error.length === 0) {
-      ToastTr.Success('Платеж создан')
+      ToastTr.Success('Платеж изменен')
     }
     this.props.navigation.goBack()
   }
 
   _getCategoryList() {
-    const type = this.props.navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
     const income = this.props.categories.Income
     const expense = this.props.categories.Expense
 
-    if (type === INCOME) {
-        return income
-    } else if (type === EXPENSE) {
-        return expense
+    /*Если было выбрано "Редактировать" - то нужно определить к какой категории относится платеж и сформировать список*/
+    let CatDesc = income.find(el => el.Id === this.state.CategoryId)
+
+    if (CatDesc == undefined) {
+      return expense
+    } else {
+      return income
     }
   }
 
@@ -88,19 +110,18 @@ class AddMonthPay extends Component {
     return true
   }
 
-  _addTemplate() {
+  _editTemplate() {
     st = this.state
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
-      this.props.addMonthPay(st.Name, Number(st.Amount), Number(st.Day), st.CategoryId, st.IsSpending, this.props.user.UserId)
+      this.props.editMonthPay(st.Id, st.Name, Number(st.Amount), Number(st.Day), st.CategoryId, st.IsSpending, this.props.user.UserId)
     }
   }
 
   render() {
     const { user, navigation } = this.props
     const { Name, Amount, errAmount, CategoryId, Day, errDay, Loading } = this.state
-    var type = this.props.navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
 
     return (
       <Container>
@@ -111,20 +132,19 @@ class AddMonthPay extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{headerText(type)}</Title>
+            <Title>Редактировать</Title>
           </Body>
         </Header>
 
         <Content padder>
           <Form style={{alignSelf: 'stretch'}}>
 
-            <Item floatingLabel style={main.mt_0}>
-              <Label>Наименование</Label>
-              <Input onChangeText={this._changeName} value={Name} style={[main.clGrey, main.mt_5]}/>
-            </Item>
-
+            <Item stackedLabel style={main.mt_0}>
+                <Label>Наименование</Label>
+                <Input onChangeText={this._changeName} value={Name} style={[main.clGrey, main.mt_5]}/>
+              </Item>
             <Grid style={main.width_90prc}>
-              <Item floatingLabel style={[{width:'80%'}, main.mt_0]} error={errAmount}>
+              <Item stackedLabel style={[{width:'80%'}, main.mt_0]} error={errAmount}>
                 <Label>Сумма</Label>
                 <Input onChangeText={this._changeAmount} value={SummMask(Amount)} keyboardType="number-pad" style={[main.clGrey, main.mt_5]} maxLength={10} />
               </Item>
@@ -147,19 +167,19 @@ class AddMonthPay extends Component {
               </Item>
             </Grid>
 
-            <Item floatingLabel style={main.mb_20} error={errDay}>
+            <Item stackedLabel style={[main.mb_20, main.mt_20]} error={errDay}>
               <Label>День платежа</Label>
-              <Input onChangeText={this._changeDay} value={Day} keyboardType="number-pad" style={[main.clGrey, main.mt_5]} />
+              <Input onChangeText={this._changeDay} value={Day} keyboardType="number-pad" style={main.clGrey} />
             </Item>
           </Form>
 
           <Card transparent>
             <CardItem>
               <Body>
-                <Button style={main.bgGreen} block onPress={this._addTemplate}>
+                <Button style={main.bgGreen} block onPress={this._editTemplate}>
                   {(Loading)
                   ? <Text>Загрузка...</Text>
-                  : <Text>Создать</Text>
+                  : <Text>Сохранить</Text>
                   }
                 </Button>
               </Body>
@@ -193,9 +213,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    addMonthPay: (Name, Amount, Day, CategoryId, IsSpending, UserId) => {
-      dispatch(TemplatesActions.Add(Name, Amount, Day, CategoryId, IsSpending, UserId))
+    editMonthPay: (Id, Name, Amount, Day, CategoryId, IsSpending, UserId) => {
+      dispatch(TemplatesActions.Edit(Id, Name, Amount, Day, CategoryId, IsSpending, UserId))
     },
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(AddMonthPay)
+export default connect(mapStateToProps, mapDispatchToProps)(EditMonthPay)

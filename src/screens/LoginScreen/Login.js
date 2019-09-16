@@ -106,7 +106,7 @@ class Login extends Component {
         <LinearGradient colors={[ivanColor, ivanColor, '#30cfd0']} style={main.fl_1} >
           <Content enableOnAndroid>
             <Grid style={[main.fD_C, {height:screenHeight}]}>
-              <Row size={40}>
+              <Row size={30}>
                 <Col style={[main.jC_C, main.aI_C]}>
                   <Image resizeMode='contain' resizeMethod='scale' style={{ width:screenWidth/1.8, height: 55}} source={require('../../../assets/Logo_white.png')}></Image>
                 </Col>
@@ -115,11 +115,11 @@ class Login extends Component {
                 <Col style={[main.pdR_50, main.pdL_50]}>
                   <Form style={{padding:10}}>
                     <Item error={errlogin}>
-                      <Input placeholder='Логин' value={login} maxLength={20} placeholderTextColor='white' style={[main.fontFam, main.clWhite]} onChangeText={this._changeLogin}/>
+                      <Input placeholder='Логин' value={login} maxLength={20} placeholderTextColor='white' style={main.clWhite} onChangeText={this._changeLogin}/>
                     </Item>
                     <Item error={errpassword}>
                       <Input placeholder='Пароль' value={password} maxLength={20} placeholderTextColor='white' 
-                        style={[main.fontFam, main.clWhite]} 
+                        style={main.clWhite} 
                         secureTextEntry={isHiddenPass} onChangeText={this._changePassword} onSubmitEditing={this._login}
                       />
                       <Icon name={icon} onPress={_=> this._togglePass()} style={main.clWhite}/>
@@ -127,22 +127,22 @@ class Login extends Component {
 
                     <View style={[main.fD_R, main.mt_10, main.jC_C]}>
                       <CheckBox checked={saveMe} color={ivanColor} onPress={this._saveMe} />
-                      <Text button onPress={this._saveMe} style={[main.ml_20, main.fontFam, main.clWhite]}>Запомнить меня</Text>
+                      <Text button onPress={this._saveMe} style={[main.ml_20, main.clWhite]}>Запомнить меня</Text>
                     </View>
 
                     <Button block onPress={this._login} style={[{marginTop:25}, main.bgIvan]}>
                       {(user.isLoad)
-                      ? <Text style={main.fontFam}>Загрузка...</Text>
-                      : <Text style={main.fontFam}>Войти</Text>
+                      ? <Text>Загрузка...</Text>
+                      : <Text>Войти</Text>
                       }
                     </Button>
 
                     <Button block transparent onPress={this._forgotPass} style={main.mt_10}>
-                      <Text style={[main.fontFam, main.clWhite]} uppercase={false} note>Забыли пароль?</Text>
+                      <Text style={main.clWhite} uppercase={false} note>Забыли пароль?</Text>
                     </Button>
 
                     <Button block transparent onPress={this._goToRegForm} style={main.mt_10}>
-                      <Text style={[main.fontFam, main.clWhite]} uppercase={false} note >Зарегистрироваться</Text>
+                      <Text style={main.clWhite} uppercase={false} note >Зарегистрироваться</Text>
                     </Button>
 
                   </Form>

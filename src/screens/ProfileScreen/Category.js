@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Alert, RefreshControl, FlatList } from 'react-native'
-import { Container, Icon, Fab, Tabs, Tab, ListItem, Body, Text, Button, Header, Left, Title } from 'native-base'
+import { Container, Icon, Fab, Tabs, Tab, ListItem, Body, Text, Button, Header, Left, Title, Content } from 'native-base'
 
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
@@ -73,13 +73,14 @@ class Category extends Component {
   }
 
   render() {
+    const { categories, navigation } = this.props
     const { CategoryType, income, expense } = this.state
 
     return (
         <Container>
           <Header>
             <Left>
-              <Button transparent onPress={_=>this.props.navigation.goBack()}>
+              <Button transparent onPress={_=> navigation.goBack()}>
                 <Icon name='arrow-back'/>
               </Button>
             </Left>
@@ -87,59 +88,58 @@ class Category extends Component {
               <Title>Мои категории</Title>
             </Body>
           </Header>
-          <Tabs tabBarUnderlineStyle={(CategoryType)? main.bgDanger: main.bgGreen} 
-            initialPage={0} 
-            onChangeTab={({ i }) => this._defineCatType(i)}
+          <Content enableOnAndroid refreshControl = {
+            <RefreshControl refreshing={categories.isLoad} onRefresh={this._refreshData} />
+          }
           >
-            <Tab heading="Доход" 
-              tabStyle={main.bgWhite} 
-              activeTabStyle={main.bgWhite} 
-              textStyle={main.clIvanG}
-              activeTextStyle={[main.clIvanG, main.fontFamBold]}
+            <Tabs tabBarUnderlineStyle={(CategoryType)? main.bgDanger: main.bgGreen} 
+              initialPage={0} 
+              onChangeTab={({ i }) => this._defineCatType(i)}
             >
-              <FlatList
-                data={income}
-                keyExtractor = {(item, index) => 'key-'+item.Name + index}
-                refreshControl={
-                  <RefreshControl refreshing={this.props.categories.isLoad} onRefresh={this._refreshData} />
-                }
-                renderItem={({item}) => {
-                  return (
-                    <ListItem key={'cat-'+item.Id + item.Name} button
-                      onPress={_=> this._editCategory(item)}
-                      onLongPress={_=> this._deleteCategory(item)}
-                    >
-                      <Body><Text style={[main.clGrey, main.fontFam]}>{item.Name}</Text></Body>
-                    </ListItem>
-                  )
-                }}
-              />
-            </Tab>
-            <Tab heading="Расход" 
-              tabStyle={main.bgWhite} 
-              activeTabStyle={main.bgWhite} 
-              textStyle={[main.clIvanD, main.fontFam]}
-              activeTextStyle={[main.clIvanD, main.fontFamBold]}
-            >
-              <FlatList
-                data={expense}
-                keyExtractor = {(item, index) => 'key-'+item.Name + index}
-                refreshControl={
-                  <RefreshControl refreshing={this.props.categories.isLoad} onRefresh={this._refreshData} />
-                }
-                renderItem={({item}) => {
-                  return (
-                    <ListItem key={'cat-'+item.Id + item.Name} button
-                      onPress={_=> this._editCategory(item)}
-                      onLongPress={_=> this._deleteCategory(item)}
-                    >
-                      <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
-                    </ListItem>
+              <Tab heading="Доход" 
+                tabStyle={main.bgWhite} 
+                activeTabStyle={main.bgWhite} 
+                textStyle={main.clIvanG}
+                activeTextStyle={[main.clIvanG, main.fontFamBold]}
+              >
+                <FlatList
+                  data={income}
+                  keyExtractor = {(item, index) => 'key-'+item.Name + index}
+                  renderItem={({item}) => {
+                    return (
+                      <ListItem key={'cat-'+item.Id + item.Name} button
+                        onPress={_=> this._editCategory(item)}
+                        onLongPress={_=> this._deleteCategory(item)}
+                      >
+                        <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
+                      </ListItem>
                     )
-                }}
-              />
-            </Tab>
-          </Tabs>
+                  }}
+                />
+              </Tab>
+              <Tab heading="Расход" 
+                tabStyle={main.bgWhite} 
+                activeTabStyle={main.bgWhite} 
+                textStyle={main.clIvanD}
+                activeTextStyle={[main.clIvanD, main.fontFamBold]}
+              >
+                <FlatList
+                  data={expense}
+                  keyExtractor = {(item, index) => 'key-'+item.Name + index}
+                  renderItem={({item}) => {
+                    return (
+                      <ListItem key={'cat-'+item.Id + item.Name} button
+                        onPress={_=> this._editCategory(item)}
+                        onLongPress={_=> this._deleteCategory(item)}
+                      >
+                        <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
+                      </ListItem>
+                      )
+                  }}
+                />
+              </Tab>
+            </Tabs>
+          </Content>
 
           <Fab style={main.bgGreen} position="bottomRight" onPress={this._addCategory} >
             <Icon ios="ios-add" android="md-add" />

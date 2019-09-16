@@ -8,20 +8,8 @@ import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { PaymentActions } from '../../actions/PaymentActions'
-import { INCOME, EXPENSE } from '../../constants/Payment'
-import { SummMask, ClearNums } from '../../utils/utils'
-
-const headerText = (type) => {
-  switch(type) {
-    case INCOME:
-      return 'Добавить доход'
-    case EXPENSE:
-      return 'Добавить расход'
-    default:
-      return 'ERROR'
-  }
-}
-
+import { INCOME, EXPENSE, headerText } from '../../constants/Payment'
+import { SummMask, ClearNums, onlyNumbers } from '../../utils/utils'
 
 class AddPayment extends Component {
   constructor(props) {
@@ -75,7 +63,10 @@ class AddPayment extends Component {
   }
 
   _changeAmount = value => {
-    this.setState({ Amount: String(Number(ClearNums(value))) })
+    var val = ClearNums(value)
+    if (onlyNumbers(val)) {
+      this.setState({ Amount: String(Number(val)) })
+    }
   }
 
   _changeDate = value => {

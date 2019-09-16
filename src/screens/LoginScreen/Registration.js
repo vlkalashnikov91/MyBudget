@@ -156,8 +156,8 @@ class Registration extends Component {
 
                 <Button block light onPress={this._registration} style={{marginTop: 30}}>
                 {(user.isLoad)
-                ? <Text style={main.fontFam}>Загрузка...</Text>
-                : <Text style={main.fontFam}>Далее</Text>
+                ? <Text>Загрузка...</Text>
+                : <Text>Далее</Text>
                 }
                 </Button>
                 

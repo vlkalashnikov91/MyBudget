@@ -132,7 +132,7 @@ class Graphics extends Component {
           <Card transparent>
             <CardItem style={main.fD_C}>
               <FontAwesome name='frown-o' size={70} style={styles.notFoundIcon}/>
-                <Text note style={[main.fontFam, main.txtAl_c]}>За выбранный вами период информация не найдена.</Text>
+                <Text note style={main.txtAl_c}>За выбранный вами период информация не найдена.</Text>
             </CardItem>
           </Card>
         )

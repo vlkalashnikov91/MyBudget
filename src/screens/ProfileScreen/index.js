@@ -8,6 +8,8 @@ import Category from './Category'
 import AddCategory from './AddCategory'
 import EditCategory from './EditCategory'
 import MonthlyPays from './MonthlyPays'
+import AddMonthPay from './AddMonthPay'
+import EditMonthPay from './EditMonthPay'
 import About from './About'
 
 const ProfileNav = createStackNavigator(
@@ -18,6 +20,8 @@ const ProfileNav = createStackNavigator(
     EditCategory: EditCategory,
     Category: Category,
     MonthlyPays: MonthlyPays,
+    AddMonthPay: AddMonthPay,
+    EditMonthPay: EditMonthPay,
     About: About
   },
   {

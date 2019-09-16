@@ -2,13 +2,13 @@ import React, {Component} from 'react'
 import { Alert, StyleSheet } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
-import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, H3, DatePicker, Grid, Row, Form, ListItem, CheckBox, Left, Header } from 'native-base'
+import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, H3, DatePicker, Grid, Row, Form, ListItem, CheckBox, Left, Header, Title } from 'native-base'
 
 import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import { TargetActions } from '../../actions/TargetActions'
 import ModalLoading from '../../components/ModalLoading'
-import { SummMask, ClearNums } from '../../utils/utils'
+import { SummMask, ClearNums, onlyNumbers } from '../../utils/utils'
 
 
 class EditItem extends Component {
@@ -20,7 +20,7 @@ class EditItem extends Component {
       Type: '',
       Amount: '',
       CurAmount: '',
-      CompleteDate: undefined,
+      CompleteDate: null,
       errGoalName: false,
       errAmount: false,
       errCurAmount: false,
@@ -71,15 +71,21 @@ class EditItem extends Component {
   }
 
   toggleEndDate() {
-    this.setState(prevState => ({isShowEndDate: !prevState.isShowEndDate, CompleteDate: undefined}))
+    this.setState(prevState => ({isShowEndDate: !prevState.isShowEndDate, CompleteDate: null}))
   }
 
   _changeAmount = value => {
-    this.setState({ Amount: String(Number(ClearNums(value))) })
+    var val = ClearNums(value)
+    if (onlyNumbers(val)) {
+      this.setState({ Amount: String(Number(val)) })
+    }
   }
 
   _changeCurAmount = value => {
-    this.setState({ CurAmount: String(Number(ClearNums(value))) })
+    var val = ClearNums(value)
+    if (onlyNumbers(val)) {
+      this.setState({ CurAmount: String(Number(val)) })
+    }
   }
 
   _changeDate = value => {
@@ -126,14 +132,14 @@ class EditItem extends Component {
   }
 
   render() {
-      const { user } = this.props
+      const { user, navigation } = this.props
       const { GoalName, Amount, CurAmount, CompleteDate, errGoalName, errAmount, errCurAmount, Loading, isShowEndDate } = this.state
 
       return (
         <Container>
           <Header>
             <Left>
-              <Button transparent onPress={_=>this.props.navigation.goBack()}>
+              <Button transparent onPress={_=>navigation.goBack()}>
                 <Icon name='arrow-back'/>
               </Button>
             </Left>

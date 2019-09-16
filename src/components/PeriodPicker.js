@@ -138,7 +138,6 @@ const styles = StyleSheet.create({
     textStyle: {
       ...main.clGrey,
       ...main.txtAl_c,
-      ...main.fontFam,
       fontSize:20,
     },
   })

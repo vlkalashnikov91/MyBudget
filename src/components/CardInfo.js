@@ -58,7 +58,7 @@ export const CardInfo = (props) => {
 
     return (
       <>
-      <Text style={[main.fontFam, main.mt_10, main.ml_10, main.clIvan, {marginBottom:6}]} note>{Desc}</Text>
+      <Text style={[main.mt_10, main.ml_10, main.clIvan, {marginBottom:6}]} note>{Desc}</Text>
       <Card style={{backgroundColor: mainColor}}>
         <FlatList
           data={filterData}
@@ -80,7 +80,7 @@ export const CardInfo = (props) => {
                 <Grid style={styles.mainGrid}>
                   <Row style={[main.pdL_10, main.pdR_10]}>
                     <View style={[main.mr_auto, main.ml_auto, main.fD_R]}>
-                      <Text style={[main.clWhite, main.fontFam]}>{capitalize(item.GoalName)}</Text>
+                      <Text style={main.clWhite}>{capitalize(item.GoalName)}</Text>
                       {((needFire<24)&&(needFire>0))&&<FontAwesome name='fire' size={20} style={styles.fireIcon} />}
                       {(needFire<0)&&<FontAwesome name='hourglass-end' size={15} style={styles.hourIcon} />}
                     </View>
@@ -113,8 +113,7 @@ export const CardInfo = (props) => {
     summStyle: {
       ...main.clWhite,
       ...main.ml_auto,
-      ...main.mr_0,
-      ...main.fontFam
+      ...main.mr_0
     },
     fireIcon: {
       ...main.ml_10, 

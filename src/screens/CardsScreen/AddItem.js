@@ -9,7 +9,7 @@ import { ToastTr } from '../../components/Toast'
 import { TargetActions } from '../../actions/TargetActions'
 import { TARGET, OWEME, IDEBT } from '../../constants/TargetDebts'
 import ModalLoading from '../../components/ModalLoading'
-import { SummMask, ClearNums } from '../../utils/utils'
+import { SummMask, ClearNums, onlyNumbers } from '../../utils/utils'
 
 
 const headerText = (type) => {
@@ -34,7 +34,7 @@ class AddItem extends Component {
       Type: '',
       Amount: '',
       CurAmount: '0',
-      CompleteDate: undefined,
+      CompleteDate: null,
       errGoalName: false,
       errAmount: false,
       Loading: false,
@@ -61,7 +61,10 @@ class AddItem extends Component {
   }
 
   _changeAmount = value => {
-    this.setState({ Amount: String(Number(ClearNums(value))) })
+    var val = ClearNums(value)
+    if (onlyNumbers(val)) {
+      this.setState({ Amount: String(Number(val)) })
+    }
   }
 
   toggleEndDate() {
@@ -91,10 +94,11 @@ class AddItem extends Component {
     let st = this.state
     let UserId = this.props.user.UserId
     let type = this.props.navigation.getParam('type', TARGET)
+    let date = (st.CompleteDate) ? moment(st.CompleteDate).format('YYYY.MM.DD') : null
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
-      this.props.additem(UserId, st.GoalName, type, Number(st.Amount), Number(st.CurAmount), moment(st.CompleteDate).format('YYYY.MM.DD'))    
+      this.props.additem(UserId, st.GoalName, type, Number(st.Amount), Number(st.CurAmount), date)    
     }
   }
 
@@ -109,15 +113,15 @@ class AddItem extends Component {
   }
 
   render() {
-      const { user } = this.props
+      const { user, navigation } = this.props
       const { GoalName, Amount, CompleteDate, errGoalName, errAmount, Loading, isShowEndDate } = this.state
-      let type = this.props.navigation.getParam('type', TARGET) /* target - в случае если тип будет не определен */
+      let type = navigation.getParam('type', TARGET) /* target - в случае если тип будет не определен */
       
       return (
         <Container>
           <Header>
             <Left>
-              <Button transparent onPress={_=>this.props.navigation.goBack()}>
+              <Button transparent onPress={_=>navigation.goBack()}>
                 <Icon name='arrow-back'/>
               </Button>
             </Left>
