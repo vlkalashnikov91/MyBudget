@@ -67,7 +67,7 @@ export default class ForgotPass extends Component {
                   <Form style={{alignSelf: 'stretch'}}>
                     <Item floatingLabel style={main.mt_0} error={this.state.errEmail}>
                       <Label>Email или логин</Label>
-                      <Input onChangeText={this._changeEmail} style={[main.clGrey, main.mt_5]}/>
+                      <Input onChangeText={this._changeEmail} style={main.mt_5}/>
                     </Item>
                   </Form>
                 </Body>

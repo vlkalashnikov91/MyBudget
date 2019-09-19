@@ -108,14 +108,14 @@ class ChangePassword extends Component {
   }
 
   render() {
-    const { user } = this.props
+    const { user, navigation } = this.props
     const { oldPass, newPass, newRePass, oldPassErr, newPassErr, newRePassErr, isHiddenOldPass, isHiddenNewPass, isHiddenNewRePass, iconOldPass, iconNewPass, iconNewRePass} = this.state
 
     return (
       <Container>
         <Header>
           <Left>
-            <Button transparent onPress={_=>this.props.navigation.goBack()}>
+            <Button transparent onPress={_=> navigation.goBack()}>
               <Icon name='arrow-back' />
             </Button>
           </Left>
@@ -127,19 +127,19 @@ class ChangePassword extends Component {
           <Form style={styles.form}>
             <Item floatingLabel style={main.mt_0} error={oldPassErr}>
               <Label>Текущий пароль</Label>
-              <Input secureTextEntry={isHiddenOldPass} style={styles.input} value={oldPass} onChangeText={this._oldPass}/>
+              <Input secureTextEntry={isHiddenOldPass} style={main.mt_5} value={oldPass} onChangeText={this._oldPass}/>
               <Icon name={iconOldPass} onPress={_=> this._togglePassIcon('OLD')} style={main.clIvan}/>
             </Item>
 
             <Item floatingLabel error={newPassErr}>
               <Label>Новый пароль</Label>
-              <Input secureTextEntry={isHiddenNewPass} style={styles.input} value={newPass} onChangeText={this._newPass}/>
+              <Input secureTextEntry={isHiddenNewPass} style={main.mt_5} value={newPass} onChangeText={this._newPass}/>
               <Icon name={iconNewPass} onPress={_=> this._togglePassIcon('NEW')} style={main.clIvan}/>
             </Item>
 
             <Item floatingLabel error={newRePassErr}>
               <Label>Подтверждение пароля</Label>
-              <Input secureTextEntry={isHiddenNewRePass} style={styles.input} value={newRePass} onChangeText={this._newRePass}/>
+              <Input secureTextEntry={isHiddenNewRePass} style={main.mt_5} value={newRePass} onChangeText={this._newRePass}/>
               <Icon name={iconNewRePass} onPress={_=> this._togglePassIcon('NEWRE')} style={main.clIvan}/>
             </Item>
           </Form>
@@ -166,10 +166,6 @@ class ChangePassword extends Component {
 }
 
 const styles = StyleSheet.create({
-  input: {
-    ...main.clGrey,
-    ...main.mt_5
-  },
   form: {
     alignSelf: 'stretch',
     paddingVertical:10, 

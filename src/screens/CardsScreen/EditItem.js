@@ -8,7 +8,7 @@ import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import { TargetActions } from '../../actions/TargetActions'
 import ModalLoading from '../../components/ModalLoading'
-import { SummMask, ClearNums, onlyNumbers } from '../../utils/utils'
+import { SummMask, ClearSpace, onlyNumbers } from '../../utils/utils'
 
 
 class EditItem extends Component {
@@ -75,16 +75,26 @@ class EditItem extends Component {
   }
 
   _changeAmount = value => {
-    var val = ClearNums(value)
-    if (onlyNumbers(val)) {
-      this.setState({ Amount: String(Number(val)) })
+    var val = ClearSpace(value)
+
+    if (val.length === 0) {
+      this.setState({ Amount: '' })
+    } else {
+      if (onlyNumbers(val)) {
+        this.setState({ Amount: String(Number(val)) })
+      }
     }
   }
 
   _changeCurAmount = value => {
-    var val = ClearNums(value)
-    if (onlyNumbers(val)) {
-      this.setState({ CurAmount: String(Number(val)) })
+    var val = ClearSpace(value)
+
+    if (val.length === 0) {
+      this.setState({ CurAmount: '' })
+    } else {
+      if (onlyNumbers(val)) {
+        this.setState({ CurAmount: String(Number(val)) })
+      }
     }
   }
 
@@ -152,13 +162,13 @@ class EditItem extends Component {
 
               <Item stackedLabel error={errGoalName}>
                 <Label>Наименование</Label>
-                <Input onChangeText={this._changeName} value={GoalName} style={main.clGrey}/>
+                <Input onChangeText={this._changeName} value={GoalName} />
               </Item>
 
               <Grid style={main.width_90prc}>
                 <Item stackedLabel style={{width:'80%'}} error={errAmount}>
                   <Label>Полная сумма</Label>
-                  <Input style={main.clGrey} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
+                  <Input onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
                 </Item>
                 <H3 style={styles.currIcon}>{user.DefCurrency}</H3>
               </Grid>
@@ -166,7 +176,7 @@ class EditItem extends Component {
               <Grid style={main.width_90prc}>
                 <Item stackedLabel style={{width:'80%'}} error={errCurAmount}>
                   <Label>Текущая сумма</Label>
-                  <Input style={main.clGrey} onChangeText={this._changeCurAmount} value={SummMask(CurAmount)} maxLength={10} keyboardType="number-pad"/>
+                  <Input onChangeText={this._changeCurAmount} value={SummMask(CurAmount)} maxLength={10} keyboardType="number-pad"/>
                 </Item>
                 <H3 style={styles.currIcon}>{user.DefCurrency}</H3>
               </Grid>
@@ -234,7 +244,6 @@ const styles = StyleSheet.create({
     fontSize:20
   },
   currIcon: {
-    ...main.clGrey,
     position:'absolute',
     right:0,
     bottom:5

@@ -9,7 +9,7 @@ import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { PaymentActions } from '../../actions/PaymentActions'
 import { INCOME, EXPENSE, headerText } from '../../constants/Payment'
-import { SummMask, ClearNums, onlyNumbers } from '../../utils/utils'
+import { SummMask, ClearSpace, onlyNumbers } from '../../utils/utils'
 
 class AddPayment extends Component {
   constructor(props) {
@@ -63,9 +63,14 @@ class AddPayment extends Component {
   }
 
   _changeAmount = value => {
-    var val = ClearNums(value)
-    if (onlyNumbers(val)) {
-      this.setState({ Amount: String(Number(val)) })
+    var val = ClearSpace(value)
+
+    if (val.length === 0) {
+      this.setState({ Amount: '' })
+    } else {
+      if (onlyNumbers(val)) {
+        this.setState({ Amount: String(Number(val)) })
+      }
     }
   }
 
@@ -99,7 +104,7 @@ class AddPayment extends Component {
   }
 
   render() {
-    const { user } = this.props
+    const { user, navigation } = this.props
     const { Amount, errAmount, CategoryId, Name, TransDate, Loading } = this.state
     let type = this.props.navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
 
@@ -107,7 +112,7 @@ class AddPayment extends Component {
       <Container>
         <Header>
           <Left>
-            <Button transparent onPress={_=> this.props.navigation.goBack()}>
+            <Button transparent onPress={_=> navigation.goBack()}>
               <Icon name='arrow-back'/>
             </Button>
           </Left>
@@ -121,13 +126,7 @@ class AddPayment extends Component {
             <Grid style={main.width_90prc}>
               <Item floatingLabel style={[{width:'80%'}, main.mt_0]} error={errAmount}>
                 <Label>Сумма</Label>
-                <Input
-                  onChangeText={this._changeAmount}
-                  value={SummMask(Amount)}
-                  keyboardType="number-pad"
-                  style={[main.clGrey, main.mt_5]} 
-                  maxLength={10}
-                />
+                <Input onChangeText={this._changeAmount} value={SummMask(Amount)} keyboardType="number-pad" style={main.mt_5} maxLength={10} />
               </Item>
               <H3 style={styles.currencyIcon}>{user.DefCurrency}</H3>
             </Grid>
@@ -150,12 +149,7 @@ class AddPayment extends Component {
 
             <Item floatingLabel style={main.mb_20}>
               <Label>Описание</Label>
-              <Input
-                onChangeText={this._changeDesc}
-                value={Name}
-                style={[main.clGrey, main.mt_5]}
-                multiline={true}
-              />
+              <Input onChangeText={this._changeDesc} value={Name} style={main.mt_5} multiline={true} />
             </Item>
 
             <DatePicker
@@ -206,7 +200,6 @@ const styles = StyleSheet.create({
     fontSize:20
   },
   currencyIcon: {
-    ...main.clGrey,
     position:'absolute',
     right:0,
     bottom:5

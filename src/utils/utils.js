@@ -10,7 +10,7 @@ export const SummMask = (string) => {
 }
 
 /* Удаляем пробелы в суммах */
-export const ClearNums = (value) => {
+export const ClearSpace = (value) => {
     return value.replace(/\s+/g, '')
 }
 

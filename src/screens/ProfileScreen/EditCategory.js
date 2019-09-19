@@ -66,13 +66,13 @@ class EditCategory extends Component {
   }
 
   render() {
-    const { categories } = this.props
+    const { categories, navigation } = this.props
 
     return (
       <Container>
         <Header>
           <Left>
-            <Button transparent onPress={_=>this.props.navigation.goBack()}>
+            <Button transparent onPress={_=> navigation.goBack()}>
               <Icon name='arrow-back'/>
             </Button>
           </Left>
@@ -87,7 +87,7 @@ class EditCategory extends Component {
                 <Form style={{alignSelf: 'stretch'}}>
                   <Item stackedLabel last>
                     <Label>Наименование</Label>
-                    <Input onChangeText={this._changeName} value={this.state.Name} style={main.clGrey}/>
+                    <Input onChangeText={this._changeName} value={this.state.Name}/>
                   </Item>
                 </Form>
               </Body>

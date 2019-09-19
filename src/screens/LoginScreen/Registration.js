@@ -114,14 +114,14 @@ class Registration extends Component {
   }
 
   render() {
-      const { user } = this.props
+      const { user, navigation } = this.props
       const { errLogin, errEmail, errPass, errRePass, isHiddenPass, iconPass, isHiddenRePass, iconRePass } = this.state
 
       return (
         <Container>
           <Header>
             <Left>
-              <Button transparent onPress={_=> this.props.navigation.goBack()}>
+              <Button transparent onPress={_=> navigation.goBack()}>
                 <Icon name='arrow-back' />
               </Button>
             </Left>

@@ -96,8 +96,8 @@ export default class YearMonthPicker extends Component {
                         <Card transparent>
                             <CardItem>
                                 <TouchableOpacity style={styles.toolBar} onPress={_=> null} activeOpacity={1}>
-                                    <Text style={styles.toolBarText}>Месяц</Text>
-                                    <Text style={styles.toolBarText}>Год</Text>
+                                    <Text style={main.fontFamBold}>Месяц</Text>
+                                    <Text style={main.fontFamBold}>Год</Text>
                                 </TouchableOpacity>
                             </CardItem>
                             <CardItem>
@@ -153,9 +153,5 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0
-    },
-    toolBarText: {
-        ...main.fontFamBold,
-        ...main.clGrey
     }
 })

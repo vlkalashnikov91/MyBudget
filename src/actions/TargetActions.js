@@ -84,7 +84,6 @@ export const TargetActions = {
     },
     Edit: (UserId, Id, GoalName, Type, Amount, CurAmount, CompleteDate) => {
         return (dispatch) => {
-
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
 
@@ -92,7 +91,7 @@ export const TargetActions = {
                         "GoalName": GoalName,
                         "Amount": Amount,
                         "CurAmount": CurAmount,
-                        "CompleteDate": (CompleteDate===undefined)?null:moment(CompleteDate).format('YYYY.MM.DD'),
+                        "CompleteDate": ((CompleteDate===undefined)||(CompleteDate==null))?null:moment(CompleteDate).format('YYYY.MM.DD'),
                         "IsActive": true
                     })
                     .then(res => {
@@ -110,7 +109,6 @@ export const TargetActions = {
     },
     Increase: (Id, Amount) => {
         return(dispatch) => {
-
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
                     axios.get(URL + `goals/${Id}/payGoal?amount=${Amount}`)
@@ -130,6 +128,13 @@ export const TargetActions = {
     }
 }
 
+export const GetFinished = async () => {
+    return await StoreActions.GetFinished()
+}
+
+export const AddToFinished = (Id) => {
+    return StoreActions.AddToFinished(Id)
+}
 
 /*+++++++++++++++ Действие при ошибки в запросе ++++++++++++++++ */
 const ActionReject = err => {
@@ -278,5 +283,24 @@ const StoreActions = {
             })
             Storage.SaveItem('targets', JSON.stringify(newArr))
         }
+    },
+    GetFinished: async() => {
+        let targets = await Storage.GetItem('finishtargets')
+        if (targets.length > 0) {
+            return JSON.parse(targets)
+        }
+        return []  
+    },
+    AddToFinished: async(Id) => {
+        let targets = await Storage.GetItem('finishtargets')
+        let targetsArr = []
+        if (targets.length > 0) {
+            targetsArr = JSON.parse(targets)
+            targetsArr.push(Id)
+            Storage.SaveItem('finishtargets', JSON.stringify(targetsArr))
+        } else {
+            targetsArr.push(Id)
+        }
+        Storage.SaveItem('finishtargets', JSON.stringify(targetsArr))
     }
 }

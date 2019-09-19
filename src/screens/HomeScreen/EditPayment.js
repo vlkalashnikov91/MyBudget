@@ -9,7 +9,7 @@ import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { PaymentActions } from '../../actions/PaymentActions'
 import { INCOME, EXPENSE } from '../../constants/Payment'
-import { SummMask, ClearNums, onlyNumbers } from '../../utils/utils'
+import { SummMask, ClearSpace, onlyNumbers } from '../../utils/utils'
 
 
 class EditPayment extends Component {
@@ -86,9 +86,14 @@ class EditPayment extends Component {
   }
 
   _changeAmount = value => {
-    var val = ClearNums(value)
-    if (onlyNumbers(val)) {
-      this.setState({ Amount: String(Number(val)) })
+    var val = ClearSpace(value)
+
+    if (val.length === 0) {
+      this.setState({ Amount: '' })
+    } else {
+      if (onlyNumbers(val)) {
+        this.setState({ Amount: String(Number(val)) })
+      }
     }
   }
 
@@ -122,14 +127,14 @@ class EditPayment extends Component {
   }
 
   render() {
-    const { user } = this.props
+    const { user, navigation } = this.props
     const { Amount, errAmount, CategoryId, Name, TransDate, Loading } = this.state
 
     return (
       <Container>
         <Header>
           <Left>
-            <Button transparent onPress={_=> this.props.navigation.goBack()}>
+            <Button transparent onPress={_=> navigation.goBack()}>
               <Icon name='arrow-back'/>
             </Button>
           </Left>
@@ -143,7 +148,7 @@ class EditPayment extends Component {
             <Grid style={main.width_90prc}>
               <Item stackedLabel style={{width:'80%'}} error={errAmount}>
                 <Label>Сумма</Label>
-                <Input style={main.clGrey} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
+                <Input onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
               </Item>
               <H3 style={styles.currencyIcon}>{user.DefCurrency}</H3>
             </Grid>
@@ -166,12 +171,7 @@ class EditPayment extends Component {
 
             <Item stackedLabel style={[main.mb_20, main.mt_20]}>
               <Label>Описание</Label>
-              <Input
-                onChangeText={this._changeDesc}
-                value={Name}
-                style={main.clGrey}
-                multiline={true}
-              />
+              <Input onChangeText={this._changeDesc} value={Name} multiline={true} />
             </Item>
 
             <DatePicker
@@ -192,12 +192,13 @@ class EditPayment extends Component {
             >
               <Text>moment(TransDate).format('DD.MM.YYYY')</Text>
             </DatePicker>
-
-            <Button iconLeft transparent >
-                <Icon name='star' style={{color:'yellow'}} />
-                <Text style={main.clIvan} uppercase={false}>Ежемесячный платеж</Text>
-            </Button>
-
+            
+            {/*
+              <Button iconLeft transparent >
+                  <Icon name='star' style={{color:'yellow'}} />
+                  <Text style={main.clIvan} uppercase={false}>Ежемесячный платеж</Text>
+              </Button>
+            */}
           </Form>
 
           <Card transparent>
@@ -228,7 +229,6 @@ const styles = StyleSheet.create({
     fontSize:20
   },
   currencyIcon: {
-    ...main.clGrey,
     position:'absolute',
     right:0,
     bottom:15

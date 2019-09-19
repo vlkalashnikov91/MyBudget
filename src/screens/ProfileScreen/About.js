@@ -3,13 +3,23 @@ import { Image, StyleSheet, Linking } from 'react-native'
 import { Container, Button, Text, Header, Icon, Body, Title, Left } from 'native-base'
 import { Row, Grid } from 'react-native-easy-grid'
 import { styles as main, screenHeight, screenWidth } from '../../Style'
+import { ToastTr } from '../../components/Toast'
 
 const mail = 'T2k.ivan@gmail.com'
 
 
 export default class About extends Component {
     _openMail() {
-        Linking.openURL(`mailto: ${mail}`)
+        var url = `mailto: ${mail}`
+        Linking.canOpenURL(url)
+            .then((supported) => {
+                if (!supported) {
+                    ToastTr.Default('Отсутствует приложение для отправки писем')
+                } else {
+                    return Linking.openURL(url)
+                }
+            })
+            .catch((err) => console.error('An error occurred', err))
     }
 
 render() {

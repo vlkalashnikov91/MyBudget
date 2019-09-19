@@ -104,12 +104,12 @@ class Category extends Component {
               >
                 <FlatList
                   data={income}
-                  keyExtractor = {(item, index) => 'key-'+item.Name + index}
+                  keyExtractor = {(item, index) => 'key-'+item.Id + index}
                   renderItem={({item}) => {
                     return (
-                      <ListItem key={'cat-'+item.Id + item.Name} button
-                        onPress={_=> this._editCategory(item)}
-                        onLongPress={_=> this._deleteCategory(item)}
+                      <ListItem key={'catI-'+item.Id} button
+                        onPress={_=> (item.CreatedBy !== null) ? this._editCategory(item) : null}
+                        onLongPress={_=> (item.CreatedBy !== null) ? this._deleteCategory(item) : null}
                       >
                         <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
                       </ListItem>
@@ -125,12 +125,12 @@ class Category extends Component {
               >
                 <FlatList
                   data={expense}
-                  keyExtractor = {(item, index) => 'key-'+item.Name + index}
+                  keyExtractor = {(item, index) => 'key-'+item.Id + index}
                   renderItem={({item}) => {
                     return (
-                      <ListItem key={'cat-'+item.Id + item.Name} button
-                        onPress={_=> this._editCategory(item)}
-                        onLongPress={_=> this._deleteCategory(item)}
+                      <ListItem key={'catE-'+item.Id} button
+                        onPress={_=> (item.CreatedBy !== null) ? this._editCategory(item) : null}
+                        onLongPress={_=> (item.CreatedBy !== null) ? this._deleteCategory(item) : null}
                       >
                         <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
                       </ListItem>

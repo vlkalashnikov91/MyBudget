@@ -9,7 +9,7 @@ import { ToastTr } from '../../components/Toast'
 import { TargetActions } from '../../actions/TargetActions'
 import { TARGET, OWEME, IDEBT } from '../../constants/TargetDebts'
 import ModalLoading from '../../components/ModalLoading'
-import { SummMask, ClearNums, onlyNumbers } from '../../utils/utils'
+import { SummMask, ClearSpace, onlyNumbers } from '../../utils/utils'
 
 
 const headerText = (type) => {
@@ -61,9 +61,14 @@ class AddItem extends Component {
   }
 
   _changeAmount = value => {
-    var val = ClearNums(value)
-    if (onlyNumbers(val)) {
-      this.setState({ Amount: String(Number(val)) })
+    var val = ClearSpace(value)
+
+    if (val.length === 0) {
+      this.setState({ Amount: '' })
+    } else {
+      if (onlyNumbers(val)) {
+        this.setState({ Amount: String(Number(val)) })
+      }
     }
   }
 
@@ -134,13 +139,13 @@ class AddItem extends Component {
 
               <Item floatingLabel error={errGoalName} style={main.mt_0}>
                 <Label>Наименование</Label>
-                <Input onChangeText={this._changeName} value={GoalName} style={styles.inputStyle}/>
+                <Input onChangeText={this._changeName} value={GoalName} style={main.mt_5}/>
               </Item>
 
               <Grid style={[main.width_90prc, main.mb_20]}>
                 <Item floatingLabel style={{width:'80%'}} error={errAmount}>
                   <Label>Полная сумма</Label>
-                  <Input style={styles.inputStyle} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
+                  <Input style={main.mt_5} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
                 </Item>
                 <H3 style={styles.currIcon}>{user.DefCurrency}</H3>
               </Grid>
@@ -203,15 +208,10 @@ const styles = StyleSheet.create({
     fontSize:20
   },
   currIcon: {
-    ...main.clGrey,
     position:'absolute',
     right:0,
     bottom:5
   },
-  inputStyle: {
-    ...main.clGrey,
-    ...main.mt_5
-  }
 })
 
 const mapStateToProps = state => {

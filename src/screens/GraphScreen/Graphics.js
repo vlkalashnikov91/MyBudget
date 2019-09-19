@@ -116,7 +116,7 @@ class Graphics extends Component {
                     </Svg>
                   </Left>
                   <Body>
-                    <Text style={[main.clGrey, (selectedPie === item.key) && {color:'#62B1F6'}]}>{item.description}</Text>
+                    <Text style={(selectedPie === item.key) && {color:'#62B1F6'}}>{item.description}</Text>
                   </Body>
                   <Right>
                     <Text note>{SummMask(item.value)} {user.DefCurrency}</Text>
@@ -187,14 +187,8 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0
   },
-  textStyle: {
-    ...main.clGrey,
-    ...main.txtAl_c,
-    fontSize:20,
-  },
   monthHeader: {
     marginTop: 5,
-    ...main.clGrey,
     fontSize: 18,
   },
   notFoundIcon: {

@@ -7,13 +7,13 @@ import moment from 'moment'
 
 import { ToastTr } from '../../components/Toast'
 import { CardInfo } from '../../components/CardInfo'
-import { TargetActions } from '../../actions/TargetActions'
+import { TargetActions, GetFinished, AddToFinished } from '../../actions/TargetActions'
 import { PaymentActions } from '../../actions/PaymentActions'
 import { TARGET, IDEBT, OWEME } from '../../constants/TargetDebts'
 import { SkypeIndicator } from 'react-native-indicators'
 
 import { styles as main, screenHeight, screenWidth, ivanColor } from '../../Style'
-import { SummMask, ClearNums, capitalize } from '../../utils/utils'
+import { SummMask, ClearSpace, capitalize, onlyNumbers } from '../../utils/utils'
 
 var BUTTONS = [
   {text:"Поставить цель", icon:"add", iconColor:"#F04124", type:TARGET},
@@ -28,17 +28,18 @@ class Cards extends Component {
     super(props)
 
     this.timer = null
+    this.timer2 = null
 
     this.state = {
       refreshing: false,
       visibleModalIncrease: false,
       visibleModalMenu: false,
       Amount:'',
-      IncreaseId: -1,
       errAmount: false,
       choosenItem: {},
       Loading: false,
-      isShowArchive: false
+      isShowArchive: false,
+      finishedTargets:[]
     }
 
     this._refreshData = this._refreshData.bind(this)
@@ -51,11 +52,13 @@ class Cards extends Component {
     this._hideModalMenu = this._hideModalMenu.bind(this)
     this._showModalMenu = this._showModalMenu.bind(this)
     this._deleteItem = this._deleteItem.bind(this)
+    this._checkFinishTarget = this._checkFinishTarget.bind(this)
 
   }
 
-  componentDidMount(){
+  async componentDidMount(){
     this.props.getTargetDebtList(this.props.user.UserId)
+    this.setState({finishedTargets: await GetFinished()})
   }
 
   componentWillReceiveProps(nextProps) {
@@ -76,11 +79,59 @@ class Cards extends Component {
         this._hideModalIncrease()
         this._hideModalMenu()
       }
+
+      this.timer2 = setTimeout(() => {
+        this._checkFinishTarget(nextProps.targets.Targets)
+      }, 3000)
     }
   }
 
+  /* Функция отбора целей по которым надо уведомить пользователя*/
+  _checkFinishTarget(targets) {
+    let arr = targets.map(item=>{
+      if (item.CompleteDate !== null) {
+        let needFire = moment().diff(moment(item.CompleteDate.split('.')))
+        needFire = Math.trunc(moment.duration(needFire).asDays())
+        if (needFire < 7) {
+          return item
+        }
+      
+      }
+    })
+    this._setModalInfo(arr)
+  }
+
+  /*Функция уведомления пользователя по целям по которым подходит или прошел срок */
+  _setModalInfo = (targets) => {
+    /*Исключаем те по которым уже направляли уведомления */
+    var arr = targets.filter(item=> item!==undefined).filter(k=> !this.state.finishedTargets.includes(k.Id))
+
+    var str = `По ${(arr.length>1)?'целям':'целе'}`
+    arr.forEach(item=> {
+      str = str +' "'+ item.GoalName + '"'
+    })
+    str = str + ` срок подходит к завершению.`
+
+    if(arr.length>0) {
+      Alert.alert(
+        'Срок',
+        str,
+        [
+          {text: 'ОК', onPress: () => {
+              arr.forEach(item=>{
+                AddToFinished(item.Id)
+              })
+            }
+          },
+        ]
+      )
+    }
+}
+
+
   componentWillUnmount(){
     clearTimeout(this.timer)
+    clearTimeout(this.timer2)
   }
 
   _refreshData() {
@@ -138,7 +189,10 @@ class Cards extends Component {
   }
 
   _chngIncreaseAmount = value => {
-    this.setState({ Amount: String(Number(ClearNums(value))) })
+    var val = ClearSpace(value)
+    if (onlyNumbers(val)) {
+      this.setState({ Amount: String(Number(val)) })
+    }
   }
 
   _increaseItem() {
@@ -157,12 +211,14 @@ class Cards extends Component {
   }
 
   _hideModalMenu() {
-    this.setState(prevState => ({ visibleModalMenu: false, choosenItem: {}}))
+    this.setState(prevState => ({ visibleModalMenu: false }))
   }
 
   render() {
     const { targets, user } = this.props
-    const { isShowArchive, refreshing, visibleModalIncrease, visibleModalMenu, choosenItem, fabState } = this.state
+    const { isShowArchive, refreshing, visibleModalIncrease, visibleModalMenu, choosenItem, fabState, Amount, errAmount, Loading } = this.state
+
+    console.log(this.state.finishedTargets)
 
     var content = <View style={[main.fl_1, {padding:20}]}><SkypeIndicator color={ivanColor} /></View>
 
@@ -218,23 +274,22 @@ class Cards extends Component {
           <Content enableOnAndroid extraHeight={Platform.select({ android: 150 })}>
             <Card transparent style={styles.modalWindow}>
               <CardItem header>
-                <Text style={main.clGrey}>Введите сумму</Text>
-                <Icon button name="close" onPress={this._hideModalIncrease} style={styles.modalCloseIcon} disabled={this.state.Loading}/>
+                <Text>Введите сумму</Text>
+                <Icon button name="close" onPress={this._hideModalIncrease} style={styles.modalCloseIcon} disabled={Loading}/>
               </CardItem>
               <CardItem>
                 <Body style={[main.fD_R, main.aI_C]}>
-                  <Item style={main.width_90prc} error={this.state.errAmount}>
+                  <Item style={main.width_90prc} error={errAmount}>
                     <Input
                       textAlign={'center'}
-                      style={main.clGrey}
                       keyboardType="number-pad"
                       maxLength={10}
                       onChangeText={this._chngIncreaseAmount}
-                      value={SummMask(this.state.Amount)}
+                      value={SummMask(Amount)}
                       onSubmitEditing={this._increaseItem}
                     />
                   </Item>
-                  <H3 style={main.clGrey}>{user.DefCurrency}</H3>
+                  <H3>{user.DefCurrency}</H3>
                 </Body>
               </CardItem>
               <CardItem>
@@ -302,7 +357,6 @@ const styles = StyleSheet.create({
     marginLeft: (screenWidth - (screenWidth / 1.2)) / 2
   },
   modalButt: {
-    ...main.clGrey, 
     fontSize:15
   },
   modalCloseIcon: {

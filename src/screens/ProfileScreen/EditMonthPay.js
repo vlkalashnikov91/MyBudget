@@ -7,7 +7,7 @@ import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { TemplatesActions } from '../../actions/TemplatesActions'
-import { SummMask, ClearNums, onlyNumbers } from '../../utils/utils'
+import { SummMask, ClearSpace, onlyNumbers } from '../../utils/utils'
 import { INCOME, EXPENSE } from '../../constants/Payment'
 
 class EditMonthPay extends Component {
@@ -82,15 +82,24 @@ class EditMonthPay extends Component {
   }
 
   _changeAmount = value => {
-    var val = ClearNums(value)
-    if (onlyNumbers(val)) {
-      this.setState({ Amount: String(Number(val)) })
+    var val = ClearSpace(value)
+
+    if (val.length === 0) {
+      this.setState({ Amount: '' })
+    } else {
+      if (onlyNumbers(val)) {
+        this.setState({ Amount: String(Number(val)) })
+      }
     }
   }
 
   _changeDay = value => {
-    if (onlyNumbers(value)) {
-      this.setState({ Day: value })
+    if (value.length === 0) {
+      this.setState({ Day: '' })
+    } else {
+      if (onlyNumbers(value)) {
+        this.setState({ Day: String(Number(value)) })
+      }
     }
   }
   
@@ -141,12 +150,12 @@ class EditMonthPay extends Component {
 
             <Item stackedLabel style={main.mt_0}>
                 <Label>Наименование</Label>
-                <Input onChangeText={this._changeName} value={Name} style={[main.clGrey, main.mt_5]}/>
+                <Input onChangeText={this._changeName} value={Name} style={main.mt_5}/>
               </Item>
             <Grid style={main.width_90prc}>
               <Item stackedLabel style={[{width:'80%'}, main.mt_0]} error={errAmount}>
                 <Label>Сумма</Label>
-                <Input onChangeText={this._changeAmount} value={SummMask(Amount)} keyboardType="number-pad" style={[main.clGrey, main.mt_5]} maxLength={10} />
+                <Input onChangeText={this._changeAmount} value={SummMask(Amount)} keyboardType="number-pad" style={main.mt_5} maxLength={10} />
               </Item>
               <H3 style={styles.currencyIcon}>{user.DefCurrency}</H3>
             </Grid>
@@ -196,7 +205,6 @@ class EditMonthPay extends Component {
     
 const styles = StyleSheet.create({
   currencyIcon: {
-    ...main.clGrey,
     position:'absolute',
     right:0,
     bottom:5

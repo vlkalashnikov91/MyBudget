@@ -46,13 +46,14 @@ class AddCategory extends Component {
   }
 
   render() {
-    const { categories } = this.props
+    const { categories, navigation } = this.props
+    const { Name, notValid } = this.state
 
     return (
       <Container>
         <Header>
           <Left>
-            <Button transparent onPress={_=>this.props.navigation.goBack()}>
+            <Button transparent onPress={_=> navigation.goBack()}>
               <Icon name='arrow-back'/>
             </Button>
           </Left>
@@ -67,7 +68,7 @@ class AddCategory extends Component {
                 <Form style={{alignSelf: 'stretch'}}>
                   <Item floatingLabel style={main.mt_0}>
                     <Label>Наименование</Label>
-                    <Input onChangeText={this._changeName} value={this.state.Name} style={[main.clGrey, main.mt_5]}/>
+                    <Input onChangeText={this._changeName} value={Name} style={main.mt_5}/>
                   </Item>
                 </Form>
               </Body>
@@ -76,7 +77,7 @@ class AddCategory extends Component {
           <Card transparent>
             <CardItem>
               <Body>
-                <Button disabled={this.state.notValid} style={(this.state.notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
+                <Button disabled={notValid} style={(notValid) ? {} : main.bgGreen} block onPress={this._editCategory}>
                 {(categories.isLoad)
                   ? <Text>Загрузка...</Text>
                   : <Text>Создать</Text>

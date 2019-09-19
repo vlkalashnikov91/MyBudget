@@ -58,7 +58,7 @@ export const CardInfo = (props) => {
 
     return (
       <>
-      <Text style={[main.mt_10, main.ml_10, main.clIvan, {marginBottom:6}]} note>{Desc}</Text>
+      <Text style={styles.descStyle} note>{Desc}</Text>
       <Card style={{backgroundColor: mainColor}}>
         <FlatList
           data={filterData}
@@ -66,8 +66,14 @@ export const CardInfo = (props) => {
           renderItem={({item}) => {
 
             let progressCnt = (Number(item.CurAmount) * 100) / Number(item.Amount).toFixed(1)
-            let needFire = moment().diff(item.CompleteDate)
-            needFire = Math.trunc(moment.duration(needFire).asHours())
+
+            let needFire = -1
+            if ((item.CompleteDate == null) || (item.CompleteDate.length === 0)) {
+              needFire = -1
+            } else {
+              needFire = moment().diff(moment(item.CompleteDate.split('.')))
+              needFire = Math.trunc(moment.duration(needFire).asHours())
+            }
 
             return (
             <ListItem key={'target-'+item.Id + item.GoalName}
@@ -116,12 +122,18 @@ export const CardInfo = (props) => {
       ...main.mr_0
     },
     fireIcon: {
-      ...main.ml_10, 
+      ...main.ml_20, 
       color: 'orange'
     },
     hourIcon: {
-      ...main.ml_10,
+      ...main.ml_20,
       marginTop:3,
       color: 'white'
+    },
+    descStyle: {
+      ...main.mt_10, 
+      ...main.ml_10,
+      ...main.clIvan,
+      marginBottom:6
     }
   })

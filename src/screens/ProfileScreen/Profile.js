@@ -83,7 +83,7 @@ class Profile extends Component {
 
               <CardItem bordered button onPress={_=>this._goto('ChangePassword')}>
                 <Body>
-                  <Text style={main.clGrey}>Изменить пароль</Text>
+                  <Text>Изменить пароль</Text>
                 </Body>
                 <Right>
                   <FontAwesome name="angle-right" size={20}/>
@@ -97,7 +97,7 @@ class Profile extends Component {
               </CardItem>
               <CardItem bordered button onPress={_=>this._goto('Category')}>
                 <Body>
-                  <Text style={main.clGrey}>Мои категории</Text>
+                  <Text>Мои категории</Text>
                 </Body>
                 <Right>
                   <FontAwesome name="angle-right" size={20}/>
@@ -105,7 +105,7 @@ class Profile extends Component {
               </CardItem>
               <CardItem bordered button onPress={_=>this._goto('MonthlyPays')}>
                 <Body>
-                  <Text style={main.clGrey}>Ежемесячные платежи</Text>
+                  <Text>Шаблоны платежей</Text>
                 </Body>
                 <Right>
                   <FontAwesome name="angle-right" size={20}/>

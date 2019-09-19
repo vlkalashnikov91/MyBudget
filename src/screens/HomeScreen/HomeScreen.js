@@ -121,7 +121,7 @@ class HomeScreen extends Component {
     
     if (!isLoad) {
       if (payments.Payments.length == 0) {
-        Pays = <Grid><Col><Row style={[main.jC_C, main.fD_R]}><Text style={main.clGrey}>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
+        Pays = <Grid><Col><Row style={[main.jC_C, main.fD_R]}><Text>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
       } else {
         Pays = <ListPays payments={payments.Payments} GoToEdit={this._navigateToEdit} />
       }
@@ -233,7 +233,6 @@ class HomeScreen extends Component {
 const styles = StyleSheet.create({
   monthHeader: {
     marginTop: 11,
-    ...main.clGrey
   },
   prevMonthBtn: {
     ...main.clGrey,

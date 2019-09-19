@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
     color:'white'
   },
   clGrey: {
-    color: '#384850'
+    //color: '#384850'
   },
   clBlack: {
     color: 'black'

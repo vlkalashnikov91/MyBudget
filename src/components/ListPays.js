@@ -83,7 +83,7 @@ class ListPays extends Component {
                 <ListItem key={value.Id} icon>
                   <Left button onPress={_=> this._choosePayments(value)}>
                     {(this.state.planedPay === value.Id)
-                    ? <Button rounded light style={main.ml_10} ><Spinner size="small"/></Button>
+                    ? <Button rounded light style={main.ml_10}><Spinner size="small"/></Button>
                     : <Button rounded bordered
                       success={(!value.IsPlaned)} 
                       light={(value.IsPlaned)} 
@@ -96,8 +96,8 @@ class ListPays extends Component {
                   <Body>
                     <TouchableOpacity onPress={_=> this.props.GoToEdit(value.Id)}>
                       {((value.Name==null) || (value.Name.length === 0))
-                      ? <Text style={main.clGrey}>---</Text>
-                      : <Text style={main.clGrey} numberOfLines={1}>{value.Name}</Text>
+                      ? <Text>---</Text>
+                      : <Text numberOfLines={1}>{value.Name}</Text>
                       }
                       <Text note>{CatDesc.Name}</Text>
                     </TouchableOpacity>
