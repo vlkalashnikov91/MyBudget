@@ -5,7 +5,7 @@ import { Row, Grid } from 'react-native-easy-grid'
 import { styles as main, screenHeight, screenWidth } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 
-const mail = 'T2k.ivan@gmail.com'
+const mail = 'MyBudgetTeam@yandex.kz'
 
 
 export default class About extends Component {

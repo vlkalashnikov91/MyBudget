@@ -99,7 +99,7 @@ class AddItem extends Component {
     let st = this.state
     let UserId = this.props.user.UserId
     let type = this.props.navigation.getParam('type', TARGET)
-    let date = (st.CompleteDate) ? moment(st.CompleteDate).format('YYYY.MM.DD') : null
+    let date = (st.CompleteDate) ? moment(st.CompleteDate).format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS) : null
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
@@ -135,24 +135,24 @@ class AddItem extends Component {
             </Body>
           </Header>
           <Content padder>
-            <Form style={{alignSelf: 'stretch'}}>
+            <Form style={{alignSelf: 'stretch', paddingHorizontal:20}}>
 
               <Item floatingLabel error={errGoalName} style={main.mt_0}>
-                <Label>Наименование</Label>
+                <Label style={main.fontFam}>Наименование <Text style={main.clOrange}>*</Text></Label>
                 <Input onChangeText={this._changeName} value={GoalName} style={main.mt_5}/>
               </Item>
 
               <Grid style={[main.width_90prc, main.mb_20]}>
                 <Item floatingLabel style={{width:'80%'}} error={errAmount}>
-                  <Label>Полная сумма</Label>
+                  <Label style={main.fontFam}>Полная сумма <Text style={main.clOrange}>*</Text></Label>
                   <Input style={main.mt_5} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
                 </Item>
                 <H3 style={styles.currIcon}>{user.DefCurrency}</H3>
               </Grid>
 
               <ListItem noBorder>
-                <CheckBox checked={isShowEndDate} onPress={this.toggleEndDate}/>
-                <Body><Text>Дата окончания</Text></Body>
+                <CheckBox checked={isShowEndDate} onPress={this.toggleEndDate} color={ivanColor}/>
+                <Body><Text button onPress={this.toggleEndDate} style={{color:'#575757'}}>Дата окончания</Text></Body>
               </ListItem>
 
               {isShowEndDate &&
@@ -174,7 +174,7 @@ class AddItem extends Component {
                     onDateChange={this._changeDate}
                     disabled={false}
                   />
-                  <Icon name='ios-information-circle' style={[main.clGrey, main.ml_20]} button onPress={this._setModalVisible} />
+                  <Icon name='ios-information-circle' style={[{color:'#609AD3'}, main.ml_20]} button onPress={this._setModalVisible} />
                 </Row>
               </Grid>
               }
@@ -203,13 +203,13 @@ class AddItem extends Component {
 
 const styles = StyleSheet.create({
   dateTextStyle: {
-    ...main.clGrey,
+    color:'#395971',
     ...main.txtAl_c,
     fontSize:20
   },
   currIcon: {
     position:'absolute',
-    right:0,
+    right:5,
     bottom:5
   },
 })

@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { Font, AppLoading } from 'expo'
+import { AppLoading } from 'expo'
+import * as Font from 'expo-font'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { Root, StyleProvider } from 'native-base'
-import MainApp from './src/App'
+import AppContainer from './src/AppContainer'
 import reducers from './src/reducers'
 import thunk from 'redux-thunk'
 import getTheme from './native-base-theme/components'
@@ -22,10 +23,10 @@ export default class App extends Component {
 
   async componentWillMount() {
     await Font.loadAsync({
-      'SegoeUIRegular': require('native-base/Fonts/SegoeUIRegular.ttf'),
-      'SegoeUIBold': require('native-base/Fonts/SegoeUIBold.ttf'),
+      'SegoeUIRegular': require('./assets/fonts/SegoeUIRegular.ttf'),
+      'SegoeUIBold': require('./assets/fonts/SegoeUIBold.ttf'),
       /*'Roboto': require('native-base/Fonts/Roboto.ttf'),*/
-      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+      'Roboto_medium': require('./assets/fonts/Roboto_medium.ttf'),
     });
 
     this.setState({ loading: false });
@@ -40,7 +41,7 @@ export default class App extends Component {
       <StyleProvider style={getTheme(platform)}>
         <Provider store={store}>
           <Root>
-            <MainApp />
+            <AppContainer />
           </Root>
         </Provider>
       </StyleProvider>

@@ -86,7 +86,7 @@ class EditCategory extends Component {
               <Body>
                 <Form style={{alignSelf: 'stretch'}}>
                   <Item stackedLabel last>
-                    <Label>Наименование</Label>
+                    <Label style={main.fontFam}>Наименование <Text style={main.clOrange}>*</Text></Label>
                     <Input onChangeText={this._changeName} value={this.state.Name}/>
                   </Item>
                 </Form>

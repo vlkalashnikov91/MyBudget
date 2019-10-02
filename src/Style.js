@@ -48,10 +48,13 @@ export const styles = StyleSheet.create({
     color:'white'
   },
   clGrey: {
-    //color: '#384850'
+    color: '#384850'
   },
   clBlack: {
     color: 'black'
+  },
+  clOrange:{
+    color:'orange'
   },
   jC_start: {
     justifyContent: 'flex-start'

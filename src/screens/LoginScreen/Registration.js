@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import { StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Content, Button, Text, Input, Icon, Item, Label, Form, Header, Left, Body, Title } from 'native-base'
-import { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo-linear-gradient'
 
 import ModalLoading from '../../components/ModalLoading'
 import { ToastTr } from '../../components/Toast'
@@ -133,23 +133,23 @@ class Registration extends Component {
             <Content padder>
               <Form style={styles.form}>
                 <Item floatingLabel error={errLogin} style={main.mt_0} >
-                  <Label style={main.clWhite}>Логин</Label>
+                  <Label style={[main.clWhite, main.fontFam]}>Логин <Text style={main.clOrange}>*</Text></Label>
                   <Input onChangeText={this._changeLogin} maxLength={20} style={styles.input}/>
                 </Item>
 
                 <Item floatingLabel error={errEmail}>
-                  <Label style={main.clWhite}>Email</Label>
+                  <Label style={[main.clWhite, main.fontFam]}>Email <Text style={main.clOrange}>*</Text></Label>
                   <Input onChangeText={this._changeEmail} style={styles.input}/>
                 </Item>
 
                 <Item floatingLabel error={errPass}>
-                  <Label style={main.clWhite}>Пароль</Label>
+                  <Label style={[main.clWhite, main.fontFam]}>Пароль <Text style={main.clOrange}>*</Text></Label>
                   <Input secureTextEntry={isHiddenPass} onChangeText={this._changePass} maxLength={20} style={styles.input}/>
                   <Icon name={iconPass} onPress={_=> this._toggleIcon('PASS')} style={main.clWhite}/>
                 </Item>
 
                 <Item floatingLabel error={errRePass}>
-                  <Label style={main.clWhite}>Подтверждение пароля</Label>
+                  <Label style={[main.clWhite, main.fontFam]}>Подтверждение пароля <Text style={main.clOrange}>*</Text></Label>
                   <Input secureTextEntry={isHiddenRePass} onChangeText={this._changeRePass} maxLength={20} style={styles.input} onSubmitEditing={this._registration}/>
                   <Icon name={iconRePass} onPress={_=> this._toggleIcon('REPASS')} style={main.clWhite}/>
                 </Item>

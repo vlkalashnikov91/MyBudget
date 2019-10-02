@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { RefreshControl, Modal, StyleSheet, Alert, Platform } from 'react-native'
+import { RefreshControl, Modal, StyleSheet, Alert, Platform, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Content, View, Button, Text, CardItem, Card, Body, Item, ActionSheet, Input, H3, Icon, Fab, Header, Title, Right } from 'native-base'
 import { FontAwesome } from '@expo/vector-icons'
@@ -12,13 +12,13 @@ import { PaymentActions } from '../../actions/PaymentActions'
 import { TARGET, IDEBT, OWEME } from '../../constants/TargetDebts'
 import { SkypeIndicator } from 'react-native-indicators'
 
-import { styles as main, screenHeight, screenWidth, ivanColor } from '../../Style'
+import { styles as main, screenHeight, screenWidth, ivanColor, IDebtColor, TargetColor, DebtColor } from '../../Style'
 import { SummMask, ClearSpace, capitalize, onlyNumbers } from '../../utils/utils'
 
 var BUTTONS = [
-  {text:"Поставить цель", icon:"add", iconColor:"#F04124", type:TARGET},
-  {text:"Дать в долг", icon:"calculator", iconColor:"#395971", type:OWEME}, 
-  {text:"Взять в долг", icon:"cash", iconColor:"#43ac6a", type:IDEBT},
+  {text:"Поставить цель", icon:"add", iconColor:TargetColor, type:TARGET},
+  {text:"Взять в долг", icon:"add", iconColor:IDebtColor, type:IDEBT},
+  {text:"Дать в долг", icon:"add", iconColor:DebtColor, type:OWEME}, 
   {text:"Отмена", icon:"close", iconColor:"#a7a7a7", type: 999}
 ]
 
@@ -29,6 +29,7 @@ class Cards extends Component {
 
     this.timer = null
     this.timer2 = null
+    this.timer3 = null
 
     this.state = {
       refreshing: false,
@@ -47,6 +48,7 @@ class Cards extends Component {
     this._toggleShowArchive = this._toggleShowArchive.bind(this)
     this._editItem = this._editItem.bind(this)
     this._increaseItem = this._increaseItem.bind(this)
+    this._repayFull = this._repayFull.bind(this)
     this._hideModalIncrease = this._hideModalIncrease.bind(this)
     this._showModalIncrease = this._showModalIncrease.bind(this)
     this._hideModalMenu = this._hideModalMenu.bind(this)
@@ -86,17 +88,20 @@ class Cards extends Component {
     }
   }
 
+  componentWillUnmount(){
+    clearTimeout(this.timer)
+    clearTimeout(this.timer2)
+    clearTimeout(this.timer3)
+  }
+
   /* Функция отбора целей по которым надо уведомить пользователя*/
   _checkFinishTarget(targets) {
-    let arr = targets.map(item=>{
-      if (item.CompleteDate !== null) {
-        let needFire = moment().diff(moment(item.CompleteDate.split('.')))
+    let arr = targets.filter(item=> (item.CompleteDate !== null)).map(item=>{
+        let needFire = moment().diff(moment(item.CompleteDate))
         needFire = Math.trunc(moment.duration(needFire).asDays())
         if (needFire < 7) {
           return item
         }
-      
-      }
     })
     this._setModalInfo(arr)
   }
@@ -104,11 +109,14 @@ class Cards extends Component {
   /*Функция уведомления пользователя по целям по которым подходит или прошел срок */
   _setModalInfo = (targets) => {
     /*Исключаем те по которым уже направляли уведомления */
-    var arr = targets.filter(item=> item!==undefined).filter(k=> !this.state.finishedTargets.includes(k.Id))
-
+    var arr = targets.filter(item=>item!==undefined).filter(t=>t.IsActive===true).filter(k=>!this.state.finishedTargets.includes(k.Id))
     var str = `По ${(arr.length>1)?'целям':'целе'}`
-    arr.forEach(item=> {
+
+    arr.forEach((item, index)=> {
       str = str +' "'+ item.GoalName + '"'
+      if (index < (arr.length-1)) {
+        str = str + ','
+      }
     })
     str = str + ` срок подходит к завершению.`
 
@@ -117,21 +125,18 @@ class Cards extends Component {
         'Срок',
         str,
         [
-          {text: 'ОК', onPress: () => {
-              arr.forEach(item=>{
-                AddToFinished(item.Id)
-              })
-            }
-          },
+          {text: 'ОК'},
         ]
       )
+
+      let arr2 = Array.from(this.state.finishedTargets)
+      arr.forEach(item=> {
+        AddToFinished(item.Id)
+        arr2.push(item.Id)
+      })
+
+      this.setState(prevState => ({finishedTargets: arr2}))
     }
-}
-
-
-  componentWillUnmount(){
-    clearTimeout(this.timer)
-    clearTimeout(this.timer2)
   }
 
   _refreshData() {
@@ -147,7 +152,7 @@ class Cards extends Component {
       {
         options: BUTTONS,
         cancelButtonIndex: 3,
-        title: "Выберите:",
+        //title: "Выберите:",
         itemStyle:{color:'red'}
       },
       buttonIndex => {
@@ -158,10 +163,12 @@ class Cards extends Component {
     )
   }
 
+  /* Редактировать цель */
   _editItem(itemId){
     this.props.navigation.navigate('EditItem', {itemid: itemId})
   }
 
+  /* Удалить цель */
   _deleteItem(){
     Alert.alert(
       `${capitalize(this.state.choosenItem.GoalName)}`,
@@ -184,30 +191,59 @@ class Cards extends Component {
   }
 
   _showModalIncrease() {
-    this.setState({ visibleModalIncrease: true })
-    this._hideModalMenu()
+    if (this.state.choosenItem.IsActive) {
+      this.setState({ visibleModalIncrease: true })
+      this._hideModalMenu()
+    }
+  }
+
+  /*Полное погашение */
+  _repayFull() {
+    st = this.state
+
+    if (st.choosenItem.IsActive) {
+      this.setState({Amount: String(Number(st.choosenItem.Amount) - Number(st.choosenItem.CurAmount))})
+      this.timer3 = setTimeout(() => {
+        this._increaseItem()
+        this._hideModalMenu()
+      }, 200)
+    }
   }
 
   _chngIncreaseAmount = value => {
     var val = ClearSpace(value)
-    if (onlyNumbers(val)) {
-      this.setState({ Amount: String(Number(val)) })
+    if (val.length === 0) {
+      this.setState({ Amount: '' })
+    } else {
+      if (onlyNumbers(val)) {
+        this.setState({ Amount: String(Number(val)) })
+      }
     }
   }
 
+  /* Пополнить цель */
   _increaseItem() {
     st = this.state
     if ((st.Amount.length == 0) || (Number(st.Amount < 0))) {
       this.setState({ errAmount: true })
-    } else {
-      this.props.increaseTarget(st.choosenItem.Id, Number(st.Amount))
-
-      this.setState({ Loading: true })
+      return
     }
+
+    if (Number(st.choosenItem.Amount) < (Number(st.Amount) + Number(st.choosenItem.CurAmount))) {
+      this.setState({ errAmount: true })
+      ToastTr.Default(`Невозможно пополнить на сумму больше чем ${SummMask(st.choosenItem.Amount)} ${this.props.user.DefCurrency}`)
+      Keyboard.dismiss()
+      return
+    }
+
+    this.props.increaseTarget(st.choosenItem.Id, Number(st.Amount))
+    Keyboard.dismiss()
+    this.setState({ Loading: true })
   }
 
+  /*Показать меню */
   _showModalMenu(item) {
-    this.setState(prevState => ({ visibleModalMenu: true, choosenItem: item}))
+    this.setState(prevState => ({ visibleModalMenu: true, choosenItem: item, Amount: ''}))
   }
 
   _hideModalMenu() {
@@ -218,14 +254,22 @@ class Cards extends Component {
     const { targets, user } = this.props
     const { isShowArchive, refreshing, visibleModalIncrease, visibleModalMenu, choosenItem, fabState, Amount, errAmount, Loading } = this.state
 
-    console.log(this.state.finishedTargets)
-
     var content = <View style={[main.fl_1, {padding:20}]}><SkypeIndicator color={ivanColor} /></View>
 
     var target = targets.Targets.filter(item => item.Type === TARGET)
     var mydebt = targets.Targets.filter(item => item.Type === IDEBT)
     var oweme = targets.Targets.filter(item => item.Type === OWEME)
-    var allCnt = target.length + mydebt.length + oweme.length
+
+    var Atarget = target.filter(item => item.IsActive===true)
+    var Amydebt = mydebt.filter(item => item.IsActive===true)
+    var Aoweme = oweme.filter(item => item.IsActive===true)
+    var allCnt = 0 
+
+    if (isShowArchive) {
+      allCnt = target.length + mydebt.length + oweme.length
+    } else {
+      allCnt = Atarget.length + Amydebt.length + Aoweme.length
+    }
 
     if (targets.isLoad === false) {
       content = 
@@ -283,10 +327,13 @@ class Cards extends Component {
                     <Input
                       textAlign={'center'}
                       keyboardType="number-pad"
+                      placeholder="Введите сумму"
+                      placeholderTextColor="#a7a7a7"
                       maxLength={10}
                       onChangeText={this._chngIncreaseAmount}
                       value={SummMask(Amount)}
                       onSubmitEditing={this._increaseItem}
+                      style={{fontSize:30}}
                     />
                   </Item>
                   <H3>{user.DefCurrency}</H3>
@@ -314,26 +361,20 @@ class Cards extends Component {
           <View style={main.modalOverlay} />
           <Card transparent style={styles.modalMenu}>
             <CardItem header>
-              <Text style={main.txtAl_c}>{choosenItem.GoalName}</Text>
+              <Text style={main.txtAl_c} numberOfLines={1}>{choosenItem.GoalName}</Text>
               <Icon button name="close" onPress={this._hideModalMenu} style={styles.modalCloseIcon}/>
             </CardItem>
             <CardItem>
               <Body>
-                <Button transparent onPress={this._showModalIncrease}><Text uppercase={false} style={styles.modalButt}>Пополнить</Text></Button>
-                <Button transparent disabled><Text uppercase={false} style={styles.modalButt}>Погасить полностью</Text></Button>
+                <Button transparent onPress={this._showModalIncrease}><Text uppercase={false} style={(choosenItem.IsActive)?styles.modalButt:styles.modalButtDis}>Пополнить</Text></Button>
+                <Button transparent onPress={this._repayFull}><Text uppercase={false} style={(choosenItem.IsActive)?styles.modalButt:styles.modalButtDis}>Погасить полностью</Text></Button>
                 <Button transparent onPress={this._deleteItem}><Text uppercase={false} style={styles.modalButt}>Удалить</Text></Button>
               </Body>
             </CardItem>
           </Card>
         </Modal>
 
-        <Fab
-          active={fabState}
-          direction="up"
-          style={main.bgGreen}
-          position="bottomRight"
-          onPress={_=> this._toggleAdd()}
-        >
+        <Fab active={fabState} direction="up" style={main.bgGreen} position="bottomRight" onPress={_=> this._toggleAdd()} >
           <Icon name="add" />
         </Fab>
       </Container>
@@ -347,7 +388,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
     marginTop: screenHeight / 1.8,
     height: screenHeight / 3.5, 
-    marginBottom: 45
+    marginBottom: screenHeight / 7 //45
   },
   modalMenu: {
     ...main.bgWhite,
@@ -358,6 +399,10 @@ const styles = StyleSheet.create({
   },
   modalButt: {
     fontSize:15
+  },
+  modalButtDis: {
+    fontSize:15,
+    color:'#A7A7A7'
   },
   modalCloseIcon: {
     ...main.mr_0,

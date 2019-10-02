@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { Alert, StyleSheet, Modal, RefreshControl, Image } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, Button, Text, Icon, Card, CardItem, H2, Segment, Left, Right, Header, Body, View } from 'native-base'
+import { Container, Content, Button, Text, Icon, Card, CardItem, H1, Segment, Left, Right, Header, Body, View } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
 import { FontAwesome } from '@expo/vector-icons'
 import moment from 'moment'
@@ -121,7 +121,7 @@ class HomeScreen extends Component {
     
     if (!isLoad) {
       if (payments.Payments.length == 0) {
-        Pays = <Grid><Col><Row style={[main.jC_C, main.fD_R]}><Text>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
+        Pays = <Grid style={main.mt_20}><Col><Row style={[main.jC_C, main.fD_R]}><Text>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
       } else {
         Pays = <ListPays payments={payments.Payments} GoToEdit={this._navigateToEdit} />
       }
@@ -180,9 +180,9 @@ class HomeScreen extends Component {
                 <FontAwesome name="angle-left" size={27} />
               </Button>
             </Left>
-            <H2 style={styles.monthHeader} button onPress={this._showModalCalendar}>
+            <H1 style={styles.monthHeader} button onPress={this._showModalCalendar}>
               {capitalize(moment(this.state.selectedDate).format("MMMM YYYY"))}
-            </H2>
+            </H1>
             <Right>
               <Button transparent style={styles.nextMonthBtn} onPress={this._nextMonth}>
                 <FontAwesome name="angle-right" size={27} />
@@ -203,14 +203,14 @@ class HomeScreen extends Component {
                       <Row style={[main.jC_C, main.aI_C]}>
                         <Button iconLeft disabled={(isLoad)} style={(!isLoad)? main.bgGreen : {}} rounded onPress={_=> this._navigateToAdd(INCOME)}>
                           <Icon ios="ios-add" android="md-add" />
-                          <Text>Доход </Text>
+                          <Text uppercase={true}>Доход </Text>
                         </Button>
                       </Row>
                     </Col>
                     <Col>
                       <Row style={[main.jC_C, main.aI_C]}>
                         <Button iconRight disabled={(isLoad)} style={(!isLoad)? main.bgDanger : {}} rounded onPress={_=> this._navigateToAdd(EXPENSE)}>
-                          <Text>Расход</Text>
+                          <Text uppercase={true}>Расход</Text>
                           <Icon ios="ios-remove" android="md-remove" />
                         </Button>
                       </Row>
@@ -232,7 +232,7 @@ class HomeScreen extends Component {
 
 const styles = StyleSheet.create({
   monthHeader: {
-    marginTop: 11,
+    marginTop: 11
   },
   prevMonthBtn: {
     ...main.clGrey,

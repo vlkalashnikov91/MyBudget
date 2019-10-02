@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Alert, RefreshControl, FlatList } from 'react-native'
-import { Container, Icon, Fab, Title, Left, Body, Text, Header, ListItem, Card, CardItem, Button, Tabs, Tab, Right, Content } from 'native-base'
+import { Container, Icon, Fab, Title, Left, Body, Text, Header, ListItem, Card, CardItem, Button, Tabs, Tab, Right, Content, TabHeading } from 'native-base'
 import { FontAwesome } from '@expo/vector-icons'
 
 import { styles as main, ivanColor } from '../../Style'
@@ -194,7 +194,7 @@ class MonthlyPays extends Component {
               </Button>
             </Left>
             <Body>
-              <Title>Ежемесячные платежи</Title>
+              <Title>Шаблоны платежей</Title>
             </Body>
           </Header>
           <Content enableOnAndroid refreshControl = {
@@ -202,11 +202,11 @@ class MonthlyPays extends Component {
           }
           >
             <Tabs tabBarUnderlineStyle={(CategoryType===EXPENSE)? main.bgDanger: main.bgGreen} initialPage={0} onChangeTab={({ i }) => this._toggleCat(i)} >
-              <Tab heading="Доход" 
-                tabStyle={main.bgWhite}
-                activeTabStyle={main.bgWhite} 
-                textStyle={main.clIvanG}
-                activeTextStyle={[main.clIvanG, main.fontFamBold]}
+              <Tab heading={
+                  <TabHeading style={main.bgWhite} activeTextStyle={main.fontFamBold} >
+                    <Text style={main.clIvanG}>Доход</Text>
+                  </TabHeading>
+                }
               >
                 {(templates.Templates.length === 0)
                 ? (
@@ -215,11 +215,11 @@ class MonthlyPays extends Component {
                   incomeARR
                 )}
               </Tab>
-              <Tab heading="Расход" 
-                tabStyle={main.bgWhite} 
-                activeTabStyle={main.bgWhite} 
-                textStyle={main.clIvanD}
-                activeTextStyle={[main.clIvanD, main.fontFamBold]}
+              <Tab heading={
+                <TabHeading style={main.bgWhite} activeTextStyle={main.fontFamBold} >
+                  <Text style={main.clIvanD}>Расход</Text>
+                </TabHeading>
+              }
               >
                 {(templates.Templates.length === 0)
                 ? (
@@ -231,7 +231,7 @@ class MonthlyPays extends Component {
             </Tabs>
           </Content>
 
-          <Fab style={main.bgGreen} position="bottomRight" onPress={this._addMonthPay}>
+          <Fab active={(!isLoad)} style={main.bgGreen} position="bottomRight" onPress={(!isLoad)?this._addMonthPay:null}>
             <Icon ios="ios-add" android="md-add" />
           </Fab>
 

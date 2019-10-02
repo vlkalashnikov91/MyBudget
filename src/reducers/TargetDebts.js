@@ -22,7 +22,7 @@ export default (state = initialeState, action) => {
             return {...state,
                 isLoad: false,
                 Error:'',
-                Targets: Array.isArray(action.payload.data) ? action.payload.data : [],
+                Targets: Array.isArray(action.payload.data) ? action.payload.data.sort((a, b) => a.IsActive < b.IsActive) : [],
             } 
         case REMOVE_TARGET:
             return {...state,
@@ -70,6 +70,10 @@ export default (state = initialeState, action) => {
             var targets = state.Targets.map(item => {
                 if (item.Id === action.payload.Id) {
                     item.CurAmount = item.CurAmount + action.payload.Amount
+                    /*Если цель пополнилась до конца, то считаем ее исполненной */
+                    if (item.Amount - item.CurAmount === 0)  {
+                        item.IsActive = false
+                    }
                 }
                 return item
             })

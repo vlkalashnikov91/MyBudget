@@ -77,7 +77,7 @@ class EditPayment extends Component {
     }
   }
 
-  _changeDesc = value => {
+  _changeName = value => {
     this.setState({ Name: value })
   }
 
@@ -143,11 +143,11 @@ class EditPayment extends Component {
           </Body>
         </Header>
         <Content padder>
-          <Form style={{alignSelf: 'stretch'}}>
+          <Form style={{alignSelf: 'stretch', paddingHorizontal:10}}>
 
             <Grid style={main.width_90prc}>
               <Item stackedLabel style={{width:'80%'}} error={errAmount}>
-                <Label>Сумма</Label>
+                <Label style={main.fontFam}>Сумма <Text style={main.clOrange}>*</Text></Label>
                 <Input onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
               </Item>
               <H3 style={styles.currencyIcon}>{user.DefCurrency}</H3>
@@ -170,8 +170,8 @@ class EditPayment extends Component {
             </Grid>
 
             <Item stackedLabel style={[main.mb_20, main.mt_20]}>
-              <Label>Описание</Label>
-              <Input onChangeText={this._changeDesc} value={Name} multiline={true} />
+              <Label style={main.fontFam}>Наименование</Label>
+              <Input onChangeText={this._changeName} value={Name}/>
             </Item>
 
             <DatePicker
@@ -184,13 +184,13 @@ class EditPayment extends Component {
               modalTransparent={false}
               animationType={"fade"}
               androidMode="calendar"
-              placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
+              placeHolderText={(TransDate) ? moment(TransDate).add(1, 'day').format('DD.MM.YYYY') : "Выберите дату"}
               placeHolderTextStyle={styles.dateTextStyle}
               textStyle={styles.dateTextStyle}
               onDateChange={this._changeDate}
               disabled={false}
             >
-              <Text>moment(TransDate).format('DD.MM.YYYY')</Text>
+              <Text>moment(TransDate).add(1, 'day').format('DD.MM.YYYY')</Text>
             </DatePicker>
             
             {/*
@@ -230,8 +230,8 @@ const styles = StyleSheet.create({
   },
   currencyIcon: {
     position:'absolute',
-    right:0,
-    bottom:15
+    right:5,
+    bottom:5
   }
 })
 

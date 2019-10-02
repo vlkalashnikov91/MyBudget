@@ -42,7 +42,6 @@ export default class PeriodPicker extends Component {
         this.setState({ visible: false })
     }
 
-
     onConfirmPress = () => {
         const confirm = this.confirm;
         const { dateTo, dateFrom } = this.state;
@@ -61,7 +60,7 @@ export default class PeriodPicker extends Component {
                   <CardItem>
                     <Body style={[main.fD_R, main.jC_C, {justifyContent:'space-evenly'}]}>
                       <DatePicker
-                        formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
+                        formatChosenDate={date => { return moment(date).format('DD MMM YYYY') }}
                         defaultDate={dateFrom}
                         minimumDate={new Date(2016, 1, 1)}
                         maximumDate={new Date(2040, 12, 31)}
@@ -70,19 +69,19 @@ export default class PeriodPicker extends Component {
                         modalTransparent={false}
                         animationType={"fade"}
                         androidMode="calendar"
-                        placeHolderText={(dateFrom) ? moment(dateFrom).format('DD.MM.YYYY') : "От"}
+                        placeHolderText={(dateFrom) ? moment(dateFrom).format('DD MMM YYYY') : "От"}
                         placeHolderTextStyle={styles.textStyle}
                         textStyle={styles.textStyle}
                         onDateChange={(value) => this.setState({ dateFrom: value })}
                         disabled={false}
                       >
-                        <Text>moment(dateFrom).format('DD.MM.YYYY')</Text>
+                        <Text>moment(dateFrom).format('DD MMM YYYY')</Text>
                       </DatePicker>
 
                       <Text style={[styles.textStyle, main.mt_10]}> - </Text>
 
                       <DatePicker
-                        formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
+                        formatChosenDate={date => { return moment(date).format('DD MMM YYYY') }}
                         defaultDate={dateTo}
                         minimumDate={new Date(2016, 1, 1)}
                         maximumDate={new Date(2040, 12, 31)}
@@ -91,13 +90,13 @@ export default class PeriodPicker extends Component {
                         modalTransparent={false}
                         animationType={"fade"}
                         androidMode="calendar"
-                        placeHolderText={(dateTo) ? moment(dateTo).format('DD.MM.YYYY') : "До"}
+                        placeHolderText={(dateTo) ? moment(dateTo).format('DD MMM YYYY') : "До"}
                         placeHolderTextStyle={styles.textStyle}
                         textStyle={styles.textStyle}
                         onDateChange={(value) => this.setState({ dateTo: value })}
                         disabled={false}
                       >
-                        <Text>moment(dateTo).format('DD.MM.YYYY')</Text>
+                        <Text>moment(dateTo).format('DD MMM YYYY')</Text>
                       </DatePicker>
 
                     </Body>

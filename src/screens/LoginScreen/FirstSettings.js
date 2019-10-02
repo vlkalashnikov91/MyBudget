@@ -81,6 +81,8 @@ render() {
                                     <Picker.Item label="₸" value="₸" />
                                     <Picker.Item label="$" value="$" />
                                     <Picker.Item label="€" value="€" />
+                                    <Picker.Item label="£" value="£" />
+                                    <Picker.Item label="₽" value="₽" />
                                 </Picker>
                             </Item>
                         </Body>

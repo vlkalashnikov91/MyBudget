@@ -91,7 +91,7 @@ export const TargetActions = {
                         "GoalName": GoalName,
                         "Amount": Amount,
                         "CurAmount": CurAmount,
-                        "CompleteDate": ((CompleteDate===undefined)||(CompleteDate==null))?null:moment(CompleteDate).format('YYYY.MM.DD'),
+                        "CompleteDate": ((CompleteDate===undefined)||(CompleteDate==null))?null:CompleteDate,
                         "IsActive": true
                     })
                     .then(res => {

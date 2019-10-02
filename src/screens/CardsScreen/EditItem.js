@@ -21,6 +21,7 @@ class EditItem extends Component {
       Amount: '',
       CurAmount: '',
       CompleteDate: null,
+      IsActive: false,
       errGoalName: false,
       errAmount: false,
       errCurAmount: false,
@@ -50,7 +51,8 @@ class EditItem extends Component {
           CurAmount: item.CurAmount.toString(), 
           Type: item.Type, 
           CompleteDate: new Date(item.CompleteDate), 
-          isShowEndDate: isShow 
+          isShowEndDate: isShow,
+          IsActive: item.IsActive
         })
       }
     }
@@ -118,23 +120,29 @@ class EditItem extends Component {
       return false
     }
 
+    if (Number(st.Amount) < Number(st.CurAmount)) {
+      ToastTr.Default('Сумма пополнения не может быть больше общей суммы')
+      return false
+    }
+
     return true
   }
 
   _saveItem() {
     let st = this.state
     let UserId = this.props.user.UserId
+    let date = (st.CompleteDate) ? moment(st.CompleteDate).format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS) : null
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
-      this.props.edititem(UserId, st.Id, st.GoalName, st.Type, Number(st.Amount), Number(st.CurAmount), st.CompleteDate)
+      this.props.edititem(UserId, st.Id, st.GoalName, st.Type, Number(st.Amount), Number(st.CurAmount), date)
     }
   }
 
   _setModalVisible() {
     Alert.alert(
       null,
-      'За месяц до окончания этой даты на главном экране появится подсказка.',
+      'За неделю до окончания этой даты на главном экране появится подсказка.',
       [
         {text: 'Ясно'},
       ]
@@ -143,7 +151,7 @@ class EditItem extends Component {
 
   render() {
       const { user, navigation } = this.props
-      const { GoalName, Amount, CurAmount, CompleteDate, errGoalName, errAmount, errCurAmount, Loading, isShowEndDate } = this.state
+      const { GoalName, Amount, CurAmount, CompleteDate, IsActive, errGoalName, errAmount, errCurAmount, Loading, isShowEndDate } = this.state
 
       return (
         <Container>
@@ -158,16 +166,16 @@ class EditItem extends Component {
             </Body>
           </Header>
           <Content padder>
-            <Form style={{alignSelf: 'stretch'}}>
+            <Form style={{alignSelf: 'stretch', paddingHorizontal:20}}>
 
               <Item stackedLabel error={errGoalName}>
-                <Label>Наименование</Label>
+                <Label style={main.fontFam}>Наименование <Text style={main.clOrange}>*</Text></Label>
                 <Input onChangeText={this._changeName} value={GoalName} />
               </Item>
 
               <Grid style={main.width_90prc}>
                 <Item stackedLabel style={{width:'80%'}} error={errAmount}>
-                  <Label>Полная сумма</Label>
+                  <Label style={main.fontFam}>Полная сумма <Text style={main.clOrange}>*</Text></Label>
                   <Input onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
                 </Item>
                 <H3 style={styles.currIcon}>{user.DefCurrency}</H3>
@@ -175,17 +183,15 @@ class EditItem extends Component {
 
               <Grid style={main.width_90prc}>
                 <Item stackedLabel style={{width:'80%'}} error={errCurAmount}>
-                  <Label>Текущая сумма</Label>
+                  <Label style={main.fontFam}>Текущая сумма</Label>
                   <Input onChangeText={this._changeCurAmount} value={SummMask(CurAmount)} maxLength={10} keyboardType="number-pad"/>
                 </Item>
                 <H3 style={styles.currIcon}>{user.DefCurrency}</H3>
               </Grid>
 
               <ListItem noBorder>
-                <CheckBox checked={isShowEndDate} onPress={this.toggleEndDate}/>
-                <Body>
-                  <Text>Дата окончания</Text>
-                </Body>
+                <CheckBox checked={isShowEndDate} onPress={this.toggleEndDate} color={ivanColor}/>
+                <Body><Text button onPress={this.toggleEndDate} style={{color:'#575757'}}>Дата окончания</Text></Body>
               </ListItem>
 
               {isShowEndDate &&
@@ -201,16 +207,16 @@ class EditItem extends Component {
                     modalTransparent={false}
                     animationType={"fade"}
                     androidMode="calendar"
-                    placeHolderText={(CompleteDate) ? moment(CompleteDate).format('DD.MM.YYYY') : "дд.мм.гггг"}
+                    placeHolderText={(CompleteDate) ? moment(CompleteDate).add(1, 'day').format('DD.MM.YYYY') : "дд.мм.гггг"}
                     textStyle={styles.dateTextStyle}
                     placeHolderTextStyle={styles.dateTextStyle}
                     onDateChange={this._changeDate}
                     disabled={false}
                   >
-                    <Text>moment(TransDate).format('DD.MM.YYYY')</Text>
+                    <Text>moment(TransDate).add(1, 'day').format('DD.MM.YYYY')</Text>
                   </DatePicker>
 
-                  <Icon name='ios-information-circle' style={[main.clGrey, main.ml_20]} button onPress={this._setModalVisible} />
+                  <Icon name='ios-information-circle' style={[{color:'#609AD3'}, main.ml_20]} button onPress={this._setModalVisible} />
                 </Row>
               </Grid>
               }
@@ -219,7 +225,7 @@ class EditItem extends Component {
             <Card transparent>
               <CardItem>
                 <Body>
-                  <Button style={main.bgGreen} block onPress={this._saveItem}>
+                  <Button style={(IsActive)?main.bgGreen:{}} block disabled={(!IsActive)} onPress={this._saveItem}>
                     {(Loading)
                     ? <Text>Загрузка...</Text>
                     : <Text>Сохранить</Text>
@@ -239,13 +245,13 @@ class EditItem extends Component {
 
 const styles = StyleSheet.create({
   dateTextStyle: {
-    ...main.clGrey,
+    color:'#395971',
     ...main.txtAl_c,
     fontSize:20
   },
   currIcon: {
     position:'absolute',
-    right:0,
+    right:5,
     bottom:5
   },
 })

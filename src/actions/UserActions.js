@@ -19,7 +19,7 @@ export const UserAuth = {
                         "pass": pass
                     })
                     .then(res => {
-                        SaveMe(username, saveMe)
+                        SaveMe(username, pass, saveMe)
 
                         let { Status, Categories, Transactions, UserSettings } = res.data
 
@@ -135,19 +135,22 @@ export const UserAuth = {
 
 
 
-const SaveMe = async (username, isSave) => {
+const SaveMe = async (username, password, isSave) => {
     /* Если надо сохранить, то перетираем страго пользователя
         Если созранить не надо, то нужно проверить какой логин был введен.
             Если был введен старый логин и выбрано "не запоминать" - удалить логин
             Если был введен новый логин и выбрано "не сохранять" - оставляем старый логин
     */
     let oldUser = await Storage.GetItem('username')
+    let oldPass = await Storage.GetItem('password')
 
     if (isSave) {
         Storage.SaveItem('username', username)
+        Storage.SaveItem('password', password)
     } else {
         if (oldUser.toUpperCase() === username.toUpperCase()) {
             Storage.RemoveItem('username')
+            Storage.RemoveItem('password')
         }
     }
 }
@@ -162,7 +165,6 @@ const ActionReject = err => {
         }
     } 
 }
-
 
 /*+++++++++++++++ Действия при login ++++++++++++++++ */
 const ActionLogin = (userInfo) => {

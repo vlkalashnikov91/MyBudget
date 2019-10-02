@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { StyleSheet, FlatList } from 'react-native'
-import { Svg } from 'expo'
-import moment from 'moment'
+import Svg, { Rect } from 'react-native-svg'
 import { PieChart } from 'react-native-svg-charts'
 import { Container, Body, Content, ListItem, Text, Card, Left, Right, CardItem, Segment, Icon, Title, Header, Button} from 'native-base'
 import { SkypeIndicator } from 'react-native-indicators'
+import moment from 'moment'
 import { FontAwesome } from '@expo/vector-icons'
  
 import { styles as main, ivanColor } from '../../Style'
@@ -112,11 +112,11 @@ class Graphics extends Component {
                 <ListItem icon button style={main.pd_0}>
                   <Left>
                     <Svg width="13" height="13">
-                      <Svg.Rect x="0" y="0" width="12" height="12" fill={item.svg.fill} />
+                      <Rect x="0" y="0" width="12" height="12" fill={item.svg.fill} />
                     </Svg>
                   </Left>
                   <Body>
-                    <Text style={(selectedPie === item.key) && {color:'#62B1F6'}}>{item.description}</Text>
+                    <Text style={(selectedPie === item.key)?{color:'#62B1F6'}:{}}>{item.description}</Text>
                   </Body>
                   <Right>
                     <Text note>{SummMask(item.value)} {user.DefCurrency}</Text>
@@ -143,16 +143,16 @@ class Graphics extends Component {
         <Container>
           <Header>
             <Body>
-              <Title style={main.ml_15}>Графики расходов</Title>
+              <Title style={main.ml_10}>Расходы по категориям</Title>
             </Body>
-            <Right>
+            <Right style={{flex:0.2}}>
               <Icon android='md-calendar' ios='ios-calendar' style={[main.clWhite, main.mr_15]} button onPress={this._showModalCalendar} />
             </Right>
           </Header>
           <Content padder>
             <Segment style={[main.bgWhite, {marginBottom:5}]}>
               <Text button bordered style={styles.monthHeader}>
-                С {moment(dateFrom).format("DD.MM.YYYY")} по {moment(dateTo).format("DD.MM.YYYY")}
+                <Text>{moment(dateFrom).format("DD MMM YYYY")} - {moment(dateTo).format("DD MMM YYYY")}</Text>
               </Text>
             </Segment>
           
@@ -189,7 +189,11 @@ const styles = StyleSheet.create({
   },
   monthHeader: {
     marginTop: 5,
-    fontSize: 18,
+    fontSize: 18
+  },
+  monthDates: {
+    ...main.clIvan,
+    ...main.fontFamBold
   },
   notFoundIcon: {
     color:'#609AD3', 

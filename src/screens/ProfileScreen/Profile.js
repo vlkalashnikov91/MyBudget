@@ -68,6 +68,7 @@ class Profile extends Component {
   }
 
   render() {
+    const { DefCurrency, CarryOverRests, isChange } = this.state
     return (
         <Container>
           <Header>
@@ -114,30 +115,32 @@ class Profile extends Component {
               <CardItem bordered>
                 <Body>
                   <Item>
-                    <Label>Валюта по умолчанию</Label>
+                    <Label style={[main.fontFam, main.clGrey]}>Валюта по умолчанию</Label>
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
                       style={{ width: undefined }}
                       placeholderStyle={{ color: "#bfc6ea" }}
                       placeholderIconColor="#007aff"
-                      selectedValue={this.state.DefCurrency}
+                      selectedValue={DefCurrency}
                       onValueChange={this._changeCurrency}
                     >
                       <Picker.Item label="₸" value="₸" />
                       <Picker.Item label="$" value="$" />
                       <Picker.Item label="€" value="€" />
+                      <Picker.Item label="£" value="£" />
+                      <Picker.Item label="₽" value="₽" />
                     </Picker>
                   </Item>
 
                   <Item>
-                    <Label>Перенос остатка</Label>
-                    <Icon name='ios-information-circle' style={main.clGrey} button onPress={this.setModalVisible} />
+                    <Label style={[main.fontFam, main.clGrey]}>Перенос остатка</Label>
+                    <Icon name='ios-information-circle' style={{color:'#609AD3'}} button onPress={this.setModalVisible} />
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
                       style={{ width: undefined }}
                       placeholderStyle={{ color: "#bfc6ea" }}
                       placeholderIconColor="#007aff"
-                      selectedValue={this.state.CarryOverRests}
+                      selectedValue={CarryOverRests}
                       onValueChange={this._balanceTransfer}
                     >
                       <Picker.Item label="Да" value={true} />
@@ -148,7 +151,7 @@ class Profile extends Component {
               </CardItem>
               
               <CardItem>
-                <Button onPress={this._saveSettings} disabled={this.state.isChange} style={(this.state.isChange)?{}:main.bgIvan}>
+                <Button onPress={this._saveSettings} disabled={isChange} style={(isChange)?{}:main.bgIvan}>
                   <Text>Сохранить изменения</Text>
                 </Button>
               </CardItem>

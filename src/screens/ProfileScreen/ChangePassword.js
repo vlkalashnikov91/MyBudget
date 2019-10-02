@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Form, Icon, Header, Left, Title } from 'native-base'
 import { UserAuth } from '../../actions/UserActions'
@@ -7,12 +7,15 @@ import { UserAuth } from '../../actions/UserActions'
 import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
+import { Storage } from '../../utils/deviceServices'
+
 
 class ChangePassword extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
+      savedPass:'',
       oldPass: '',
       newPass: '',
       newRePass: '',
@@ -29,6 +32,11 @@ class ChangePassword extends Component {
     }
 
     this._changePass = this._changePass.bind(this)
+  }
+
+  async componentWillMount() {
+    let password = await Storage.GetItem('password')
+    this.setState({ savedPass: password })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -77,9 +85,17 @@ class ChangePassword extends Component {
 
     this.setState({ oldPassErr: false, newPassErr: false, newRePassErr: false })
 
+    Keyboard.dismiss()
+
     if (st.oldPass.length === 0) {
       this.setState({ oldPassErr: true })
       return false
+    }
+
+    if (st.oldPass !== st.savedPass) {
+      this.setState({ oldPassErr: true })
+      ToastTr.Default('Вы ввели неверный текущий пароль')
+      return false 
     }
 
     if (st.newPass.length === 0) {
@@ -94,6 +110,7 @@ class ChangePassword extends Component {
 
     if (st.newPass !== st.newRePass) {
       this.setState({ newPassErr: true, newRePassErr: true })
+      ToastTr.Default('Новый пароль не совпадает с подтверждением')
       return false
     }
 
@@ -126,19 +143,19 @@ class ChangePassword extends Component {
         <Content padder>
           <Form style={styles.form}>
             <Item floatingLabel style={main.mt_0} error={oldPassErr}>
-              <Label>Текущий пароль</Label>
+              <Label style={main.fontFam}>Текущий пароль <Text style={main.clOrange}>*</Text></Label>
               <Input secureTextEntry={isHiddenOldPass} style={main.mt_5} value={oldPass} onChangeText={this._oldPass}/>
               <Icon name={iconOldPass} onPress={_=> this._togglePassIcon('OLD')} style={main.clIvan}/>
             </Item>
 
             <Item floatingLabel error={newPassErr}>
-              <Label>Новый пароль</Label>
+              <Label style={main.fontFam}>Новый пароль <Text style={main.clOrange}>*</Text></Label>
               <Input secureTextEntry={isHiddenNewPass} style={main.mt_5} value={newPass} onChangeText={this._newPass}/>
               <Icon name={iconNewPass} onPress={_=> this._togglePassIcon('NEW')} style={main.clIvan}/>
             </Item>
 
             <Item floatingLabel error={newRePassErr}>
-              <Label>Подтверждение пароля</Label>
+              <Label style={main.fontFam}>Подтверждение пароля <Text style={main.clOrange}>*</Text></Label>
               <Input secureTextEntry={isHiddenNewRePass} style={main.mt_5} value={newRePass} onChangeText={this._newRePass}/>
               <Icon name={iconNewRePass} onPress={_=> this._togglePassIcon('NEWRE')} style={main.clIvan}/>
             </Item>

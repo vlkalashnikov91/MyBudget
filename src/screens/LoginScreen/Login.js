@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { LinearGradient } from 'expo'
+import { LinearGradient } from 'expo-linear-gradient'
 import { Container, View, Button, Text, Item, Input, Form, Icon, CheckBox, Content } from 'native-base'
 import { Image } from 'react-native'
 import { Col, Row, Grid } from 'react-native-easy-grid'
@@ -20,8 +20,8 @@ class Login extends Component {
     super(props)
     
     this.state = {
-      login: 'demo',
-      password: 'qaz222',
+      login: '',
+      password: '',
       saveMe: false,
       errlogin: false,
       errpassword: false,
@@ -38,7 +38,8 @@ class Login extends Component {
 
   async componentWillMount() {
     let username = await Storage.GetItem('username')
-    this.setState({ login: username,  saveMe: (username.length == 0) ? false : true})
+    let password = await Storage.GetItem('password')
+    this.setState({ login: username,  password: password, saveMe: (username.length == 0) ? false : true})
   }
 
   async componentWillReceiveProps(nextProps) {

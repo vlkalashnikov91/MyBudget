@@ -14,12 +14,14 @@ class EditMonthPay extends Component {
   constructor(props) {
     super(props);
     
+    this.dayArr = Array.from(Array(28), (_,x) => x+1)
+
     this.state = {
       Id: -1, 
       Name: '',
       CategoryId: -1,
       Amount: '',
-      Day: '',
+      Day: 1,
       IsSpending: false,
       Loading: false,
       errAmount: false
@@ -43,7 +45,7 @@ class EditMonthPay extends Component {
             Name: item.Name,
             CategoryId: item.CategoryId, 
             Amount: item.Amount.toString(), 
-            Day: item.Day.toString(), 
+            Day: Number(item.Day), 
             IsSpending: item.IsSpending,
         })
       }
@@ -94,13 +96,7 @@ class EditMonthPay extends Component {
   }
 
   _changeDay = value => {
-    if (value.length === 0) {
-      this.setState({ Day: '' })
-    } else {
-      if (onlyNumbers(value)) {
-        this.setState({ Day: String(Number(value)) })
-      }
-    }
+    this.setState({ Day: value })
   }
   
   _checkParams() {
@@ -108,11 +104,6 @@ class EditMonthPay extends Component {
 
     if ((st.Amount.length === 0) || (Number(st.Amount) < 0)) {
       this.setState({ errAmount: true })
-      return false
-    }
-
-    if ((st.Day.length === 0) || (Number(st.Day) < 0) || (Number(st.Day) < 1) || (Number(st.Day) > 31)) {
-      this.setState({ errDay: true })
       return false
     }
 
@@ -124,13 +115,13 @@ class EditMonthPay extends Component {
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
-      this.props.editMonthPay(st.Id, st.Name, Number(st.Amount), Number(st.Day), st.CategoryId, st.IsSpending, this.props.user.UserId)
+      this.props.editMonthPay(st.Id, st.Name, Number(st.Amount), st.Day, st.CategoryId, st.IsSpending, this.props.user.UserId)
     }
   }
 
   render() {
     const { user, navigation } = this.props
-    const { Name, Amount, errAmount, CategoryId, Day, errDay, Loading } = this.state
+    const { Name, Amount, errAmount, CategoryId, Day, Loading } = this.state
 
     return (
       <Container>
@@ -146,21 +137,17 @@ class EditMonthPay extends Component {
         </Header>
 
         <Content padder>
-          <Form style={{alignSelf: 'stretch'}}>
-
-            <Item stackedLabel style={main.mt_0}>
-                <Label>Наименование</Label>
-                <Input onChangeText={this._changeName} value={Name} style={main.mt_5}/>
-              </Item>
+          <Form style={styles.fromStyle}>
+            
             <Grid style={main.width_90prc}>
               <Item stackedLabel style={[{width:'80%'}, main.mt_0]} error={errAmount}>
-                <Label>Сумма</Label>
+                <Label style={main.fontFam}>Сумма <Text style={main.clOrange}>*</Text></Label>
                 <Input onChangeText={this._changeAmount} value={SummMask(Amount)} keyboardType="number-pad" style={main.mt_5} maxLength={10} />
               </Item>
               <H3 style={styles.currencyIcon}>{user.DefCurrency}</H3>
             </Grid>
 
-            <Grid style={[main.fD_R, main.aI_C, main.mt_20, {paddingLeft:15}]}>
+            <Grid style={styles.pickerGrid}>
               <Item picker>
                 <Picker mode="dropdown"
                   iosIcon={<Icon name="arrow-down" />}
@@ -169,17 +156,30 @@ class EditMonthPay extends Component {
                   selectedValue={CategoryId}
                   onValueChange={this._changeCat}
                 >
-                {
-                  this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
-                }
+                {this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )}
                 </Picker>
               </Item>
             </Grid>
 
-            <Item stackedLabel style={[main.mb_20, main.mt_20]} error={errDay}>
-              <Label>День платежа</Label>
-              <Input onChangeText={this._changeDay} value={Day} keyboardType="number-pad" style={main.clGrey} />
+            <Item stackedLabel style={main.mt_0}>
+              <Label style={main.fontFam}>Наименование</Label>
+              <Input onChangeText={this._changeName} value={Name} style={main.mt_5}/>
             </Item>
+
+            <Grid style={styles.pickerGrid}>
+              <Item picker style={{width:'80%'}}>
+                <Label style={main.fontFam}>День месяца</Label>
+                <Picker mode="dropdown"
+                  iosIcon={<Icon name="arrow-down" />}
+                  placeholderStyle={{ color: "#bfc6ea" }}
+                  placeholderIconColor="#007aff"
+                  selectedValue={Day}
+                  onValueChange={this._changeDay}
+                >
+                  {this.dayArr.map(i => <Picker.Item label={String(i)} value={i} key={'day-'+i}/>)}
+                </Picker>
+              </Item>
+            </Grid>
           </Form>
 
           <Card transparent>
@@ -204,10 +204,20 @@ class EditMonthPay extends Component {
 
     
 const styles = StyleSheet.create({
+  fromStyle:{
+    alignSelf: 'stretch', 
+    paddingHorizontal:10
+  },
   currencyIcon: {
     position:'absolute',
     right:0,
     bottom:5
+  },
+  pickerGrid:{
+    ...main.fD_R, 
+    ...main.aI_C, 
+    ...main.mt_20,
+    paddingLeft:15
   }
 })
 

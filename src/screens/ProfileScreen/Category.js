@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Alert, RefreshControl, FlatList } from 'react-native'
-import { Container, Icon, Fab, Tabs, Tab, ListItem, Body, Text, Button, Header, Left, Title, Content } from 'native-base'
+import { Container, Icon, Fab, Tabs, Tab, ListItem, Body, Text, Button, Header, Left, Title, Content, TabHeading, Right } from 'native-base'
+import { FontAwesome } from '@expo/vector-icons'
 
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
-import { styles as main } from '../../Style'
+import { styles as main, ivanGray } from '../../Style'
 
 
 class Category extends Component {
@@ -68,6 +69,26 @@ class Category extends Component {
     )
   }
 
+  _createCatList(list) {
+    return (
+      <FlatList
+        data={list}
+        keyExtractor = {(item, index) => 'key-'+item.Id + index}
+        renderItem={({item}) => {
+          return (
+            <ListItem button
+              onPress={_=> (item.CreatedBy !== null) ? this._editCategory(item) : null}
+              onLongPress={_=> this._deleteCategory(item)}
+            >
+              <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
+              {(item.CreatedBy !== null) && <Right><FontAwesome name="pencil" size={20} style={{color:ivanGray}}/*style={main.clGrey}*//></Right>}
+            </ListItem>
+          )
+        }}
+      />
+    )
+  }
+
   _refreshData() {
     this.props.getcategories(this.props.user.UserId)
   }
@@ -75,6 +96,9 @@ class Category extends Component {
   render() {
     const { categories, navigation } = this.props
     const { CategoryType, income, expense } = this.state
+
+    const incomeList = this._createCatList(income)
+    const expenseList = this._createCatList(expense)
 
     return (
         <Container>
@@ -96,47 +120,21 @@ class Category extends Component {
               initialPage={0} 
               onChangeTab={({ i }) => this._defineCatType(i)}
             >
-              <Tab heading="Доход" 
-                tabStyle={main.bgWhite} 
-                activeTabStyle={main.bgWhite} 
-                textStyle={main.clIvanG}
-                activeTextStyle={[main.clIvanG, main.fontFamBold]}
+              <Tab heading={
+                <TabHeading style={main.bgWhite} activeTextStyle={main.fontFamBold} >
+                  <Text style={main.clIvanG}>Доход</Text>
+                </TabHeading>
+              }
               >
-                <FlatList
-                  data={income}
-                  keyExtractor = {(item, index) => 'key-'+item.Id + index}
-                  renderItem={({item}) => {
-                    return (
-                      <ListItem key={'catI-'+item.Id} button
-                        onPress={_=> (item.CreatedBy !== null) ? this._editCategory(item) : null}
-                        onLongPress={_=> (item.CreatedBy !== null) ? this._deleteCategory(item) : null}
-                      >
-                        <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
-                      </ListItem>
-                    )
-                  }}
-                />
+                {incomeList}
               </Tab>
-              <Tab heading="Расход" 
-                tabStyle={main.bgWhite} 
-                activeTabStyle={main.bgWhite} 
-                textStyle={main.clIvanD}
-                activeTextStyle={[main.clIvanD, main.fontFamBold]}
+              <Tab heading={
+                <TabHeading style={main.bgWhite} activeTextStyle={main.fontFamBold} >
+                  <Text style={main.clIvanD}>Расход</Text>
+                </TabHeading>
+              }
               >
-                <FlatList
-                  data={expense}
-                  keyExtractor = {(item, index) => 'key-'+item.Id + index}
-                  renderItem={({item}) => {
-                    return (
-                      <ListItem key={'catE-'+item.Id} button
-                        onPress={_=> (item.CreatedBy !== null) ? this._editCategory(item) : null}
-                        onLongPress={_=> (item.CreatedBy !== null) ? this._deleteCategory(item) : null}
-                      >
-                        <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
-                      </ListItem>
-                      )
-                  }}
-                />
+                {expenseList}
               </Tab>
             </Tabs>
           </Content>

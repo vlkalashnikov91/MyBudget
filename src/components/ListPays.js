@@ -1,53 +1,29 @@
 import React, {Component} from 'react'
-import { Alert, ListView, TouchableOpacity } from 'react-native'
+import { Alert, StyleSheet, PixelRatio } from 'react-native'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { Body, Left, Button, Text, ListItem, List, Icon, Right, Spinner } from 'native-base'
+import { Button, Text, Icon, Spinner, View } from 'native-base'
+import { FlatList, RectButton } from 'react-native-gesture-handler'
 
 import { PaymentActions } from '../actions/PaymentActions'
 import { styles as main } from '../Style'
 import { SummMask } from '../utils/utils'
-
+import SwipeableRow from './SwipeableRow'
 
 class ListPays extends Component {
     constructor(props) {
       super(props)
-
-      this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
 
       this.state = {
         planedPay: -1,
       }
 
       this._definePayCat = this._definePayCat.bind(this)
-
+      this._deletePay = this._deletePay.bind(this)
     }
 
     componentWillReceiveProps() {
       this.setState({ planedPay: -1 })
-    }
-
-    _choosePayments(item) {
-      this.setState({ planedPay: item.Id })
-      this.props.editpayment(item.Id, item.CategoryId, item.Amount, item.Name, item.TransDate, item.IsSpending, !item.IsPlaned) 
-    }
-
-    _deletePay(data, secId, rowId, rowMap) {
-      Alert.alert(
-          `${data.Name}`,
-          'Удалить платеж?',
-          [
-            {text: 'Нет', onPress: ()=> {
-                  rowMap[`${secId}${rowId}`].props.closeRow()
-              }
-            },
-            {text: 'Да', onPress: ()=> {
-                  rowMap[`${secId}${rowId}`].props.closeRow()
-                  this.props.deletepayment(data.Id)
-              }
-            },
-          ]
-        )
     }
 
     _definePayCat(item) {
@@ -63,26 +39,30 @@ class ListPays extends Component {
       }
     }
 
-    render() {
-      const { user, payments } = this.props
+    _choosePayments(item) {
+      this.setState({ planedPay: item.Id })
+      this.props.editpayment(item.Id, item.CategoryId, item.Amount, item.Name, item.TransDate, item.IsSpending, !item.IsPlaned) 
+    }
 
-      return (
-        <List 
-            rightOpenValue={-75}
-            disableRightSwipe={true}
-            dataSource={this.ds.cloneWithRows(payments)}
-            renderRightHiddenRow={(data, secId, rowId, rowMap) =>
-              <Button full danger onPress={_=> this._deletePay(data, secId, rowId, rowMap) }>
-                <Icon active name="trash" />
-              </Button>
-            }
-            renderRow={value => {
-              let CatDesc = this._definePayCat(value)
+    _deletePay(Id) {
+      var item = this.props.payments.filter(val => val.Id === Id)
+      Alert.alert(
+          `${item[0].Name}`,
+          'Удалить платеж?',
+          [
+            {text: 'Нет', onPress: ()=> {}
+            },
+            {text: 'Да', onPress: ()=> {
+                this.props.deletepayment(item[0].Id)
+              }
+            },
+          ]
+        )
+    }
 
-              return (
-                <ListItem key={value.Id} icon>
-                  <Left button onPress={_=> this._choosePayments(value)}>
-                    {(this.state.planedPay === value.Id)
+    /*
+
+                        {(this.state.planedPay === value.Id)
                     ? <Button rounded light style={main.ml_10}><Spinner size="small"/></Button>
                     : <Button rounded bordered
                       success={(!value.IsPlaned)} 
@@ -92,31 +72,110 @@ class ListPays extends Component {
                         <Icon ios="ios-checkmark" android="md-checkmark"/>
                     </Button>
                     }
-                  </Left>
-                  <Body>
-                    <TouchableOpacity onPress={_=> this.props.GoToEdit(value.Id)}>
-                      {((value.Name==null) || (value.Name.length === 0))
-                      ? <Text>---</Text>
-                      : <Text numberOfLines={1}>{value.Name}</Text>
-                      }
-                      <Text note>{CatDesc.Name}</Text>
-                    </TouchableOpacity>
-                  </Body>
-                  <Right style={[main.fD_C, {alignItems:'flex-end'}]}>
-                    {(CatDesc.IsSpendingCategory) 
-                    ? <Text style={main.clIvanD}> - {SummMask(value.Amount)} {user.DefCurrency}</Text>
-                    : <Text style={main.clIvanG}> + {SummMask(value.Amount)} {user.DefCurrency}</Text>
-                    }
-                    <Text note>{moment(value.TransDate).format('DD.MM.YYYY')}</Text>
-                  </Right>
-                </ListItem>
-              )
-            }}
-        >
-        </List>
+
+  
+                                      {(planedPay === item.Id)
+                    ? <Button rounded light style={styles.chooseButton}><Spinner size="small"/></Button>
+                    : <Button rounded bordered
+                      success={(!item.IsPlaned)} 
+                      light={(item.IsPlaned)}
+                      style={styles.chooseButton}
+                      onPress={_=> this._choosePayments(item)}>
+                        <Icon ios="ios-checkmark" android="md-checkmark" style={styles.checkmark}/>
+                    </Button>
+                  }
+  
+  
+                    */
+
+    render() {
+      const { user, payments } = this.props
+      const { planedPay } = this.state
+
+      return (
+        <FlatList
+          data={payments}
+          renderItem={({ item, index }) => {
+            let CatDesc = this._definePayCat(item)
+            return (
+              <SwipeableRow rightFunc={this._deletePay} itemId={item.Id} >
+                <View style={styles.row}>
+                  {(planedPay === item.Id)
+                    ? <Button rounded light style={styles.chooseButton}><Spinner size="small"/></Button>
+                    : <Button rounded bordered
+                      success={(!item.IsPlaned)} 
+                      light={(item.IsPlaned)} 
+                      style={styles.chooseButton}
+                      onPress={_=> this._choosePayments(item)}
+                      >
+                        <Icon ios="ios-checkmark" android="md-checkmark" style={styles.checkmark}/>
+                    </Button>
+                  }
+                  <RectButton onPress={_=> this.props.GoToEdit(item.Id)} style={main.fl_1}>
+                    <View style={styles.rectView}>
+                      <View>
+                        {((item.Name==null) || (item.Name.length === 0))
+                          ? <Text>---</Text>
+                          : <Text numberOfLines={1}>{item.Name}</Text>
+                        }
+                        <Text note>{CatDesc.Name}</Text>
+                      </View>
+                      <View style={[main.fD_C, {alignItems:'flex-end'}]}>
+                        {(CatDesc.IsSpendingCategory) 
+                        ? <Text style={[main.clIvanD, main.fontFamBold]}> - {SummMask(item.Amount)} {user.DefCurrency}</Text>
+                        : <Text style={[main.clIvanG, main.fontFamBold]}> + {SummMask(item.Amount)} {user.DefCurrency}</Text>
+                        }
+                        <Text note>{moment(item.TransDate).format('DD.MM.YYYY')}</Text>
+                      </View>
+                    </View>
+                  </RectButton>
+                </View>
+              </SwipeableRow>
+            )}
+          }
+          keyExtractor={(item, index) => `message ${index}`}
+        />
       )
     }
 }
+
+const styles = StyleSheet.create({
+  row: {
+    height: 50,
+    paddingLeft: 2,
+    ...main.bgWhite,
+    ...main.fD_R,
+    ...main.aI_C, 
+    ...main.fl_1
+  },
+  rectView: {
+    ...main.fl_1,
+    ...main.fD_R,
+    ...main.aI_C,
+    justifyContent:'space-between',
+    paddingLeft: 8,
+    paddingRight:8,
+    borderColor:'#c9c9c9', 
+    borderBottomWidth: 1 / PixelRatio.getPixelSizeForLayoutSize(1)
+  },
+  chooseButton: {
+    ...main.ml_10, 
+    marginRight: 2,
+    height: 31,
+    width: 31,
+    paddingHorizontal: 9,
+    marginVertical: 7
+  },
+  checkmark: {
+    fontSize:18, 
+    marginLeft:0, 
+    marginRight:0, 
+    marginTop:0
+  }
+})
+
+
+
 
 const mapStateToProps = state => {
   return {

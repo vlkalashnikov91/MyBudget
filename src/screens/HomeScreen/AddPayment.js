@@ -54,7 +54,7 @@ class AddPayment extends Component {
     }
   }
 
-  _changeDesc = value => {
+  _changeName = value => {
     this.setState({ Name: value })
   }
 
@@ -121,17 +121,17 @@ class AddPayment extends Component {
           </Body>
         </Header>
         <Content padder>
-          <Form style={{alignSelf: 'stretch'}}>
+          <Form style={styles.fromStyle}>
 
             <Grid style={main.width_90prc}>
               <Item floatingLabel style={[{width:'80%'}, main.mt_0]} error={errAmount}>
-                <Label>Сумма</Label>
+                <Label style={main.fontFam}>Сумма <Text style={main.clOrange}>*</Text></Label>
                 <Input onChangeText={this._changeAmount} value={SummMask(Amount)} keyboardType="number-pad" style={main.mt_5} maxLength={10} />
               </Item>
               <H3 style={styles.currencyIcon}>{user.DefCurrency}</H3>
             </Grid>
 
-            <Grid style={[main.fD_R, main.aI_C, main.mt_20, {paddingLeft:15}]}>
+            <Grid style={styles.catGrid}>
               <Item picker>
                 <Picker mode="dropdown"
                   iosIcon={<Icon name="arrow-down" />}
@@ -148,8 +148,8 @@ class AddPayment extends Component {
             </Grid>
 
             <Item floatingLabel style={main.mb_20}>
-              <Label>Описание</Label>
-              <Input onChangeText={this._changeDesc} value={Name} style={main.mt_5} multiline={true} />
+              <Label style={main.fontFam}>Наименование</Label>
+              <Input onChangeText={this._changeName} value={Name} style={main.mt_5}/>
             </Item>
 
             <DatePicker
@@ -194,6 +194,10 @@ class AddPayment extends Component {
 
     
 const styles = StyleSheet.create({
+  fromStyle:{
+    alignSelf: 'stretch',
+    paddingHorizontal:10
+  },
   dateTextStyle: {
     ...main.clGrey,
     ...main.txtAl_c,
@@ -201,8 +205,14 @@ const styles = StyleSheet.create({
   },
   currencyIcon: {
     position:'absolute',
-    right:0,
+    right:5,
     bottom:5
+  },
+  catGrid:{
+    ...main.fD_R, 
+    ...main.aI_C, 
+    ...main.mt_20,
+    paddingLeft:15
   }
 })
 
