@@ -7,9 +7,9 @@ import { styles as main } from '../Style'
 
 
 const quickArr = [
-  { desc:"Текущая неделя", range:'week' },
-  { desc:"Текущий месяц", range:'month' },
-  { desc:"Текущий год", range:'year' }
+  { desc:"Текущая неделя", range:'week', id:1 },
+  { desc:"Текущий месяц", range:'month', id:2 },
+  { desc:"Текущий год", range:'year', id:3 }
 ]
 
 export default class PeriodPicker extends Component {
@@ -23,22 +23,23 @@ export default class PeriodPicker extends Component {
         this.state = {
             dateFrom,
             dateTo,
+            hotChoos:0,
             visible: visible || false
         }
     }
 
-    quickChangeRange(range) {
+    quickChangeRange(range, id) {
       var start = moment()
-      var end = moment()
+      var end = moment().toDate()
 
       if(isNaN(range)) {
-          start = moment().startOf(range)
+          start = moment().startOf(range).toDate()
       } else {
-         start = start.add(-range, 'm');
+         start = start.add(-range, 'm').toDate()
       }
 
-      //this.setState({dateFrom:start, dateTo:end})
-  }
+      this.setState({hotChoos: id, dateFrom:start, dateTo:end})
+    }
 
     show = async ({dateTo, dateFrom}) => {
         dateFrom = dateFrom || new Date()
@@ -70,7 +71,7 @@ export default class PeriodPicker extends Component {
     }
 
     render() {
-        const { dateTo, dateFrom, visible } = this.state
+        const { dateTo, dateFrom, visible, hotChoos } = this.state
 
         if (!visible) return null;
         return (
@@ -92,7 +93,7 @@ export default class PeriodPicker extends Component {
                         placeHolderText={(dateFrom) ? moment(dateFrom).format('DD MMM YYYY') : "От"}
                         placeHolderTextStyle={styles.textStyle}
                         textStyle={styles.textStyle}
-                        onDateChange={(value) => this.setState({ dateFrom: value })}
+                        onDateChange={(value) => this.setState({ dateFrom: value, hotChoos: 0 })}
                         disabled={false}
                       >
                         <Text>moment(dateFrom).format('DD MMM YYYY')</Text>
@@ -113,7 +114,7 @@ export default class PeriodPicker extends Component {
                         placeHolderText={(dateTo) ? moment(dateTo).format('DD MMM YYYY') : "До"}
                         placeHolderTextStyle={styles.textStyle}
                         textStyle={styles.textStyle}
-                        onDateChange={(value) => this.setState({ dateTo: value })}
+                        onDateChange={(value) => this.setState({ dateTo: value, hotChoos: 0 })}
                         disabled={false}
                       >
                         <Text>moment(dateTo).format('DD MMM YYYY')</Text>
@@ -125,7 +126,9 @@ export default class PeriodPicker extends Component {
                     <Body>
                       {quickArr.map((item, index)=> {
                         return (
-                          <Button block transparent key={'hot-'+index} onPress={_=>this.quickChangeRange(item.range)}><Text>{item.desc}</Text></Button>
+                          <Button block transparent key={'hot-'+index} onPress={_=>this.quickChangeRange(item.range, item.id)}>
+                            <Text style={[main.clIvan, (hotChoos===item.id)?main.fontFamBold:{}]}>{item.desc}</Text>
+                          </Button>
                         )
                       })}
                     </Body>

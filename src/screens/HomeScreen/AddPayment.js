@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Grid, Form, Header, Left, Title } from 'native-base'
-import { FontAwesome } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 
 import { styles as main, ivanColor, ivanGray } from '../../Style'
 import { ToastTr } from '../../components/Toast'
@@ -28,11 +28,9 @@ class AddPayment extends Component {
       errAmount: false
     } 
 
-    this._addNewCat = this._addNewCat.bind(this)
     this._checkParams = this._checkParams.bind(this)
     this._addPayment = this._addPayment.bind(this)
     this._getCategoryList = this._getCategoryList.bind(this)
-    this._gotoCategories = this._gotoCategories.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -80,10 +78,6 @@ class AddPayment extends Component {
     this.setState({ TransDate: value })
   }
 
-  _addNewCat() {
-    this.props.navigation.navigate('Category')
-  }
-
   _checkParams() {
     st = this.state
 
@@ -105,8 +99,14 @@ class AddPayment extends Component {
     }
   }
 
-  _gotoCategories() {
-    this.props.navigation.navigate('Category')
+  _infoCategories() {
+    Alert.alert(
+      null,
+      'Для настройки списка категорий зайдите в личный кабинет.',
+      [
+        {text: 'Ясно'},
+      ]
+    )
   }
 
   render() {
@@ -141,6 +141,7 @@ class AddPayment extends Component {
               <Item picker style={main.width_90prc}>
                 <Picker mode="dropdown"
                   iosIcon={<Icon name="arrow-down" />}
+                  iosHeader="Категория"
                   placeholderStyle={{ color: "#bfc6ea" }}
                   placeholderIconColor="#007aff"
                   selectedValue={CategoryId}
@@ -151,7 +152,8 @@ class AddPayment extends Component {
                 }
                 </Picker>
               </Item>
-              <FontAwesome name="pencil" size={20} style={[{color:ivanGray}, main.ml_15]} button onPress={this._gotoCategories} />
+
+              <AntDesign name="questioncircle" button size={20} style={[main.clBlue, main.ml_15]} onPress={this._infoCategories} />
             </Grid>
 
             <Item floatingLabel style={main.mb_20}>

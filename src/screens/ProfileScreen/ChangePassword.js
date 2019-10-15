@@ -14,6 +14,8 @@ class ChangePassword extends Component {
   constructor(props) {
     super(props)
 
+    this.inputs = {}
+
     this.state = {
       savedPass:'',
       oldPass: '',
@@ -144,19 +146,42 @@ class ChangePassword extends Component {
           <Form style={styles.form}>
             <Item floatingLabel style={main.mt_0} error={oldPassErr}>
               <Label style={main.fontFam}>Текущий пароль <Text style={main.clOrange}>*</Text></Label>
-              <Input secureTextEntry={isHiddenOldPass} style={main.mt_5} value={oldPass} onChangeText={this._oldPass}/>
+              <Input secureTextEntry={isHiddenOldPass}
+                style={main.mt_5}
+                value={oldPass}
+                onChangeText={this._oldPass}
+                returnKeyType={'next'} 
+                autoFocus={true}
+                blurOnSubmit={false} 
+                getRef={input => { this.inputs[1] = input }}
+                onSubmitEditing={_=> this.inputs[2]._root.focus()}
+              />
               <Icon name={iconOldPass} onPress={_=> this._togglePassIcon('OLD')} style={main.clIvan}/>
             </Item>
 
             <Item floatingLabel error={newPassErr}>
               <Label style={main.fontFam}>Новый пароль <Text style={main.clOrange}>*</Text></Label>
-              <Input secureTextEntry={isHiddenNewPass} style={main.mt_5} value={newPass} onChangeText={this._newPass}/>
+              <Input secureTextEntry={isHiddenNewPass}
+                style={main.mt_5}
+                value={newPass}
+                onChangeText={this._newPass}
+                returnKeyType={'next'} 
+                blurOnSubmit={false} 
+                getRef={input => { this.inputs[2] = input }}
+                onSubmitEditing={_=> this.inputs[3]._root.focus()} 
+              />
               <Icon name={iconNewPass} onPress={_=> this._togglePassIcon('NEW')} style={main.clIvan}/>
             </Item>
 
             <Item floatingLabel error={newRePassErr}>
               <Label style={main.fontFam}>Подтверждение пароля <Text style={main.clOrange}>*</Text></Label>
-              <Input secureTextEntry={isHiddenNewRePass} style={main.mt_5} value={newRePass} onChangeText={this._newRePass}/>
+              <Input secureTextEntry={isHiddenNewRePass}
+                style={main.mt_5}
+                value={newRePass}
+                onChangeText={this._newRePass}
+                getRef={input => { this.inputs[3] = input }}
+                onSubmitEditing={this._changePass}
+              />
               <Icon name={iconNewRePass} onPress={_=> this._togglePassIcon('NEWRE')} style={main.clIvan}/>
             </Item>
           </Form>

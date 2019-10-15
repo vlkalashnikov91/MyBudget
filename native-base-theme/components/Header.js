@@ -399,7 +399,7 @@ export default (variables /* : * */ = variable) => {
         ? 1 / PixelRatio.getPixelSizeForLayoutSize(1)
         : 0,
     borderBottomColor: variables.toolbarDefaultBorder,
-    height: variables.toolbarHeight + StatusBar.currentHeight,
+    height: platform === PLATFORM.IOS ? 85 : variables.toolbarHeight + StatusBar.currentHeight,
     elevation: 3,
     shadowColor: platformStyle === PLATFORM.MATERIAL ? '#000' : undefined,
     shadowOffset: platformStyle === PLATFORM.MATERIAL ? { width: 0, height: 2 } : undefined,

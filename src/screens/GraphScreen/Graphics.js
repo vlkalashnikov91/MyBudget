@@ -104,8 +104,7 @@ class Graphics extends Component {
             animationDuration={500}
           />
           <Card style={main.mt_10} transparent>
-            <FlatList
-              data={arr}
+            <FlatList data={arr}
               keyExtractor = {(item, index) => 'graph-'+item.description + index}
               renderItem={({item}) => {
                 return (
@@ -132,7 +131,7 @@ class Graphics extends Component {
           <Card transparent>
             <CardItem style={main.fD_C}>
               <FontAwesome name='frown-o' size={70} style={styles.notFoundIcon}/>
-                <Text note style={main.txtAl_c}>За выбранный вами период информация не найдена.</Text>
+                <Text note style={main.txtAl_c}>За выбранный Вами период информация не найдена.</Text>
             </CardItem>
           </Card>
         )

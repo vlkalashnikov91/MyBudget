@@ -17,10 +17,10 @@ export default class SwipeableRow extends Component {
     }
 
     close = () => {
-      this.props.rightFunc(this.props.itemId)
       setTimeout(() => {
         this._swipeableRow.close()
-      }, 1200)
+      }, 800)
+      this.props.rightFunc(this.props.itemId)
     }
 
     render() {

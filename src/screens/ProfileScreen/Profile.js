@@ -118,6 +118,7 @@ class Profile extends Component {
                     <Label style={[main.fontFam, main.clGrey]}>Валюта по умолчанию</Label>
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
+                      iosHeader="Валюта по умолчанию"
                       style={{ width: undefined }}
                       placeholderStyle={{ color: "#bfc6ea" }}
                       placeholderIconColor="#007aff"
@@ -137,6 +138,7 @@ class Profile extends Component {
                     <AntDesign name="questioncircle" style={main.clBlue} size={20} button onPress={this.setModalVisible} />
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
+                      iosHeader="Перенос остатка"
                       style={{ width: undefined }}
                       placeholderStyle={{ color: "#bfc6ea" }}
                       placeholderIconColor="#007aff"

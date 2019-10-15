@@ -356,7 +356,7 @@ class Cards extends Component {
                       onChangeText={this._chngIncreaseAmount}
                       value={SummMask(Amount)}
                       onSubmitEditing={this._increaseItem}
-                      style={{fontSize:30}}
+                      style={{fontSize:25}}
                     />
                   </Item>
                   <H3>{user.DefCurrency}</H3>

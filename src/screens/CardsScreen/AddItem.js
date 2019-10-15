@@ -30,6 +30,8 @@ class AddItem extends Component {
   constructor(props) {
     super(props)
 
+    this.inputs = {}
+
     this.state = {
       GoalName: '',
       Type: '',
@@ -140,13 +142,27 @@ class AddItem extends Component {
 
               <Item floatingLabel error={errGoalName} style={main.mt_0}>
                 <Label style={main.fontFam}>Наименование <Text style={main.clOrange}>*</Text></Label>
-                <Input onChangeText={this._changeName} value={GoalName} style={main.mt_5}/>
+                <Input style={main.mt_5}
+                  value={GoalName}
+                  onChangeText={this._changeName}
+                  returnKeyType={'next'}
+                  autoFocus={true}
+                  blurOnSubmit={false} 
+                  getRef={input => { this.inputs[1] = input }}
+                  onSubmitEditing={_=> this.inputs[2]._root.focus()}
+                />
               </Item>
 
               <Grid style={[main.width_90prc, main.mb_20]}>
                 <Item floatingLabel style={{width:'80%'}} error={errAmount}>
                   <Label style={main.fontFam}>Полная сумма <Text style={main.clOrange}>*</Text></Label>
-                  <Input style={main.mt_5} onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
+                  <Input style={main.mt_5}
+                    onChangeText={this._changeAmount}
+                    value={SummMask(Amount)}
+                    maxLength={10}
+                    keyboardType="number-pad"
+                    getRef={input => { this.inputs[2] = input }}
+                  />
                 </Item>
                 <H3 style={styles.currIcon}>{user.DefCurrency}</H3>
               </Grid>

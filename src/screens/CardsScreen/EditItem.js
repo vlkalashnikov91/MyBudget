@@ -16,6 +16,8 @@ class EditItem extends Component {
   constructor(props) {
     super(props)
 
+    this.inputs = {}
+
     this.state = {
       GoalName: '',
       Type: '',
@@ -171,13 +173,21 @@ class EditItem extends Component {
 
               <Item stackedLabel error={errGoalName}>
                 <Label style={main.fontFam}>Наименование <Text style={main.clOrange}>*</Text></Label>
-                <Input onChangeText={this._changeName} value={GoalName} />
+                <Input 
+                  onChangeText={this._changeName} 
+                  value={GoalName}
+                />
               </Item>
 
               <Grid style={main.width_90prc}>
                 <Item stackedLabel style={{width:'80%'}} error={errAmount}>
                   <Label style={main.fontFam}>Полная сумма <Text style={main.clOrange}>*</Text></Label>
-                  <Input onChangeText={this._changeAmount} value={SummMask(Amount)} maxLength={10} keyboardType="number-pad"/>
+                  <Input
+                    onChangeText={this._changeAmount}
+                    value={SummMask(Amount)}
+                    maxLength={10}
+                    keyboardType="number-pad"
+                  />
                 </Item>
                 <H3 style={styles.currIcon}>{user.DefCurrency}</H3>
               </Grid>
@@ -185,7 +195,12 @@ class EditItem extends Component {
               <Grid style={main.width_90prc}>
                 <Item stackedLabel style={{width:'80%'}} error={errCurAmount}>
                   <Label style={main.fontFam}>Текущая сумма</Label>
-                  <Input onChangeText={this._changeCurAmount} value={SummMask(CurAmount)} maxLength={10} keyboardType="number-pad"/>
+                  <Input 
+                    onChangeText={this._changeCurAmount}
+                    value={SummMask(CurAmount)}
+                    maxLength={10}
+                    keyboardType="number-pad"
+                  />
                 </Item>
                 <H3 style={styles.currIcon}>{user.DefCurrency}</H3>
               </Grid>
