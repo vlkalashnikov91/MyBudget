@@ -60,34 +60,6 @@ class ListPays extends Component {
         )
     }
 
-    /*
-
-                        {(this.state.planedPay === value.Id)
-                    ? <Button rounded light style={main.ml_10}><Spinner size="small"/></Button>
-                    : <Button rounded bordered
-                      success={(!value.IsPlaned)} 
-                      light={(value.IsPlaned)} 
-                      style={main.ml_10}
-                      onPress={_=> this._choosePayments(value)}>
-                        <Icon ios="ios-checkmark" android="md-checkmark"/>
-                    </Button>
-                    }
-
-  
-                                      {(planedPay === item.Id)
-                    ? <Button rounded light style={styles.chooseButton}><Spinner size="small"/></Button>
-                    : <Button rounded bordered
-                      success={(!item.IsPlaned)} 
-                      light={(item.IsPlaned)}
-                      style={styles.chooseButton}
-                      onPress={_=> this._choosePayments(item)}>
-                        <Icon ios="ios-checkmark" android="md-checkmark" style={styles.checkmark}/>
-                    </Button>
-                  }
-  
-  
-                    */
-
     render() {
       const { user, payments } = this.props
       const { planedPay } = this.state
@@ -113,14 +85,14 @@ class ListPays extends Component {
                   }
                   <RectButton onPress={_=> this.props.GoToEdit(item.Id)} style={main.fl_1}>
                     <View style={styles.rectView}>
-                      <View>
+                      <View style={main.fl_1}>
                         {((item.Name==null) || (item.Name.length === 0))
                           ? <Text>---</Text>
                           : <Text numberOfLines={1}>{item.Name}</Text>
                         }
-                        <Text note>{CatDesc.Name}</Text>
+                        <Text note numberOfLines={1}>{CatDesc.Name}</Text>
                       </View>
-                      <View style={[main.fD_C, {alignItems:'flex-end'}]}>
+                      <View style={[main.fD_C, main.aI_E]}>
                         {(CatDesc.IsSpendingCategory) 
                         ? <Text style={[main.clIvanD, main.fontFamBold]}> - {SummMask(item.Amount)} {user.DefCurrency}</Text>
                         : <Text style={[main.clIvanG, main.fontFamBold]}> + {SummMask(item.Amount)} {user.DefCurrency}</Text>

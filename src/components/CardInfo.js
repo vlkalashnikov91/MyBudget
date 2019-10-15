@@ -106,10 +106,10 @@ export const CardInfo = (props) => {
                 <Row style={[{backgroundColor: fillFull, borderRadius:4}, (!item.IsActive)?{opacity:0.6}:{}]}>
                   <Row style={{backgroundColor: prcColor, borderRadius:4, width:`${progressCnt}%`, height:56}}></Row>
                   <Grid style={styles.mainGrid}>
-                    <Row style={[main.pdL_10, main.pdR_10]}>
-                      <View style={[main.mr_auto, main.ml_auto, main.fD_R, {marginTop:1}]}>
+                    <Row style={[main.pdL_25, main.pdR_25, main.fD_R, main.fl_1]}>
+                      <View style={[main.fD_R, main.fl_1, main.jC_C, {marginTop:1}]}>
                         {defineCardIcon(item)}
-                        <Text style={[main.clWhite]}>{capitalize(item.GoalName)}</Text>
+                        <Text style={[main.clWhite]} numberOfLines={1}>{capitalize(item.GoalName)}</Text>
                       </View>
                     </Row>
                     <Row style={[main.pdL_10, main.pdR_10]}>

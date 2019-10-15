@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
-import { Alert, StyleSheet, Modal, RefreshControl, Image } from 'react-native'
+import { Animated, StyleSheet, Modal, RefreshControl, Image, FlatList } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, Button, Text, Icon, Card, CardItem, H1, Segment, Left, Right, Header, Body, View } from 'native-base'
+import { Container, Content, Button, Text, Icon, Card, CardItem, H1, Segment, Left, Right, Header, Body, View, ListItem, Radio } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, SimpleLineIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import moment from 'moment'
 import 'moment/locale/ru'
 
@@ -13,10 +13,20 @@ import ListPays from '../../components/ListPays'
 import YearMonthPicker from '../../components/YearMonthPicker'
 
 import { PaymentActions } from '../../actions/PaymentActions'
+import { CategoriesActions } from '../../actions/CategoriesActions'
 import { INCOME, EXPENSE } from '../../constants/Payment'
 
-import { styles as main, ivanColor } from '../../Style'
+import { styles as main, ivanColor, ivanGray, screenHeight } from '../../Style'
 import { capitalize, SummMask } from '../../utils/utils'
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
+
+const SORT_ARR = [
+  {desc:'Сначала свежие платежи', id:1},
+  {desc:'Сначала старые платежи',  id:2},
+  {desc:'По возрастанию суммы',  id:3},
+  {desc:'По убыванию суммы',  id:4}
+]
+
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -27,7 +37,9 @@ class HomeScreen extends Component {
     this.state = {
       selectedDate: moment(),
       refreshing: false,
-      payments: this.props.payments
+      visibleModalInfo: false,
+      visibleModalSort: false,
+      sortId: 1,
     }
 
     this._refreshData = this._refreshData.bind(this)
@@ -37,8 +49,14 @@ class HomeScreen extends Component {
     this._changeMonth = this._changeMonth.bind(this)
   }
 
-  componentDidMount() {
-    this.timer = setTimeout(() => { this._refreshData() }, 200)
+  async componentDidMount() {
+    const { selectedDate } = this.state
+    const { UserId } = this.props.user
+    let currMonth = selectedDate.month()+1
+    let currYear = selectedDate.year()
+
+    const res = await this.props.getcategories(UserId)
+    const res2 = await this.props.getpaymentlist(UserId, currYear, currMonth)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -62,15 +80,39 @@ class HomeScreen extends Component {
     this.props.navigation.navigate('AddPayment', {type: type})
   }
 
-  _setModalInfo = () => {
-    Alert.alert(
-      'Планирование',
-      '"Плановый" баланс позволяет отследить остаток средств с учетом еще не проведенных, но запланированных выплат.\n   ✓ Проведенный платеж \n   ✓ Запланированный платеж\n\nЧтобы перевести платеж в статус "запланированный" нажмите на галочку перед наименованием платежа.',
-      [
-        {text: 'Ясно'},
-      ]
-    )
-}
+  _toggleModalInfo = () => {
+    this.setState(prevState => ({visibleModalInfo: !prevState.visibleModalInfo}))
+  }
+
+  _toggleModalSort = () => {
+    this.setState(prevState => ({visibleModalSort: !prevState.visibleModalSort}))
+  }
+
+  _changeSort = (id) => {
+    this.setState({sortId: id, visibleModalSort: false})
+  }
+
+  _sortPays = () => {
+    const { sortId } = this.state
+    const { Payments } = this.props.payments
+
+    if ((Payments === undefined) && (Payments.length === 0)) {
+      return []
+    }
+
+    switch(sortId) {
+      case 1:
+        return Payments.sort((a, b) => moment(a.TransDate) - moment(b.TransDate))
+      case 2:
+        return Payments.sort((a, b) => moment(b.TransDate) - moment(a.TransDate))
+      case 3:
+        return Payments.sort((a, b) => Number(a.Amount) > Number(b.Amount))
+      case 4:
+        return Payments.sort((a, b) => Number(a.Amount) < Number(b.Amount))
+      default:
+        return Payments
+    }
+  }
 
   _nextMonth() {
     let newMonth = moment(this.state.selectedDate).add(1, 'months')
@@ -115,15 +157,18 @@ class HomeScreen extends Component {
 
   render() {
     const { payments, categories, user } = this.props
+    const { visibleModalInfo, selectedDate, refreshing, visibleModalSort, sortId } = this.state
+
     const isLoad = payments.isLoad || categories.isLoad || user.isLoad
 
     var Pays = <SkypeIndicator color={ivanColor} />
     
     if (!isLoad) {
       if (payments.Payments.length == 0) {
-        Pays = <Grid style={main.mt_20}><Col><Row style={[main.jC_C, main.fD_R]}><Text>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
+        Pays = <Grid style={main.mt_20}><Col><Row style={[main.jC_C, main.fD_R]}><Text note>В этом месяце ещё нет платежей</Text></Row></Col></Grid>
       } else {
-        Pays = <ListPays payments={payments.Payments} GoToEdit={this._navigateToEdit} />
+        var sortPays = this._sortPays()
+        Pays = <ListPays payments={sortPays} GoToEdit={this._navigateToEdit} sort={sortId} /> /*sort - добавлен просто так чтобы class ListPays обновлялся, функция componentWillReceiveProps срабатывала */
       }
     }
 
@@ -171,20 +216,32 @@ class HomeScreen extends Component {
                   </Col>
                 </Row>
               </Grid>
-              <Icon android='md-information-circle' ios='ios-information-circle' style={styles.iconInfo} button onPress={this._setModalInfo} />
+
+              <Menu>
+                <MenuTrigger>
+                  <View style={[main.fD_R, main.aI_C, {height:45, paddingLeft:7, paddingRight:7}]}>
+                    <SimpleLineIcons name="options-vertical" style={main.clWhite} size={16}/>
+                  </View>
+                </MenuTrigger>
+                <MenuOptions customStyles={{optionWrapper: {padding: 10, flexDirection:'row', alignItems:'center'}}}>
+                  <MenuOption onSelect={this._toggleModalSort}><MaterialCommunityIcons name="sort" style={[main.mr_15, main.clBlue]} size={20} /><Text>Сортировать</Text></MenuOption>
+                  <MenuOption onSelect={this._toggleModalInfo}><SimpleLineIcons name="question" style={[main.mr_15, main.clBlue]} size={20} /><Text>Помощь</Text></MenuOption>
+                </MenuOptions>
+              </Menu>
+
             </View>
           </Header>
           <Segment style={main.bgWhite}>
             <Left>
-              <Button transparent onPress={this._prevMonth} style={styles.prevMonthBtn}>
+              <Button transparent disabled={(isLoad)} onPress={this._prevMonth} style={styles.prevMonthBtn}>
                 <FontAwesome name="angle-left" size={27} />
               </Button>
             </Left>
-            <H1 style={styles.monthHeader} button onPress={this._showModalCalendar}>
-              {capitalize(moment(this.state.selectedDate).format("MMMM YYYY"))}
+            <H1 style={styles.monthHeader} button disabled={(isLoad)} onPress={this._showModalCalendar}>
+              {capitalize(moment(selectedDate).format("MMMM YYYY"))}
             </H1>
             <Right>
-              <Button transparent style={styles.nextMonthBtn} onPress={this._nextMonth}>
+              <Button transparent disabled={(isLoad)} style={styles.nextMonthBtn} onPress={this._nextMonth}>
                 <FontAwesome name="angle-right" size={27} />
               </Button>
             </Right>
@@ -192,7 +249,7 @@ class HomeScreen extends Component {
 
           <Content
             refreshControl={
-              <RefreshControl refreshing={this.state.refreshing} onRefresh={this._refreshData} />
+              <RefreshControl refreshing={refreshing} onRefresh={this._refreshData} />
             }
           >
             <Card transparent>
@@ -225,6 +282,64 @@ class HomeScreen extends Component {
           </Content>
 
           <YearMonthPicker ref={(picker) => this.picker=picker} />
+
+
+          <Modal animationType="fade" transparent={true} visible={visibleModalInfo} onRequestClose={this._toggleModalInfo} >
+            <View style={main.modalOverlay} />
+            <Card transparent style={styles.modalMenu}>
+              <CardItem header>
+                <Text style={main.fontFamBold}>Планирование</Text>
+              </CardItem>
+              <CardItem>
+                <Body>
+                  <Text>"Плановый" баланс позволяет отследить остаток средств с учетом еще не проведенных, но запланированных выплат.</Text>
+                  <View style={[main.fD_R, main.aI_C]}>
+                    <Button rounded bordered success={false} light={true} style={styles.chooseButton}>
+                      <Icon ios="ios-checkmark" android="md-checkmark" style={styles.checkmark}/>
+                    </Button>
+                    <Text>Запланированный платеж</Text>
+                  </View>
+                  <View style={[main.fD_R, main.aI_C]}>
+                    <Button rounded bordered success={true} light={false} style={styles.chooseButton} >
+                      <Icon ios="ios-checkmark" android="md-checkmark" style={styles.checkmark}/>
+                    </Button>
+                    <Text>Проведенный платеж</Text>
+                  </View>
+                  <Text>Чтобы перевести платеж в статус "запланированный" нажмите на галочку перед наименованием платежа.</Text>
+                </Body>
+              </CardItem>
+              <CardItem style={[main.fD_R,{justifyContent:'flex-end'}]}>
+                <Button transparent onPress={this._toggleModalInfo}>
+                  <Text>Ясно</Text>
+                </Button>
+              </CardItem>
+            </Card>
+        </Modal>
+
+        <Modal animationType="fade" transparent={true} visible={visibleModalSort} onRequestClose={this._toggleModalSort} >
+          <View style={main.modalOverlay}/>
+          <Card transparent style={styles.modalMenu}>
+            <CardItem header>
+              <Text style={main.fontFamBold}>Сортировка</Text>
+              <Icon button name="close" onPress={this._toggleModalSort} style={styles.modalCloseIcon}/>
+            </CardItem>
+            <CardItem>
+              <FlatList
+                data={SORT_ARR}
+                keyExtractor = {(item, index) => 'sort-'+index}
+                renderItem={({item}) => {
+                  return (
+                    <ListItem noBorder={true} onPress={_=>this._changeSort(item.id)} >
+                      <Left><Text>{item.desc}</Text></Left>
+                      <Right><Radio selected={(sortId===item.id)} selectedColor={ivanColor} color={ivanGray} onPress={_=>this._changeSort(item.id)} /></Right>
+                    </ListItem>
+                  )
+                }}
+              />
+            </CardItem>
+          </Card>
+        </Modal>
+
       </Container>
     )
   }
@@ -253,10 +368,30 @@ const styles = StyleSheet.create({
     ...main.txtAl_c, 
     fontSize: 13
   },
-  iconInfo: {
-    ...main.clWhite, 
-    ...main.mr_15, 
-    ...main.mt_5
+  modalMenu: {
+    ...main.bgWhite,
+    marginTop: screenHeight / 7,
+    ...main.ml_10,
+    ...main.mr_10
+  },
+  chooseButton: {
+    ...main.ml_10, 
+    marginRight: 10,
+    height: 31,
+    width: 31,
+    paddingHorizontal: 9,
+    marginVertical: 7
+  },
+  modalCloseIcon: {
+    ...main.mr_0,
+    ...main.ml_auto,
+    ...main.clGrey
+  },
+  checkmark: {
+    fontSize:18, 
+    marginLeft:0, 
+    marginRight:0, 
+    marginTop:0
   }
 })
 
@@ -274,7 +409,8 @@ const mapDispatchToProps = dispatch => {
     deletepayment: (id) => dispatch(PaymentActions.Delete(id)),
     editpayment: (Id, CategoryId, Amount, Name, TransDate, IsSpending, IsPlaned) => {
       dispatch(PaymentActions.Edit(Id, CategoryId, Amount, Name, TransDate, IsSpending, IsPlaned))
-    }
+    },
+    getcategories: (UserId) => dispatch(CategoriesActions.Get(UserId))
   }
 }
 

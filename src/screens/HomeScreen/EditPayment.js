@@ -3,8 +3,9 @@ import { StyleSheet } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Grid, Form, Title, Header, Left } from 'native-base'
+import { FontAwesome } from '@expo/vector-icons'
 
-import { styles as main, ivanColor } from '../../Style'
+import { styles as main, ivanColor, ivanGray } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { PaymentActions } from '../../actions/PaymentActions'
@@ -32,6 +33,8 @@ class EditPayment extends Component {
     this._checkParams = this._checkParams.bind(this)
     this._editPayment = this._editPayment.bind(this)
     this._getCategoryList = this._getCategoryList.bind(this)
+    this._gotoCategories = this._gotoCategories.bind(this)
+
   }
 
   componentDidMount() {
@@ -126,6 +129,10 @@ class EditPayment extends Component {
     }
   }
 
+  _gotoCategories() {
+    this.props.navigation.navigate('Category')
+  }
+
   render() {
     const { user, navigation } = this.props
     const { Amount, errAmount, CategoryId, Name, TransDate, Loading } = this.state
@@ -143,7 +150,7 @@ class EditPayment extends Component {
           </Body>
         </Header>
         <Content padder>
-          <Form style={{alignSelf: 'stretch', paddingHorizontal:10}}>
+          <Form style={styles.fromStyle}>
 
             <Grid style={main.width_90prc}>
               <Item stackedLabel style={{width:'80%'}} error={errAmount}>
@@ -153,8 +160,8 @@ class EditPayment extends Component {
               <H3 style={styles.currencyIcon}>{user.DefCurrency}</H3>
             </Grid>
 
-            <Grid style={[main.fD_R, main.aI_C, main.mt_20, {paddingLeft:15}]}>
-              <Item picker>
+            <Grid style={styles.catGrid}>
+              <Item picker style={main.width_90prc}>
                 <Picker mode="dropdown"
                   iosIcon={<Icon name="arrow-down" />}
                   placeholderStyle={{ color: "#bfc6ea" }}
@@ -163,10 +170,12 @@ class EditPayment extends Component {
                   onValueChange={this._changeCat}
                 >
                 {
-                  this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
+                  this._getCategoryList().map(value => <Picker.Item color={ivanColor} label={value.Name} value={value.Id} key={value.Id} /> )
                 }
                 </Picker>
               </Item>
+              <FontAwesome name="pencil" size={20} style={[{color:ivanGray}, main.ml_15]} button onPress={this._gotoCategories} />
+
             </Grid>
 
             <Item stackedLabel style={[main.mb_20, main.mt_20]}>
@@ -193,12 +202,6 @@ class EditPayment extends Component {
               <Text>moment(TransDate).add(1, 'day').format('DD.MM.YYYY')</Text>
             </DatePicker>
             
-            {/*
-              <Button iconLeft transparent >
-                  <Icon name='star' style={{color:'yellow'}} />
-                  <Text style={main.clIvan} uppercase={false}>Ежемесячный платеж</Text>
-              </Button>
-            */}
           </Form>
 
           <Card transparent>
@@ -223,6 +226,10 @@ class EditPayment extends Component {
 
     
 const styles = StyleSheet.create({
+  fromStyle:{
+    alignSelf: 'stretch',
+    paddingHorizontal:10
+  },
   dateTextStyle: {
     ...main.clGrey,
     ...main.txtAl_c,
@@ -232,6 +239,12 @@ const styles = StyleSheet.create({
     position:'absolute',
     right:5,
     bottom:5
+  },
+  catGrid:{
+    ...main.fD_R, 
+    ...main.aI_C, 
+    ...main.mt_20,
+    paddingLeft:15
   }
 })
 

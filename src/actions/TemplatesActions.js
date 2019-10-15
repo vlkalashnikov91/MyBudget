@@ -21,13 +21,11 @@ export const TemplatesActions = {
                             /*если 404 - значит данных нет за этот месяц */
                             if(error.response.status === 404) {
                                 dispatch(ActionFetchTemplates([]))
-                            } else {
-                                dispatch(ActionReject(error.message))
+                                return
                             }
-                        } else {
-                            console.log('Error', error.message)
-                            dispatch(ActionReject(error.message))
                         }
+                        console.log('Error', error.message)
+                        dispatch(ActionReject(error.message))
                     })
                 } else {
                     dispatch(ActionReject(NO_CONN_MESS))

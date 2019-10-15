@@ -132,7 +132,7 @@ class MonthlyPays extends Component {
                 <Text note>{CatDesc.Name}</Text>
               </Body>
 
-              <Right style={[main.fD_C, {alignItems:'flex-end'}]}>
+              <Right style={[main.fD_C, main.aI_E]}>
               {(CatDesc.IsSpendingCategory) 
                 ? <Text style={main.clIvanD}> - {SummMask(item.Amount)} {this.props.user.DefCurrency}</Text>
                 : <Text style={main.clIvanG}> + {SummMask(item.Amount)} {this.props.user.DefCurrency}</Text>

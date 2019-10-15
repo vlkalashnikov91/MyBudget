@@ -3,6 +3,7 @@ import { Alert, StyleSheet } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, H3, DatePicker, Grid, Row, Form, ListItem, CheckBox, Header, Left, Title } from 'native-base'
+import { AntDesign } from '@expo/vector-icons'
 
 import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
@@ -135,7 +136,7 @@ class AddItem extends Component {
             </Body>
           </Header>
           <Content padder>
-            <Form style={{alignSelf: 'stretch', paddingHorizontal:20}}>
+            <Form style={styles.formStyle}>
 
               <Item floatingLabel error={errGoalName} style={main.mt_0}>
                 <Label style={main.fontFam}>Наименование <Text style={main.clOrange}>*</Text></Label>
@@ -174,7 +175,7 @@ class AddItem extends Component {
                     onDateChange={this._changeDate}
                     disabled={false}
                   />
-                  <Icon name='ios-information-circle' style={[{color:'#609AD3'}, main.ml_20]} button onPress={this._setModalVisible} />
+                  <AntDesign name="questioncircle" button onPress={this._setModalVisible} style={[main.ml_15, main.clBlue]} size={20} />
                 </Row>
               </Grid>
               }
@@ -202,6 +203,10 @@ class AddItem extends Component {
 }
 
 const styles = StyleSheet.create({
+  formStyle: {
+    alignSelf: 'stretch', 
+    paddingHorizontal:20
+  },
   dateTextStyle: {
     color:'#395971',
     ...main.txtAl_c,

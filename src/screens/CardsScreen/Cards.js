@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
-import { RefreshControl, Modal, StyleSheet, Alert, Platform, Keyboard } from 'react-native'
+import { RefreshControl, Modal, StyleSheet, Alert, Platform, Keyboard, ToolbarAndroid } from 'react-native'
 import { connect } from 'react-redux'
 import { Container, Content, View, Button, Text, CardItem, Card, Body, Item, ActionSheet, Input, H3, Icon, Fab, Header, Title, Right } from 'native-base'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, MaterialIcons, SimpleLineIcons, Ionicons } from '@expo/vector-icons'
 import moment from 'moment'
 
 import { ToastTr } from '../../components/Toast'
@@ -11,6 +11,8 @@ import { TargetActions, GetFinished, AddToFinished } from '../../actions/TargetA
 import { PaymentActions } from '../../actions/PaymentActions'
 import { TARGET, IDEBT, OWEME } from '../../constants/TargetDebts'
 import { SkypeIndicator } from 'react-native-indicators'
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
+
 
 import { styles as main, screenHeight, screenWidth, ivanColor, IDebtColor, TargetColor, DebtColor } from '../../Style'
 import { SummMask, ClearSpace, capitalize, onlyNumbers } from '../../utils/utils'
@@ -40,6 +42,7 @@ class Cards extends Component {
       choosenItem: {},
       Loading: false,
       isShowArchive: false,
+      visibleModalInfo: false,
       finishedTargets:[]
     }
 
@@ -250,9 +253,13 @@ class Cards extends Component {
     this.setState(prevState => ({ visibleModalMenu: false }))
   }
 
+  _toggleModalInfo = () => {
+    this.setState(prevState => ({visibleModalInfo: !prevState.visibleModalInfo}))
+  }
+
   render() {
     const { targets, user } = this.props
-    const { isShowArchive, refreshing, visibleModalIncrease, visibleModalMenu, choosenItem, fabState, Amount, errAmount, Loading } = this.state
+    const { isShowArchive, refreshing, visibleModalIncrease, visibleModalMenu, choosenItem, fabState, Amount, errAmount, Loading, visibleModalInfo } = this.state
 
     var content = <View style={[main.fl_1, {padding:20}]}><SkypeIndicator color={ivanColor} /></View>
 
@@ -295,10 +302,26 @@ class Cards extends Component {
             <Title style={main.ml_15}>Мои цели</Title>
           </Body>
           <Right>
-            <Icon android={(isShowArchive)?'md-eye':'md-eye-off'} ios={(isShowArchive)?'ios-eye':'ios-eye-off'} 
-              style={[main.clWhite, main.mr_15]} 
-              button onPress={this._toggleShowArchive}
-            />
+            <Menu>
+              <MenuTrigger>
+                <View style={[main.fD_R, main.aI_C, {height:45, paddingLeft:7, paddingRight:7}]}>
+                  <SimpleLineIcons name="options-vertical" style={main.clWhite} size={16}/>
+                </View>
+              </MenuTrigger>
+              <MenuOptions customStyles={{optionWrapper: {padding: 10, flexDirection:'row', alignItems:'center'}}}>
+                <MenuOption onSelect={this._toggleShowArchive}>
+                  {(isShowArchive)
+                  ?<MaterialIcons name="check-box" style={[main.mr_15, main.clBlue]} size={20} />
+                  :<MaterialIcons name="check-box-outline-blank" style={[main.mr_15, main.clBlue]} size={20} />}
+                  <Text>Архивные цели</Text>
+                </MenuOption>
+                <MenuOption onSelect={this._toggleModalInfo}>
+                  <SimpleLineIcons name="question" style={[main.mr_15, main.clBlue]} size={20} />
+                  <Text>Помощь</Text>
+                </MenuOption>
+              </MenuOptions>
+            </Menu>
+
           </Right>
         </Header>
         <Content enableOnAndroid refreshControl = {
@@ -318,7 +341,7 @@ class Cards extends Component {
           <Content enableOnAndroid extraHeight={Platform.select({ android: 150 })}>
             <Card transparent style={styles.modalWindow}>
               <CardItem header>
-                <Text>Введите сумму</Text>
+                <Text>{choosenItem.GoalName}</Text>
                 <Icon button name="close" onPress={this._hideModalIncrease} style={styles.modalCloseIcon} disabled={Loading}/>
               </CardItem>
               <CardItem>
@@ -361,7 +384,7 @@ class Cards extends Component {
           <View style={main.modalOverlay} />
           <Card transparent style={styles.modalMenu}>
             <CardItem header>
-              <Text style={main.txtAl_c} numberOfLines={1}>{choosenItem.GoalName}</Text>
+              <Text style={[main.txtAl_c, main.fontFamBold]} numberOfLines={1}>{choosenItem.GoalName}</Text>
               <Icon button name="close" onPress={this._hideModalMenu} style={styles.modalCloseIcon}/>
             </CardItem>
             <CardItem>
@@ -370,6 +393,37 @@ class Cards extends Component {
                 <Button transparent onPress={this._repayFull}><Text uppercase={false} style={(choosenItem.IsActive)?styles.modalButt:styles.modalButtDis}>Погасить полностью</Text></Button>
                 <Button transparent onPress={this._deleteItem}><Text uppercase={false} style={styles.modalButt}>Удалить</Text></Button>
               </Body>
+            </CardItem>
+          </Card>
+        </Modal>
+
+        <Modal animationType="fade"
+          transparent={true}
+          visible={visibleModalInfo}
+          onRequestClose={this._toggleModalInfo}
+        >
+          <View style={main.modalOverlay} />
+          <Card transparent style={styles.modalMenu2}>
+            <CardItem header>
+              <Text style={main.fontFamBold}>Информация</Text>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <View style={[main.fD_R, main.aI_C]}>
+                  <Button transparent><FontAwesome name='exclamation-circle' size={25} style={styles.chooseButton} /></Button> 
+                  <Text>У цели подходит срок</Text>
+                </View>
+                <View style={[main.fD_R, main.aI_C]}>
+                <Button transparent><FontAwesome name='fire' size={25} style={[styles.chooseButton,{color:'orange'}]} /></Button> 
+                  <Text>Просроченная цель</Text>
+                </View>
+                <Text>Долго удерживайте цель для выбора дополнительных действий</Text>
+              </Body>
+            </CardItem>
+            <CardItem style={[main.fD_R,{justifyContent:'flex-end'}]}>
+              <Button transparent onPress={this._toggleModalInfo}>
+                <Text>Ясно</Text>
+              </Button>
             </CardItem>
           </Card>
         </Modal>
@@ -398,7 +452,8 @@ const styles = StyleSheet.create({
     marginLeft: (screenWidth - (screenWidth / 1.2)) / 2
   },
   modalButt: {
-    fontSize:15
+    fontSize:15,
+    ...main.clIvan
   },
   modalButtDis: {
     fontSize:15,
@@ -414,7 +469,19 @@ const styles = StyleSheet.create({
     marginBottom:35, 
     marginTop:10, 
     opacity:0.8
-  }
+  },
+  modalMenu2: {
+    ...main.bgWhite,
+    marginTop: screenHeight / 7,
+    ...main.ml_10,
+    ...main.mr_10
+  },
+  chooseButton: {
+    ...main.ml_10, 
+    marginRight: 10,
+    paddingHorizontal: 9,
+    marginVertical: 7
+  },
 })
 
 const mapStateToProps = state => {

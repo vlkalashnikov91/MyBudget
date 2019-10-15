@@ -15,6 +15,8 @@ class Registration extends Component {
   constructor(props) {
     super(props)
 
+    this.inputs = {}
+
     this.state = {
       Login: '',
       Email: '',
@@ -94,7 +96,7 @@ class Registration extends Component {
     if(validateEmail(st.Email) === false)
     {
       this.setState({ errEmail: true })
-      ToastTr.Danger('Email is Not Correct')
+      ToastTr.Danger('Некорректный email')
       return false
     }
 
@@ -115,13 +117,13 @@ class Registration extends Component {
 
   render() {
       const { user, navigation } = this.props
-      const { errLogin, errEmail, errPass, errRePass, isHiddenPass, iconPass, isHiddenRePass, iconRePass } = this.state
+      const { Login, Email, Password, RePassword, errLogin, errEmail, errPass, errRePass, isHiddenPass, iconPass, isHiddenRePass, iconRePass } = this.state
 
       return (
         <Container>
           <Header>
             <Left>
-              <Button transparent onPress={_=> navigation.goBack()}>
+              <Button transparent onPress={_=> navigation.navigate('Login')}>
                 <Icon name='arrow-back' />
               </Button>
             </Left>
@@ -129,28 +131,64 @@ class Registration extends Component {
               <Title>Регистрация</Title>
             </Body>
           </Header>
+          
           <LinearGradient colors={[ivanColor, ivanColor, '#30cfd0']} style={main.fl_1} >
-            <Content padder>
+            <Content padder enableOnAndroid>
               <Form style={styles.form}>
                 <Item floatingLabel error={errLogin} style={main.mt_0} >
                   <Label style={[main.clWhite, main.fontFam]}>Логин <Text style={main.clOrange}>*</Text></Label>
-                  <Input onChangeText={this._changeLogin} maxLength={20} style={styles.input}/>
+                  <Input
+                    onChangeText={this._changeLogin} 
+                    maxLength={20}
+                    style={styles.input}
+                    value={Login}
+                    returnKeyType={'next'} 
+                    autoFocus={true}
+                    blurOnSubmit={false} 
+                    getRef={input => { this.inputs[1] = input }}
+                    onSubmitEditing={_=> this.inputs[2]._root.focus()} />
                 </Item>
 
                 <Item floatingLabel error={errEmail}>
                   <Label style={[main.clWhite, main.fontFam]}>Email <Text style={main.clOrange}>*</Text></Label>
-                  <Input onChangeText={this._changeEmail} style={styles.input}/>
+                  <Input
+                    onChangeText={this._changeEmail}
+                    style={styles.input}
+                    value={Email}
+                    returnKeyType={'next'} 
+                    blurOnSubmit={false} 
+                    getRef={input => { this.inputs[2] = input }}
+                    onSubmitEditing={_=> this.inputs[3]._root.focus()} 
+                  />
                 </Item>
 
                 <Item floatingLabel error={errPass}>
                   <Label style={[main.clWhite, main.fontFam]}>Пароль <Text style={main.clOrange}>*</Text></Label>
-                  <Input secureTextEntry={isHiddenPass} onChangeText={this._changePass} maxLength={20} style={styles.input}/>
+                  <Input
+                    secureTextEntry={isHiddenPass}
+                    onChangeText={this._changePass}
+                    maxLength={20}
+                    style={styles.input}
+                    value={Password}
+                    returnKeyType={'next'}
+                    blurOnSubmit={false}
+                    getRef={input => { this.inputs[3] = input }}
+                    onSubmitEditing={_=> this.inputs[4]._root.focus()} 
+                  />
                   <Icon name={iconPass} onPress={_=> this._toggleIcon('PASS')} style={main.clWhite}/>
                 </Item>
 
                 <Item floatingLabel error={errRePass}>
                   <Label style={[main.clWhite, main.fontFam]}>Подтверждение пароля <Text style={main.clOrange}>*</Text></Label>
-                  <Input secureTextEntry={isHiddenRePass} onChangeText={this._changeRePass} maxLength={20} style={styles.input} onSubmitEditing={this._registration}/>
+                  <Input
+                    secureTextEntry={isHiddenRePass}
+                    onChangeText={this._changeRePass}
+                    maxLength={20}
+                    style={styles.input}
+                    value={RePassword}
+                    getRef={input => { this.inputs[4] = input }}
+                    onSubmitEditing={this._registration}
+                  />
                   <Icon name={iconRePass} onPress={_=> this._toggleIcon('REPASS')} style={main.clWhite}/>
                 </Item>
 

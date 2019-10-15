@@ -5,30 +5,31 @@ import { URL, NO_CONN_MESS } from '../constants/Common'
 import { Storage } from '../utils/deviceServices'
 
 
+
+
 export const CategoriesActions = {
     Get: (UserId) => {
-        return (dispatch) => {
+        return async (dispatch) => {
     
             dispatch({ type: START_LOADING_CATS })
 
-            NetInfo.isConnected.fetch().then(isConnected => {
-                if (isConnected) {
-
-                    axios.get(URL + `categories?userid=${UserId}`)
-                    .then(res => {
-                        StoreActions.Save(res.data)
-                        dispatch(ActionFetchCategories(res.data))
-                    })
-                    .catch(error => {
-                        if (error.response) {
-                            console.log('Error', error.message)
-                            dispatch(ActionReject(error.message))
-                        }
-                    })
-                } else {
-                    dispatch(ActionReject(NO_CONN_MESS))
+            const isConnected = await NetInfo.isConnected.fetch()
+            if (isConnected) {
+                try {
+                    const res = await axios.get(URL + `categories?userid=${UserId}`)
+                    StoreActions.Save(res.data)
+                    dispatch(ActionFetchCategories(res.data))
                 }
-            })
+                catch(error) {
+                    if (error.response) {
+                        console.log('Error', error.message)
+                        dispatch(ActionReject(error.message))
+                    }
+                }
+            } else {
+                dispatch(ActionReject(NO_CONN_MESS))
+            }
+            return 'done'
         }
     },
     Add: (UserId, Name, IsSpendingCategory) => {
@@ -105,7 +106,6 @@ export const CategoriesActions = {
         }
     },
 }
-
 
 
 /*+++++++++++++++ Действие при ошибки в запросе ++++++++++++++++ */

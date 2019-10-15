@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import { connect } from 'react-redux'
 import { Alert } from 'react-native'
 import { Container, Body, Content, Button, Text, Icon, Card, CardItem, Item, Label, Picker, Header, Title } from 'native-base'
+import { AntDesign } from '@expo/vector-icons'
 
 import { UserAuth } from '../../actions/UserActions'
 import { styles as main } from '../../Style'
@@ -68,7 +69,7 @@ render() {
                 <Card transparent style={main.aI_C}>
                     <CardItem>
                         <Body style={[main.fD_R, main.aI_C]}>
-                            <Label style={main.width_65prc}>Валюта по умолчанию</Label>
+                            <Label style={[main.width_65prc, main.fontFam, main.clGrey]}>Валюта по умолчанию</Label>
                             <Item picker style={main.width_30prc}>
                                 <Picker mode="dropdown"
                                     iosIcon={<Icon name="arrow-down" />}
@@ -89,8 +90,8 @@ render() {
                     </CardItem>
                     <CardItem>
                         <Body style={[main.fD_R, main.aI_C]}>
-                            <Label style={main.width_65prc}>
-                                Перенос остатка  <Icon name='information-circle' style={main.clGrey} button onPress={this.setModalVisible} />
+                            <Label style={[main.width_65prc, main.fontFam, main.clGrey]}>
+                                Перенос остатка <AntDesign name="questioncircle" button onPress={this.setModalVisible} style={[main.ml_20, main.clBlue]} size={25} />
                             </Label>
                             <Item picker style={main.width_30prc}>
                                 <Picker mode="dropdown"

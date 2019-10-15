@@ -1,4 +1,4 @@
-import { USER_LOGIN, USER_LOGOUT, CHANGE_USER_SETTINGS, USER_ERR, USER_LOADING, USER_REGISTRATION, CHANGE_USER_PASS } from '../constants/User'
+import { USER_LOGIN, USER_LOGOUT, CHANGE_USER_SETTINGS, USER_ERR, USER_LOADING, USER_REGISTRATION, CHANGE_USER_PASS, FORGOT_PASS } from '../constants/User'
 
 const initialeState = {
     isLoad: false,
@@ -61,6 +61,12 @@ export default (state = initialeState, action) => {
             return {...state,
                 isLoad: false,
                 Error: ''
+            }
+        case FORGOT_PASS:
+            return {...state,
+                isLoad: false,
+                Error: '',
+                UserId: action.payload.UserId
             }
         default:
             return state

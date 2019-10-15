@@ -10,8 +10,6 @@ import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { Storage } from '../../utils/deviceServices'
 
-import { CategoriesActions } from '../../actions/CategoriesActions'
-
 import { styles as main, screenHeight, screenWidth, ivanColor } from '../../Style'
 
 
@@ -42,11 +40,10 @@ class Login extends Component {
     this.setState({ login: username,  password: password, saveMe: (username.length == 0) ? false : true})
   }
 
-  async componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if(nextProps.user.Error.length > 0) {
       ToastTr.Danger(nextProps.user.Error)
     } else if (nextProps.user.UserId.length > 0) {
-      this.props.getcategories(nextProps.user.UserId)
       this.props.navigation.navigate('Home')
     }
   }
@@ -116,12 +113,27 @@ class Login extends Component {
                 <Col style={[main.pdR_50, main.pdL_50]}>
                   <Form style={{padding:10}}>
                     <Item error={errlogin}>
-                      <Input placeholder='Логин' value={login} maxLength={20} placeholderTextColor='white' style={main.clWhite} onChangeText={this._changeLogin}/>
+                      <Input placeholder='Логин' 
+                        value={login}
+                        maxLength={20} 
+                        placeholderTextColor='white' 
+                        style={main.clWhite} 
+                        onChangeText={this._changeLogin}
+                        returnKeyType={'next'}
+                        blurOnSubmit={false}
+                        onSubmitEditing={_=>this.inputPass._root.focus()}
+                      />
                     </Item>
                     <Item error={errpassword}>
-                      <Input placeholder='Пароль' value={password} maxLength={20} placeholderTextColor='white' 
+                      <Input placeholder='Пароль'
+                        value={password} 
+                        maxLength={20} 
+                        placeholderTextColor='white' 
                         style={main.clWhite} 
-                        secureTextEntry={isHiddenPass} onChangeText={this._changePassword} onSubmitEditing={this._login}
+                        secureTextEntry={isHiddenPass}
+                        onChangeText={this._changePassword}
+                        onSubmitEditing={this._login}
+                        ref={input => { this.inputPass = input }}
                       />
                       <Icon name={icon} onPress={_=> this._togglePass()} style={main.clWhite}/>
                     </Item>
@@ -169,9 +181,6 @@ const mapDispatchToProps = dispatch => {
   return {
     login: (username, pass, saveMe) => {
       dispatch(UserAuth.Login(username, pass, saveMe))
-    },
-    getcategories: (UserId) => {
-      dispatch(CategoriesActions.Get(UserId))
     }
   }
 }

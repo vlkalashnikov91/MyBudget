@@ -6,10 +6,10 @@ import { MaterialIcons } from '@expo/vector-icons'
 
 export default class SwipeableRow extends Component {
     renderRightActions = (progress, dragX) => (
-        <RectButton style={styles.rightAction} onPress={this.close}>
-            <Text style={styles.actionText}>Удалить</Text>
-            <MaterialIcons name="delete-forever" size={25} color="#fff" style={styles.actionIcon} />
-        </RectButton>
+      <RectButton style={styles.rightAction} onPress={this.close}>
+        <Text style={styles.actionText}>Удалить</Text>
+        <MaterialIcons name="delete-forever" size={25} color="#fff" style={styles.actionIcon} />
+      </RectButton>
     )
 
     updateRef = ref => {

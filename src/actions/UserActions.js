@@ -1,7 +1,7 @@
 import { NetInfo } from 'react-native'
 import axios from 'react-native-axios'
-import { USER_LOGIN, USER_LOGOUT, CHANGE_USER_SETTINGS, USER_ERR, USER_LOADING, USER_REGISTRATION, CHANGE_USER_PASS } from '../constants/User'
-import { URL, NO_CONN_MESS, UN_AUTH_MESS } from '../constants/Common'
+import { USER_LOGIN, USER_LOGOUT, CHANGE_USER_SETTINGS, USER_ERR, USER_LOADING, USER_REGISTRATION, CHANGE_USER_PASS, FORGOT_PASS } from '../constants/User'
+import { URL, NO_CONN_MESS, UN_AUTH_MESS, USER_NOT_FND } from '../constants/Common'
 import { Storage } from '../utils/deviceServices'
 
 
@@ -14,17 +14,15 @@ export const UserAuth = {
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
 
-                    axios.post(URL + '/newLogin', {
+                    axios.post(URL + '/login', {
                         "usr": username,
                         "pass": pass
                     })
                     .then(res => {
                         SaveMe(username, pass, saveMe)
 
-                        let { Status, Categories, Transactions, UserSettings } = res.data
-
-                        if (Status === 200) {
-                            dispatch(ActionLogin(UserSettings))
+                        if (res.data.Status === 200) {
+                            dispatch(ActionLogin(res.data))
                         } else {
                             dispatch(ActionReject(UN_AUTH_MESS))
                         }
@@ -72,6 +70,13 @@ export const UserAuth = {
                         dispatch(ActionReg(res.data, pass))
                     })
                     .catch(error => {
+                        if (error.response) {
+                            if(error.response.data.Message) {
+                                console.log("error", error.response.data.Message)
+                                dispatch(ActionReject(error.response.data.Message))
+                                return
+                            }
+                        }
                         console.log("error", error)
                         dispatch(ActionReject(error.message))
                     })
@@ -130,9 +135,35 @@ export const UserAuth = {
                 }
             })
         }
-    }
-}
+    },
+    forgotPassword: (login, email) => {
+        return (dispatch) => {
+            dispatch({ type: USER_LOADING })
 
+            NetInfo.isConnected.fetch().then(isConnected => {
+                if (isConnected) {
+                    axios.post(URL + `/forgotPassword`, {
+                        "Email":email,
+                        "Username": login
+                    })
+                    .then(res => {
+                        if (res.status === 200) {
+                            dispatch(ActionForgotPass(email, login))
+                        } else {
+                            dispatch(ActionReject(USER_NOT_FND))
+                        }
+                    }).catch(error => {
+                        console.log("error", error)
+                        dispatch(ActionReject(error.message))
+                    })
+                } else {
+                    dispatch(ActionReject(NO_CONN_MESS))
+                }
+            })
+        }
+    }
+
+}
 
 
 const SaveMe = async (username, password, isSave) => {
@@ -216,5 +247,16 @@ const ActionNewPass = (UserId, oldPass, newPass) => {
     return {
         type: CHANGE_USER_PASS,
         payload: {}
+    }
+}
+
+/*+++++++++++++++ Действия при восстановлении пароля ++++++++++++++++ */
+const ActionForgotPass = (email, UserId) => {
+    return {
+        type: FORGOT_PASS,
+        payload: {
+            email,
+            UserId
+        }
     }
 }

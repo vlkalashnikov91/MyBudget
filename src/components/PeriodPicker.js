@@ -5,6 +5,13 @@ import moment from 'moment'
 
 import { styles as main } from '../Style'
 
+
+const quickArr = [
+  { desc:"Текущая неделя", range:'week' },
+  { desc:"Текущий месяц", range:'month' },
+  { desc:"Текущий год", range:'year' }
+]
+
 export default class PeriodPicker extends Component {
     constructor(props) {
         super(props);
@@ -19,6 +26,19 @@ export default class PeriodPicker extends Component {
             visible: visible || false
         }
     }
+
+    quickChangeRange(range) {
+      var start = moment()
+      var end = moment()
+
+      if(isNaN(range)) {
+          start = moment().startOf(range)
+      } else {
+         start = start.add(-range, 'm');
+      }
+
+      //this.setState({dateFrom:start, dateTo:end})
+  }
 
     show = async ({dateTo, dateFrom}) => {
         dateFrom = dateFrom || new Date()
@@ -99,6 +119,15 @@ export default class PeriodPicker extends Component {
                         <Text>moment(dateTo).format('DD MMM YYYY')</Text>
                       </DatePicker>
 
+                    </Body>
+                  </CardItem>
+                  <CardItem>
+                    <Body>
+                      {quickArr.map((item, index)=> {
+                        return (
+                          <Button block transparent key={'hot-'+index} onPress={_=>this.quickChangeRange(item.range)}><Text>{item.desc}</Text></Button>
+                        )
+                      })}
                     </Body>
                   </CardItem>
                   <CardItem>

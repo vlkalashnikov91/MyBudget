@@ -3,8 +3,9 @@ import { StyleSheet } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Grid, Form, Header, Left, Title } from 'native-base'
+import { FontAwesome } from '@expo/vector-icons'
 
-import { styles as main, ivanColor } from '../../Style'
+import { styles as main, ivanColor, ivanGray } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { PaymentActions } from '../../actions/PaymentActions'
@@ -31,6 +32,7 @@ class AddPayment extends Component {
     this._checkParams = this._checkParams.bind(this)
     this._addPayment = this._addPayment.bind(this)
     this._getCategoryList = this._getCategoryList.bind(this)
+    this._gotoCategories = this._gotoCategories.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -103,6 +105,10 @@ class AddPayment extends Component {
     }
   }
 
+  _gotoCategories() {
+    this.props.navigation.navigate('Category')
+  }
+
   render() {
     const { user, navigation } = this.props
     const { Amount, errAmount, CategoryId, Name, TransDate, Loading } = this.state
@@ -132,7 +138,7 @@ class AddPayment extends Component {
             </Grid>
 
             <Grid style={styles.catGrid}>
-              <Item picker>
+              <Item picker style={main.width_90prc}>
                 <Picker mode="dropdown"
                   iosIcon={<Icon name="arrow-down" />}
                   placeholderStyle={{ color: "#bfc6ea" }}
@@ -141,10 +147,11 @@ class AddPayment extends Component {
                   onValueChange={this._changeCat}
                 >
                 {
-                  this._getCategoryList().map(value => <Picker.Item label={value.Name} value={value.Id} key={value.Id} /> )
+                  this._getCategoryList().map(value => <Picker.Item color={ivanColor} label={value.Name} value={value.Id} key={value.Id} /> )
                 }
                 </Picker>
               </Item>
+              <FontAwesome name="pencil" size={20} style={[{color:ivanGray}, main.ml_15]} button onPress={this._gotoCategories} />
             </Grid>
 
             <Item floatingLabel style={main.mb_20}>

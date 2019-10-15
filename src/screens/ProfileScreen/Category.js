@@ -81,7 +81,7 @@ class Category extends Component {
               onLongPress={_=> this._deleteCategory(item)}
             >
               <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
-              {(item.CreatedBy !== null) && <Right><FontAwesome name="pencil" size={20} style={{color:ivanGray}}/*style={main.clGrey}*//></Right>}
+              {(item.CreatedBy !== null) && <Right><FontAwesome name="pencil" size={20} style={{color:ivanGray}}/></Right>}
             </ListItem>
           )
         }}

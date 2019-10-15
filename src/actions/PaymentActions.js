@@ -6,34 +6,30 @@ import { URL, NO_CONN_MESS } from '../constants/Common'
 
 export const PaymentActions = {
     Get: (UserId, year, month) => {
-        return (dispatch) => {
-    
+        return async (dispatch) => {
             dispatch({ type: START_LOADING_PAY })
 
-            NetInfo.isConnected.fetch().then(isConnected => {
-                if (isConnected) {
-    
-                    axios.get(URL + `mobtransactions?id=${UserId}&year=${year}&month=${month}`)
-                    .then(res => {
-                        dispatch(ActionFetchPayments(res.data))
-                    })
-                    .catch(function (error) {
-                        if (error.response) {
-                            /*если 404 - значит данных нет за этот месяц */
-                            if(error.response.status === 404) {
-                                dispatch(ActionFetchPayments([]))
-                            } else {
-                                dispatch(ActionReject(error.message))
-                            }
-                        } else {
-                            console.log('Error', error.message)
-                            dispatch(ActionReject(error.message))
-                        }
-                    })
-                } else {
-                    dispatch(ActionReject(NO_CONN_MESS))
+            const isConnected = await NetInfo.isConnected.fetch()
+            if (isConnected) {
+                try {
+                    const res = await axios.get(URL + `mobtransactions?id=${UserId}&year=${year}&month=${month}`)
+                    dispatch(ActionFetchPayments(res.data))
                 }
-            })
+                catch(error) {
+                    if (error.response) {
+                        /*если 404 - значит данных нет за этот месяц */
+                        if(error.response.status === 404) {
+                            dispatch(ActionFetchPayments([]))
+                            return 'done'
+                        }
+                    }
+                    console.log('Error', error.message)
+                    dispatch(ActionReject(error.message))
+                }
+            } else {
+                dispatch(ActionReject(NO_CONN_MESS))
+            }
+            return 'done'
         }
     },
     Delete: (id) => {

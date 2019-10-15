@@ -23,7 +23,7 @@ export default (state = initialeState, action) => {
             return {...state,
                 isLoad: false,
                 Error: '',
-                Payments: Array.isArray(action.payload.Payments) ? action.payload.Payments.sort((a, b) => a.TransDate < b.TransDate) : [],
+                Payments: Array.isArray(action.payload.Payments) ? action.payload.Payments : [],
             }
         case REMOVE_PAYMENT:
             return {...state,
@@ -46,7 +46,7 @@ export default (state = initialeState, action) => {
                         IsSpending: action.payload.IsSpending,
                         IsPlaned: action.payload.IsPlaned
                     }
-                ].sort((a,b) => a.TransDate < b.TransDate)
+                ]
             }
         case EDIT_PAYMENT: 
             var pays = state.Payments.filter(item => item.Id != action.payload.Id)
@@ -62,7 +62,7 @@ export default (state = initialeState, action) => {
             return {...state,
                 isLoad: false,
                 Error: '',
-                Payments: pays.sort((a,b) => a.TransDate < b.TransDate)
+                Payments: pays
             }
         default:
             return state

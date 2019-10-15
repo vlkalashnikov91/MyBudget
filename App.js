@@ -9,6 +9,7 @@ import reducers from './src/reducers'
 import thunk from 'redux-thunk'
 import getTheme from './native-base-theme/components'
 import platform from './native-base-theme/variables/platform'
+import { MenuProvider } from 'react-native-popup-menu'
 
 const store = createStore(reducers, applyMiddleware(thunk))
 
@@ -41,7 +42,9 @@ export default class App extends Component {
       <StyleProvider style={getTheme(platform)}>
         <Provider store={store}>
           <Root>
-            <AppContainer />
+            <MenuProvider>
+              <AppContainer />
+            </MenuProvider>
           </Root>
         </Provider>
       </StyleProvider>

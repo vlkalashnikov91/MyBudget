@@ -24,13 +24,11 @@ export const TargetActions = {
                             if(error.response.status === 404) {
                                 StoreActions.Save([])
                                 dispatch(ActionFetchList([]))
-                            } else {
-                                dispatch(ActionReject(error.message))
+                                return
                             }
-                        } else {
-                            console.log('Error', error.message)
-                            dispatch(ActionReject(error.message))
                         }
+                        console.log('Error', error.message)
+                        dispatch(ActionReject(error.message))
                     })
                 } else {
                     dispatch(ActionReject(NO_CONN_MESS))

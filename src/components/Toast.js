@@ -4,7 +4,7 @@ export const ToastTr = {
     Success: (message) => {
         Toast.show({
             text: message,
-            duration: 2500,
+            duration: 3000,
             buttonText: "OK",
             position: "bottom",
             type: 'success'
@@ -13,7 +13,7 @@ export const ToastTr = {
     Danger: (message) => {
         Toast.show({
             text: message,
-            duration: 2500,
+            duration: 3000,
             buttonText: "OK",
             position: "bottom",
             type: 'danger'
@@ -22,7 +22,7 @@ export const ToastTr = {
     Warning: (message) => {
         Toast.show({
             text: message,
-            duration: 2500,
+            duration: 3000,
             buttonText: "OK",
             position: "bottom",
             type: "warning"
@@ -31,7 +31,7 @@ export const ToastTr = {
     Default: (message) => {
         Toast.show({
             text: message,
-            duration:2500,
+            duration:3000,
             buttonText: "OK",
             position: "bottom"
         })

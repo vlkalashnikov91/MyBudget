@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import { Alert } from 'react-native'
 import { Container, Body, Content, Item, Button, Text, Icon, Card, CardItem, Picker, Label, Right, Header, Title } from 'native-base'
 import { connect } from 'react-redux'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, AntDesign } from '@expo/vector-icons'
 
 import { UserAuth } from '../../actions/UserActions'
-import { styles as main } from '../../Style'
+import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 
 class Profile extends Component {
@@ -124,17 +124,17 @@ class Profile extends Component {
                       selectedValue={DefCurrency}
                       onValueChange={this._changeCurrency}
                     >
-                      <Picker.Item label="₸" value="₸" />
-                      <Picker.Item label="$" value="$" />
-                      <Picker.Item label="€" value="€" />
-                      <Picker.Item label="£" value="£" />
-                      <Picker.Item label="₽" value="₽" />
+                      <Picker.Item color={ivanColor} label="₸" value="₸" />
+                      <Picker.Item color={ivanColor} label="$" value="$" />
+                      <Picker.Item color={ivanColor} label="€" value="€" />
+                      <Picker.Item color={ivanColor} label="£" value="£" />
+                      <Picker.Item color={ivanColor} label="₽" value="₽" />
                     </Picker>
                   </Item>
 
                   <Item>
                     <Label style={[main.fontFam, main.clGrey]}>Перенос остатка</Label>
-                    <Icon name='ios-information-circle' style={{color:'#609AD3'}} button onPress={this.setModalVisible} />
+                    <AntDesign name="questioncircle" style={main.clBlue} size={20} button onPress={this.setModalVisible} />
                     <Picker mode="dropdown"
                       iosIcon={<Icon name="arrow-down" />}
                       style={{ width: undefined }}
@@ -143,8 +143,8 @@ class Profile extends Component {
                       selectedValue={CarryOverRests}
                       onValueChange={this._balanceTransfer}
                     >
-                      <Picker.Item label="Да" value={true} />
-                      <Picker.Item label="Нет" value={false} />
+                      <Picker.Item color={ivanColor} label="Да" value={true} />
+                      <Picker.Item color={ivanColor} label="Нет" value={false} />
                     </Picker>
                   </Item>
                 </Body>

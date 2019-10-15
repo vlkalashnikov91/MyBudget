@@ -2,14 +2,16 @@ import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import { fromRight } from 'react-navigation-transitions'
 
-import Login from './Login'
+import ForgotPass from './ForgotPass'
+import ForgotPassInfo from './ForgotPassInfo'
 
-export const LoginNavigator = createStackNavigator(
+export const ForgotPassNavigator = createStackNavigator(
   {
-    Login: Login,
+    ForgotPass: ForgotPass,
+    ForgotPassInfo: ForgotPassInfo,
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'ForgotPass',
     transitionConfig: () => fromRight(),
     defaultNavigationOptions: {
       header: null

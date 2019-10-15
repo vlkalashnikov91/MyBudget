@@ -3,6 +3,7 @@ import { Alert, StyleSheet } from 'react-native'
 import moment from 'moment'
 import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, H3, DatePicker, Grid, Row, Form, ListItem, CheckBox, Left, Header, Title } from 'native-base'
+import { AntDesign } from '@expo/vector-icons'
 
 import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
@@ -166,7 +167,7 @@ class EditItem extends Component {
             </Body>
           </Header>
           <Content padder>
-            <Form style={{alignSelf: 'stretch', paddingHorizontal:20}}>
+            <Form style={styles.formStyle}>
 
               <Item stackedLabel error={errGoalName}>
                 <Label style={main.fontFam}>Наименование <Text style={main.clOrange}>*</Text></Label>
@@ -216,7 +217,8 @@ class EditItem extends Component {
                     <Text>moment(TransDate).add(1, 'day').format('DD.MM.YYYY')</Text>
                   </DatePicker>
 
-                  <Icon name='ios-information-circle' style={[{color:'#609AD3'}, main.ml_20]} button onPress={this._setModalVisible} />
+                  <AntDesign name="questioncircle" button onPress={this._setModalVisible} style={[main.ml_15, main.clBlue]} size={20} />
+
                 </Row>
               </Grid>
               }
@@ -244,6 +246,10 @@ class EditItem extends Component {
 }
 
 const styles = StyleSheet.create({
+  formStyle: {
+    alignSelf: 'stretch', 
+    paddingHorizontal:20
+  },
   dateTextStyle: {
     color:'#395971',
     ...main.txtAl_c,

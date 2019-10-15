@@ -2,14 +2,16 @@ import React from 'react'
 import { createStackNavigator } from 'react-navigation'
 import { fromRight } from 'react-navigation-transitions'
 
-import Login from './Login'
+import Registration from './Registration'
+import FirstSettings from './FirstSettings'
 
-export const LoginNavigator = createStackNavigator(
+export const RegNavigator = createStackNavigator(
   {
-    Login: Login,
+    Registration: Registration,
+    FirstSettings: FirstSettings,
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Registration',
     transitionConfig: () => fromRight(),
     defaultNavigationOptions: {
       header: null

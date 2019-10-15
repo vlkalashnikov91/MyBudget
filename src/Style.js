@@ -56,6 +56,9 @@ export const styles = StyleSheet.create({
   clOrange:{
     color:'orange'
   },
+  clBlue: {
+    color:'#609AD3'
+  },
   jC_start: {
     justifyContent: 'flex-start'
   },
@@ -70,6 +73,9 @@ export const styles = StyleSheet.create({
   },
   aI_C: {
     alignItems: 'center'
+  },
+  aI_E: {
+    alignItems:'flex-end'
   },
   mt_0: {
     marginTop:0

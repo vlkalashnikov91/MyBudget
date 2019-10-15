@@ -145,13 +145,13 @@ class Graphics extends Component {
             <Body>
               <Title style={main.ml_10}>Расходы по категориям</Title>
             </Body>
-            <Right style={{flex:0.2}}>
+            <Right style={{flex:0.3}}>
               <Icon android='md-calendar' ios='ios-calendar' style={[main.clWhite, main.mr_15]} button onPress={this._showModalCalendar} />
             </Right>
           </Header>
           <Content padder>
             <Segment style={[main.bgWhite, {marginBottom:5}]}>
-              <Text button bordered style={styles.monthHeader}>
+              <Text button bordered style={styles.monthHeader} onPress={this._showModalCalendar}>
                 <Text>{moment(dateFrom).format("DD MMM YYYY")} - {moment(dateTo).format("DD MMM YYYY")}</Text>
               </Text>
             </Segment>
