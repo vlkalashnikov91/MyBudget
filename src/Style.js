@@ -44,6 +44,9 @@ export const styles = StyleSheet.create({
   clIvanG: {
     color: ivanGreen
   },
+  clIvanGr: {
+    color: ivanGray
+  },
   clWhite: {
     color:'white'
   },

@@ -113,7 +113,7 @@ class Cards extends Component {
   _setModalInfo = (targets) => {
     /*Исключаем те по которым уже направляли уведомления */
     var arr = targets.filter(item=>item!==undefined).filter(t=>t.IsActive===true).filter(k=>!this.state.finishedTargets.includes(k.Id))
-    var str = `По ${(arr.length>1)?'целям':'целе'}`
+    var str = `По ${(arr.length>1)?'целям':'цели'}`
 
     arr.forEach((item, index)=> {
       str = str +' "'+ item.GoalName + '"'
@@ -364,12 +364,9 @@ class Cards extends Component {
               </CardItem>
               <CardItem>
                 <Body>
-                {(this.state.Loading)
-                ? <SkypeIndicator color={ivanColor} />
-                : <Button block style={main.bgGreen} onPress={this._increaseItem}>
-                    <Text>Пополнить</Text>
+                  <Button block success={(!Loading)} transparent={(Loading)} onPress={(Loading)?null:this._increaseItem}>
+                    {(Loading) ? <SkypeIndicator color={ivanColor}/> : <Text>Пополнить</Text>}
                   </Button>
-                }
                 </Body>
               </CardItem>
             </Card>
@@ -408,18 +405,23 @@ class Cards extends Component {
               <Text style={main.fontFamBold}>Информация</Text>
             </CardItem>
             <CardItem>
-              <Body>
+              <Body style={main.aI_C}>
                 <View style={[main.fD_R, main.aI_C]}>
-                  <Button transparent><FontAwesome name='exclamation-circle' size={25} style={styles.chooseButton} /></Button> 
+                  <Button transparent>
+                    <FontAwesome name='exclamation-circle' size={25} style={styles.chooseButton} />
+                  </Button> 
                   <Text>У цели подходит срок</Text>
                 </View>
                 <View style={[main.fD_R, main.aI_C]}>
-                <Button transparent><FontAwesome name='fire' size={25} style={[styles.chooseButton,{color:'orange'}]} /></Button> 
+                  <Button transparent>
+                    <FontAwesome name='fire' size={25} style={[styles.chooseButton,{color:'orange'}]} />
+                  </Button>
                   <Text>Просроченная цель</Text>
                 </View>
-                <Text>Долго удерживайте цель для выбора дополнительных действий</Text>
+                <Text style={[main.mt_20, main.txtAl_c]}>Долго удерживайте цель для выбора дополнительных действий</Text>
               </Body>
             </CardItem>
+
             <CardItem style={[main.fD_R,{justifyContent:'flex-end'}]}>
               <Button transparent onPress={this._toggleModalInfo}>
                 <Text>Ясно</Text>
@@ -429,7 +431,7 @@ class Cards extends Component {
         </Modal>
 
         <Fab active={fabState} direction="up" style={main.bgGreen} position="bottomRight" onPress={_=> this._toggleAdd()} >
-          <Icon name="add" />
+          <Icon name="add"/>
         </Fab>
       </Container>
     )
@@ -479,8 +481,6 @@ const styles = StyleSheet.create({
   chooseButton: {
     ...main.ml_10, 
     marginRight: 10,
-    paddingHorizontal: 9,
-    marginVertical: 7
   },
 })
 

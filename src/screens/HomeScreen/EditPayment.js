@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Grid, Form, Title, Header, Left } from 'native-base'
 import { AntDesign } from '@expo/vector-icons'
 
-import { styles as main, ivanColor, ivanGray } from '../../Style'
+import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { PaymentActions } from '../../actions/PaymentActions'
@@ -46,7 +46,7 @@ class EditPayment extends Component {
           CategoryId: item.CategoryId, 
           Amount: item.Amount.toString(), 
           Name: item.Name, 
-          TransDate: new Date(item.TransDate), 
+          TransDate: item.TransDate, 
           IsSpending: item.IsSpending,
           IsPlaned: item.IsPlaned
          })
@@ -98,7 +98,11 @@ class EditPayment extends Component {
   }
 
   _changeDate = value => {
-    this.setState({ TransDate: value })
+    let day = value.getDate()
+    let month = value.getMonth()+1
+    let year = value.getFullYear()
+    let data = moment(year+'-'+month+'-'+day).format('YYYY-MM-DDTHH:mm:ss')
+    this.setState({ TransDate: data })
   }
 
   _checkParams() {
@@ -117,7 +121,6 @@ class EditPayment extends Component {
 
     if (this._checkParams()) {
       this.setState({ Loading: true })
-
       this.props.editpayment(st.Id, st.CategoryId, Number(st.Amount), st.Name, st.TransDate, st.IsSpending, st.IsPlaned)
     }
   }
@@ -136,6 +139,8 @@ class EditPayment extends Component {
   render() {
     const { user, navigation } = this.props
     const { Amount, errAmount, CategoryId, Name, TransDate, Loading } = this.state
+
+    const dtFrmt = moment(TransDate, 'YYYY-MM-DDTHH:mm:ss').format('DD.MM.YYYY')
 
     return (
       <Container>
@@ -161,10 +166,11 @@ class EditPayment extends Component {
             </Grid>
 
             <Grid style={styles.catGrid}>
-              <Item picker style={main.width_90prc}>
+              <Item picker style={{flex:0.9}}>
                 <Picker mode="dropdown"
-                  iosIcon={<Icon name="arrow-down" />}
+                  iosIcon={<Icon name="arrow-down" style={main.clGrey}/>}
                   iosHeader="Категория"
+                  headerBackButtonTextStyle={main.clWhite}
                   placeholderStyle={{ color: "#bfc6ea" }}
                   placeholderIconColor="#007aff"
                   selectedValue={CategoryId}
@@ -176,7 +182,9 @@ class EditPayment extends Component {
                 </Picker>
               </Item>
 
-              <AntDesign name="questioncircle" button size={20} style={[main.clBlue, main.ml_15]} onPress={this._infoCategories} />
+              <Button icon transparent hitSlop={{top:10, left:10, bottom:10, right:10}} onPress={this._infoCategories} >
+                <AntDesign name="questioncircle" size={20} style={main.clBlue}/>
+              </Button>
 
             </Grid>
 
@@ -195,13 +203,13 @@ class EditPayment extends Component {
               modalTransparent={false}
               animationType={"fade"}
               androidMode="calendar"
-              placeHolderText={(TransDate) ? moment(TransDate).add(1, 'day').format('DD.MM.YYYY') : "Выберите дату"}
+              placeHolderText={(TransDate) ? dtFrmt : "Выберите дату"}
               placeHolderTextStyle={styles.dateTextStyle}
               textStyle={styles.dateTextStyle}
               onDateChange={this._changeDate}
               disabled={false}
             >
-              <Text>moment(TransDate).add(1, 'day').format('DD.MM.YYYY')</Text>
+              <Text>dtFrmt</Text>
             </DatePicker>
             
           </Form>
@@ -209,7 +217,7 @@ class EditPayment extends Component {
           <Card transparent>
             <CardItem>
               <Body>
-                <Button style={main.bgGreen} block onPress={this._editPayment}>
+                <Button success block onPress={this._editPayment}>
                 {(Loading)
                   ? <Text>Загрузка...</Text>
                   : <Text>Сохранить</Text>

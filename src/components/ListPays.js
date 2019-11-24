@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import { Button, Text, Icon, Spinner, View } from 'native-base'
 import { FlatList, RectButton } from 'react-native-gesture-handler'
+import { Feather } from '@expo/vector-icons'
 
 import { PaymentActions } from '../actions/PaymentActions'
 import { styles as main } from '../Style'
@@ -60,51 +61,53 @@ class ListPays extends Component {
         )
     }
 
+    renderItem = ({ item }) => {
+      let { user } = this.props
+      let { planedPay } = this.state
+      let CatDesc = this._definePayCat(item)
+      let Name = ((item.Name==null) || (item.Name.length === 0)) ? '---' : item.Name
+      return (
+        <SwipeableRow rightFunc={this._deletePay} itemId={item.Id} >
+          <View style={styles.row}>
+            {(planedPay === item.Id)
+              ? <Button rounded light style={styles.chooseButton}><Spinner size="small"/></Button>
+              : <Button rounded bordered
+                  hitSlop={styles.hitSlop}
+                  success={(!item.IsPlaned)} 
+                  light={(item.IsPlaned)} 
+                  style={styles.chooseButton}
+                  onPress={_=> this._choosePayments(item)}
+                >
+                  <Feather name="check" size={18} style={(item.IsPlaned)?{color:'#d8d8d8'}:main.clIvanG}/>
+              </Button>
+            }
+            <RectButton onPress={_=> this.props.GoToEdit(item.Id)} style={main.fl_1}>
+              <View style={styles.rectView}>
+                <View style={main.fl_1}>
+                  <Text numberOfLines={1}>{Name}</Text>
+                  <Text note numberOfLines={1}>{CatDesc.Name}</Text>
+                </View>
+                <View style={[main.fD_C, main.aI_E]}>
+                  {(CatDesc.IsSpendingCategory) 
+                  ? <Text style={[main.clIvanD, main.fontFamBold]}> - {SummMask(item.Amount)} {user.DefCurrency}</Text>
+                  : <Text style={[main.clIvanG, main.fontFamBold]}> + {SummMask(item.Amount)} {user.DefCurrency}</Text>
+                  }
+                  <Text note>{moment(item.TransDate).format('DD.MM.YYYY')}</Text>
+                </View>
+              </View>
+            </RectButton>
+          </View>
+        </SwipeableRow>
+      )
+    }
+
     render() {
-      const { user, payments } = this.props
-      const { planedPay } = this.state
+      const { payments } = this.props
 
       return (
         <FlatList
           data={payments}
-          renderItem={({ item, index }) => {
-            let CatDesc = this._definePayCat(item)
-            return (
-              <SwipeableRow rightFunc={this._deletePay} itemId={item.Id} >
-                <View style={styles.row}>
-                  {(planedPay === item.Id)
-                    ? <Button rounded light style={styles.chooseButton}><Spinner size="small"/></Button>
-                    : <Button rounded bordered
-                      success={(!item.IsPlaned)} 
-                      light={(item.IsPlaned)} 
-                      style={styles.chooseButton}
-                      onPress={_=> this._choosePayments(item)}
-                      >
-                        <Icon ios="ios-checkmark" android="md-checkmark" style={styles.checkmark}/>
-                    </Button>
-                  }
-                  <RectButton onPress={_=> this.props.GoToEdit(item.Id)} style={main.fl_1}>
-                    <View style={styles.rectView}>
-                      <View style={main.fl_1}>
-                        {((item.Name==null) || (item.Name.length === 0))
-                          ? <Text>---</Text>
-                          : <Text numberOfLines={1}>{item.Name}</Text>
-                        }
-                        <Text note numberOfLines={1}>{CatDesc.Name}</Text>
-                      </View>
-                      <View style={[main.fD_C, main.aI_E]}>
-                        {(CatDesc.IsSpendingCategory) 
-                        ? <Text style={[main.clIvanD, main.fontFamBold]}> - {SummMask(item.Amount)} {user.DefCurrency}</Text>
-                        : <Text style={[main.clIvanG, main.fontFamBold]}> + {SummMask(item.Amount)} {user.DefCurrency}</Text>
-                        }
-                        <Text note>{moment(item.TransDate).format('DD.MM.YYYY')}</Text>
-                      </View>
-                    </View>
-                  </RectButton>
-                </View>
-              </SwipeableRow>
-            )}
-          }
+          renderItem={this.renderItem}
           keyExtractor={(item, index) => `message ${index}`}
         />
       )
@@ -135,14 +138,14 @@ const styles = StyleSheet.create({
     marginRight: 2,
     height: 31,
     width: 31,
-    paddingHorizontal: 9,
-    marginVertical: 7
+    justifyContent:'space-around',
+    alignItems:'center'
   },
-  checkmark: {
-    fontSize:18, 
-    marginLeft:0, 
-    marginRight:0, 
-    marginTop:0
+  hitSlop: {
+    top:10, 
+    left:10, 
+    bottom:10, 
+    right:10
   }
 })
 

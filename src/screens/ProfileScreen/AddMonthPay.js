@@ -128,7 +128,9 @@ class AddMonthPay extends Component {
             <Grid style={styles.pickerGrid}>
               <Item picker>
                 <Picker mode="dropdown"
-                  iosIcon={<Icon name="arrow-down" />}
+                  iosIcon={<Icon name="arrow-down" style={main.clGrey}/>}
+                  iosHeader="Категория"
+                  headerBackButtonTextStyle={main.clWhite}
                   placeholderStyle={{ color: "#bfc6ea" }}
                   placeholderIconColor="#007aff"
                   selectedValue={CategoryId}
@@ -148,7 +150,9 @@ class AddMonthPay extends Component {
               <Item picker style={{width:'80%'}}>
                 <Label style={main.fontFam}>День месяца</Label>
                 <Picker mode="dropdown"
-                  iosIcon={<Icon name="arrow-down"/>}
+                  iosIcon={<Icon name="arrow-down" style={main.clGrey}/>}
+                  iosHeader="День"
+                  headerBackButtonTextStyle={main.clWhite}
                   placeholderStyle={{ color: "#bfc6ea" }}
                   placeholderIconColor="#007aff"
                   selectedValue={Day}

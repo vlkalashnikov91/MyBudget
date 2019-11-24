@@ -46,7 +46,7 @@ export const TargetActions = {
                         "Amount": Amount,
                         "CurAmount": CurAmount,
                         "UserId": UserId,
-                        "CompleteDate": CompleteDate
+                        "CompleteDate": ((CompleteDate===undefined)||(CompleteDate==null))?null:moment(CompleteDate).format('YYYY.MM.DD')
                     })
                     .then(res => {
                         StoreActions.Add(res.data, GoalName, Type, Amount, CurAmount, CompleteDate, UserId)
@@ -89,7 +89,7 @@ export const TargetActions = {
                         "GoalName": GoalName,
                         "Amount": Amount,
                         "CurAmount": CurAmount,
-                        "CompleteDate": ((CompleteDate===undefined)||(CompleteDate==null))?null:CompleteDate,
+                        "CompleteDate": ((CompleteDate===undefined)||(CompleteDate==null))?null:moment(CompleteDate).format('YYYY.MM.DD'),
                         "IsActive": true
                     })
                     .then(res => {

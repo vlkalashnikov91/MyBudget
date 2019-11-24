@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Alert } from 'react-native'
-import { Container, Body, Content, Item, Button, Text, Icon, Card, CardItem, Picker, Label, Right, Header, Title } from 'native-base'
+import { Container, Body, Content, Item, Button, Text, Icon, Card, CardItem, Picker, Label, Right, Header, Title, View } from 'native-base'
 import { connect } from 'react-redux'
 import { FontAwesome, AntDesign } from '@expo/vector-icons'
 
@@ -75,7 +75,9 @@ class Profile extends Component {
             <Body>
               <Title style={main.ml_15}>Мой кабинет</Title>
             </Body>
+            <Right></Right>
           </Header>
+
           <Content padder>
             <Card>
               <CardItem bordered>
@@ -112,14 +114,16 @@ class Profile extends Component {
                   <FontAwesome name="angle-right" size={20}/>
                 </Right>
               </CardItem>
+
               <CardItem bordered>
                 <Body>
-                  <Item>
-                    <Label style={[main.fontFam, main.clGrey]}>Валюта по умолчанию</Label>
+                  <Item style={{borderBottomWidth:0}}>
+                    <Label style={[main.fontFam, main.clGrey, main.mr_20]}>Валюта по умолчанию</Label>
                     <Picker mode="dropdown"
-                      iosIcon={<Icon name="arrow-down" />}
-                      iosHeader="Валюта по умолчанию"
-                      style={{ width: undefined }}
+                      iosIcon={<Icon name="arrow-down" style={main.clGrey} />}
+                      iosHeader="Валюта"
+                      headerBackButtonTextStyle={main.clWhite}
+                      style={{ width: 80, height:35 }}
                       placeholderStyle={{ color: "#bfc6ea" }}
                       placeholderIconColor="#007aff"
                       selectedValue={DefCurrency}
@@ -132,14 +136,20 @@ class Profile extends Component {
                       <Picker.Item color={ivanColor} label="₽" value="₽" />
                     </Picker>
                   </Item>
-
-                  <Item>
+                </Body>
+              </CardItem>
+              <CardItem bordered>
+                <Body>
+                  <Item style={{borderBottomWidth:0}}>
                     <Label style={[main.fontFam, main.clGrey]}>Перенос остатка</Label>
-                    <AntDesign name="questioncircle" style={main.clBlue} size={20} button onPress={this.setModalVisible} />
+                    <Button icon transparent style={[main.mr_20, main.ml_10]} hitSlop={{top:5, left:10, bottom:5, right:10}} onPress={this.setModalVisible} >
+                      <AntDesign name="questioncircle" style={main.clBlue} size={20} />
+                    </Button>
                     <Picker mode="dropdown"
-                      iosIcon={<Icon name="arrow-down" />}
+                      iosIcon={<Icon name="arrow-down" style={main.clGrey} />}
                       iosHeader="Перенос остатка"
-                      style={{ width: undefined }}
+                      headerBackButtonTextStyle={main.clWhite}
+                      style={{ width: 80, height:35 }}
                       placeholderStyle={{ color: "#bfc6ea" }}
                       placeholderIconColor="#007aff"
                       selectedValue={CarryOverRests}

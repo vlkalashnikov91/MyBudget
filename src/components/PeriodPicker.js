@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import { Text, Button, Card, CardItem, Body, DatePicker } from 'native-base'
 import moment from 'moment'
 
@@ -77,70 +77,72 @@ export default class PeriodPicker extends Component {
         return (
             <TouchableOpacity style={styles.modal} onPress={this.dismiss}>
               <View style={styles.modalWindow}>
-                <Card transparent>
-                  <CardItem>
-                    <Body style={[main.fD_R, main.jC_C, {justifyContent:'space-evenly'}]}>
-                      <DatePicker
-                        formatChosenDate={date => { return moment(date).format('DD MMM YYYY') }}
-                        defaultDate={dateFrom}
-                        minimumDate={new Date(2016, 1, 1)}
-                        maximumDate={new Date(2040, 12, 31)}
-                        locale="ru"
-                        timeZoneOffsetInMinutes={undefined}
-                        modalTransparent={false}
-                        animationType={"fade"}
-                        androidMode="calendar"
-                        placeHolderText={(dateFrom) ? moment(dateFrom).format('DD MMM YYYY') : "От"}
-                        placeHolderTextStyle={styles.textStyle}
-                        textStyle={styles.textStyle}
-                        onDateChange={(value) => this.setState({ dateFrom: value, hotChoos: 0 })}
-                        disabled={false}
-                      >
-                        <Text>moment(dateFrom).format('DD MMM YYYY')</Text>
-                      </DatePicker>
+                <TouchableWithoutFeedback disabled>
+                  <Card transparent>
+                    <CardItem>
+                      <Body style={[main.fD_R, main.jC_C, {justifyContent:'space-evenly'}]}>
+                        <DatePicker
+                          formatChosenDate={date => { return moment(date).format('DD MMM YYYY') }}
+                          defaultDate={dateFrom}
+                          minimumDate={new Date(2016, 1, 1)}
+                          maximumDate={new Date(2040, 12, 31)}
+                          locale="ru"
+                          timeZoneOffsetInMinutes={undefined}
+                          modalTransparent={false}
+                          animationType={"fade"}
+                          androidMode="calendar"
+                          placeHolderText={(dateFrom) ? moment(dateFrom).format('DD MMM YYYY') : "От"}
+                          placeHolderTextStyle={styles.textStyle}
+                          textStyle={styles.textStyle}
+                          onDateChange={(value) => this.setState({ dateFrom: value, hotChoos: 0 })}
+                          disabled={false}
+                        >
+                          <Text>moment(dateFrom).format('DD MMM YYYY')</Text>
+                        </DatePicker>
 
-                      <Text style={[styles.textStyle, main.mt_10]}> - </Text>
+                        <Text style={[styles.textStyle, main.mt_10]}> - </Text>
 
-                      <DatePicker
-                        formatChosenDate={date => { return moment(date).format('DD MMM YYYY') }}
-                        defaultDate={dateTo}
-                        minimumDate={new Date(2016, 1, 1)}
-                        maximumDate={new Date(2040, 12, 31)}
-                        locale="ru"
-                        timeZoneOffsetInMinutes={undefined}
-                        modalTransparent={false}
-                        animationType={"fade"}
-                        androidMode="calendar"
-                        placeHolderText={(dateTo) ? moment(dateTo).format('DD MMM YYYY') : "До"}
-                        placeHolderTextStyle={styles.textStyle}
-                        textStyle={styles.textStyle}
-                        onDateChange={(value) => this.setState({ dateTo: value, hotChoos: 0 })}
-                        disabled={false}
-                      >
-                        <Text>moment(dateTo).format('DD MMM YYYY')</Text>
-                      </DatePicker>
+                        <DatePicker
+                          formatChosenDate={date => { return moment(date).format('DD MMM YYYY') }}
+                          defaultDate={dateTo}
+                          minimumDate={new Date(2016, 1, 1)}
+                          maximumDate={new Date(2040, 12, 31)}
+                          locale="ru"
+                          timeZoneOffsetInMinutes={undefined}
+                          modalTransparent={false}
+                          animationType={"fade"}
+                          androidMode="calendar"
+                          placeHolderText={(dateTo) ? moment(dateTo).format('DD MMM YYYY') : "До"}
+                          placeHolderTextStyle={styles.textStyle}
+                          textStyle={styles.textStyle}
+                          onDateChange={(value) => this.setState({ dateTo: value, hotChoos: 0 })}
+                          disabled={false}
+                        >
+                          <Text>moment(dateTo).format('DD MMM YYYY')</Text>
+                        </DatePicker>
 
-                    </Body>
+                      </Body>
+                    </CardItem>
+                    <CardItem>
+                      <Body>
+                        {quickArr.map((item, index)=> {
+                          return (
+                            <Button block transparent key={'hot-'+index} onPress={_=>this.quickChangeRange(item.range, item.id)}>
+                              <Text uppercase style={[main.clIvan, (hotChoos===item.id)?main.fontFamBold:{}]}>{item.desc}</Text>
+                            </Button>
+                          )
+                        })}
+                      </Body>
+                    </CardItem>
+                    <CardItem>
+                      <Body>
+                        <Button block style={main.bgIvan} onPress={this.onConfirmPress}>
+                          <Text>Выбрать</Text>
+                        </Button>
+                      </Body>
                   </CardItem>
-                  <CardItem>
-                    <Body>
-                      {quickArr.map((item, index)=> {
-                        return (
-                          <Button block transparent key={'hot-'+index} onPress={_=>this.quickChangeRange(item.range, item.id)}>
-                            <Text style={[main.clIvan, (hotChoos===item.id)?main.fontFamBold:{}]}>{item.desc}</Text>
-                          </Button>
-                        )
-                      })}
-                    </Body>
-                  </CardItem>
-                  <CardItem>
-                    <Body>
-                      <Button block style={main.bgIvan} onPress={this.onConfirmPress}>
-                        <Text>Выбрать</Text>
-                      </Button>
-                    </Body>
-                </CardItem>
-              </Card>
+                </Card>
+              </TouchableWithoutFeedback>
             </View>
           </TouchableOpacity>
         )

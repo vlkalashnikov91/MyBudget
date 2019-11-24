@@ -72,7 +72,9 @@ render() {
                             <Label style={[main.width_65prc, main.fontFam, main.clGrey]}>Валюта по умолчанию</Label>
                             <Item picker style={main.width_30prc}>
                                 <Picker mode="dropdown"
-                                    iosIcon={<Icon name="arrow-down" />}
+                                    iosIcon={<Icon name="arrow-down" style={main.clGrey}/>}
+                                    iosHeader="Валюта"
+                                    headerBackButtonTextStyle={main.clWhite}
                                     style={{ width: undefined }}
                                     placeholderStyle={{ color: "#bfc6ea" }}
                                     placeholderIconColor="#007aff"
@@ -95,7 +97,9 @@ render() {
                             </Label>
                             <Item picker style={main.width_30prc}>
                                 <Picker mode="dropdown"
-                                    iosIcon={<Icon name="arrow-down" />}
+                                    iosIcon={<Icon name="arrow-down" style={main.clGrey}/>}
+                                    iosHeader="Перенос"
+                                    headerBackButtonTextStyle={main.clWhite}
                                     style={{ width: undefined }}
                                     placeholderStyle={{ color: "#bfc6ea" }}
                                     placeholderIconColor="#007aff"

@@ -23,7 +23,7 @@ class EditItem extends Component {
       Type: '',
       Amount: '',
       CurAmount: '',
-      CompleteDate: null,
+      CompleteDate: undefined,
       IsActive: false,
       errGoalName: false,
       errAmount: false,
@@ -47,13 +47,14 @@ class EditItem extends Component {
 
       if (item != undefined) {
         let isShow = ((item.CompleteDate===null)||(item.CompleteDate===undefined))? false: true
+
         this.setState({
           Id: item.Id, 
           GoalName: item.GoalName, 
           Amount: item.Amount.toString(), 
           CurAmount: item.CurAmount.toString(), 
           Type: item.Type, 
-          CompleteDate: new Date(item.CompleteDate), 
+          CompleteDate: item.CompleteDate, 
           isShowEndDate: isShow,
           IsActive: item.IsActive
         })
@@ -104,7 +105,11 @@ class EditItem extends Component {
   }
 
   _changeDate = value => {
-    this.setState({ CompleteDate: value })
+    let day = value.getDate()
+    let month = value.getMonth()+1
+    let year = value.getFullYear()
+    let data = moment(year+'-'+month+'-'+day).format('YYYY-MM-DDTHH:mm:ss')
+    this.setState({ CompleteDate: data })
   }
 
   _checkParams() {
@@ -155,6 +160,8 @@ class EditItem extends Component {
   render() {
       const { user, navigation } = this.props
       const { GoalName, Amount, CurAmount, CompleteDate, IsActive, errGoalName, errAmount, errCurAmount, Loading, isShowEndDate } = this.state
+
+      const dtFrmt = moment(CompleteDate, 'YYYY-MM-DDTHH:mm:ss').format('DD.MM.YYYY')
 
       return (
         <Container>
@@ -223,13 +230,13 @@ class EditItem extends Component {
                     modalTransparent={false}
                     animationType={"fade"}
                     androidMode="calendar"
-                    placeHolderText={(CompleteDate) ? moment(CompleteDate).add(1, 'day').format('DD.MM.YYYY') : "дд.мм.гггг"}
+                    placeHolderText={(CompleteDate) ? dtFrmt : "дд.мм.гггг"}
                     textStyle={styles.dateTextStyle}
                     placeHolderTextStyle={styles.dateTextStyle}
                     onDateChange={this._changeDate}
                     disabled={false}
                   >
-                    <Text>moment(TransDate).add(1, 'day').format('DD.MM.YYYY')</Text>
+                    <Text>dtFrmt</Text>
                   </DatePicker>
 
                   <AntDesign name="questioncircle" button onPress={this._setModalVisible} style={[main.ml_15, main.clBlue]} size={20} />
@@ -242,7 +249,7 @@ class EditItem extends Component {
             <Card transparent>
               <CardItem>
                 <Body>
-                  <Button style={(IsActive)?main.bgGreen:{}} block disabled={(!IsActive)} onPress={this._saveItem}>
+                  <Button success={(IsActive)} block disabled={(!IsActive)} onPress={this._saveItem}>
                     {(Loading)
                     ? <Text>Загрузка...</Text>
                     : <Text>Сохранить</Text>

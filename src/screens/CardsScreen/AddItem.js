@@ -80,7 +80,11 @@ class AddItem extends Component {
   }
 
   _changeDate = value => {
-    this.setState({ CompleteDate: value })
+    let day = value.getDate()
+    let month = value.getMonth()+1
+    let year = value.getFullYear()
+    let data = moment(year+'-'+month+'-'+day).format('YYYY-MM-DDTHH:mm:ss')
+    this.setState({ CompleteDate: data })
   }
 
   _checkParams() {
@@ -124,6 +128,9 @@ class AddItem extends Component {
       const { user, navigation } = this.props
       const { GoalName, Amount, CompleteDate, errGoalName, errAmount, Loading, isShowEndDate } = this.state
       let type = navigation.getParam('type', TARGET) /* target - в случае если тип будет не определен */
+
+      const dtFrmt = moment(CompleteDate, 'YYYY-MM-DDTHH:mm:ss').format('DD.MM.YYYY')
+
       
       return (
         <Container>
@@ -185,7 +192,7 @@ class AddItem extends Component {
                     modalTransparent={false}
                     animationType={"fade"}
                     androidMode="calendar"
-                    placeHolderText={(CompleteDate) ? moment(CompleteDate).format('DD.MM.YYYY') : "дд.мм.гггг"}
+                    placeHolderText={(CompleteDate) ? dtFrmt : "дд.мм.гггг"}
                     textStyle={styles.dateTextStyle}
                     placeHolderTextStyle={styles.dateTextStyle}
                     onDateChange={this._changeDate}
@@ -200,7 +207,7 @@ class AddItem extends Component {
             <Card transparent>
               <CardItem>
                 <Body>
-                  <Button style={main.bgGreen} block onPress={this._saveItem}>
+                  <Button success block onPress={this._saveItem}>
                   {(Loading)
                     ? <Text>Загрузка...</Text>
                     : <Text>Создать</Text>

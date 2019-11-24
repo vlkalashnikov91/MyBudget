@@ -70,10 +70,14 @@ class Login extends Component {
     if (st.login.length === 0) {
       this.setState({ errlogin: true })
       return false
+    } else {
+      this.setState({ errlogin: false })
     }
     if (st.password.length === 0) {
       this.setState({ errpassword: true })
       return false
+    } else {
+      this.setState({ errpassword: false })
     }
     return true
   }
@@ -139,7 +143,7 @@ class Login extends Component {
                     </Item>
 
                     <View style={[main.fD_R, main.mt_10, main.jC_C]}>
-                      <CheckBox checked={saveMe} color={ivanColor} onPress={this._saveMe} />
+                      <CheckBox checked={saveMe} color={ivanColor} onPress={this._saveMe} hitSlop={{top:5, left:10, bottom:10, right:5}}/>
                       <Text button onPress={this._saveMe} style={[main.ml_20, main.clWhite]}>Запомнить меня</Text>
                     </View>
 

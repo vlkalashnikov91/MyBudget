@@ -6,7 +6,7 @@ import { FontAwesome } from '@expo/vector-icons'
 
 import { CategoriesActions } from '../../actions/CategoriesActions'
 import { ToastTr } from '../../components/Toast'
-import { styles as main, ivanGray } from '../../Style'
+import { styles as main } from '../../Style'
 
 
 class Category extends Component {
@@ -81,7 +81,7 @@ class Category extends Component {
               onLongPress={_=> this._deleteCategory(item)}
             >
               <Body><Text style={main.clGrey}>{item.Name}</Text></Body>
-              {(item.CreatedBy !== null) && <Right><FontAwesome name="pencil" size={20} style={{color:ivanGray}}/></Right>}
+              {(item.CreatedBy !== null) && <Right><FontAwesome name="pencil" size={20} style={main.clIvanGr}/></Right>}
             </ListItem>
           )
         }}

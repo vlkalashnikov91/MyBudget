@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View,  Picker, StyleSheet, TouchableOpacity } from 'react-native'
+import { View,  Picker, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import { Text, Button, Card, CardItem, Body } from 'native-base'
 import moment from 'moment'
 
@@ -93,38 +93,40 @@ export default class YearMonthPicker extends Component {
         return (
                 <TouchableOpacity style={styles.modal} onPress={this.dismiss}>
                     <View style={styles.modalWindow}>
-                        <Card transparent>
-                            <CardItem>
-                                <TouchableOpacity style={styles.toolBar} onPress={_=> null} activeOpacity={1}>
-                                    <Text style={main.fontFamBold}>Месяц</Text>
-                                    <Text style={main.fontFamBold}>Год</Text>
-                                </TouchableOpacity>
-                            </CardItem>
-                            <CardItem>
-                                <Body style={[main.fD_R, main.aI_C]}>
-                                    <Picker style={main.fl_1}
-                                        selectedValue={selectedMonth}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ selectedMonth: itemValue })}
-                                    >
-                                        {this.renderMonthPicker(months)}
-                                    </Picker>
+                        <TouchableWithoutFeedback disabled>
+                            <Card transparent>
+                                <CardItem>
+                                    <TouchableOpacity style={styles.toolBar} onPress={_=> null} activeOpacity={1}>
+                                        <Text style={main.fontFamBold}>Месяц</Text>
+                                        <Text style={main.fontFamBold}>Год</Text>
+                                    </TouchableOpacity>
+                                </CardItem>
+                                <CardItem>
+                                    <Body style={[main.fD_R, main.aI_C]}>
+                                        <Picker style={main.fl_1}
+                                            selectedValue={selectedMonth}
+                                            onValueChange={(itemValue, itemIndex) => this.setState({ selectedMonth: itemValue })}
+                                        >
+                                            {this.renderMonthPicker(months)}
+                                        </Picker>
 
-                                    <Picker style={main.fl_1}
-                                        selectedValue={selectedYear}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ selectedYear: itemValue })}
-                                    >
-                                        {this.renderYearPicker(years)}
-                                    </Picker>
-                                </Body>
+                                        <Picker style={main.fl_1}
+                                            selectedValue={selectedYear}
+                                            onValueChange={(itemValue, itemIndex) => this.setState({ selectedYear: itemValue })}
+                                        >
+                                            {this.renderYearPicker(years)}
+                                        </Picker>
+                                    </Body>
+                                </CardItem>
+                                <CardItem>
+                                    <Body>
+                                        <Button block style={main.bgIvan} onPress={this.onConfirmPress}>
+                                            <Text>Выбрать</Text>
+                                        </Button>
+                                    </Body>
                             </CardItem>
-                            <CardItem>
-                                <Body>
-                                    <Button block style={main.bgIvan} onPress={this.onConfirmPress}>
-                                        <Text>Выбрать</Text>
-                                    </Button>
-                                </Body>
-                        </CardItem>
-                    </Card>
+                        </Card>
+                    </TouchableWithoutFeedback>
                 </View>
             </TouchableOpacity>
         )

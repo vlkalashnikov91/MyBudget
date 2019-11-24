@@ -54,7 +54,8 @@ export default {
   badgePadding: platform === PLATFORM.IOS ? 3 : 0,
 
   // Button
-  buttonFontFamily: platform === PLATFORM.IOS ? 'System' : 'SegoeUIRegular',
+  //buttonFontFamily: platform === PLATFORM.IOS ? 'System' : 'SegoeUIRegular',
+  buttonFontFamily: 'SegoeUIRegular',
   buttonDisabledBg: '#b5b5b5',
   buttonPadding: 6,
   buttonDefaultActiveOpacity: 0.5,
@@ -133,9 +134,11 @@ export default {
   checkboxTextShadowRadius: 0,
 
   // Color
-  brandPrimary: platform === PLATFORM.IOS ? '#007aff' : '#3F51B5',
+  //brandPrimary: platform === PLATFORM.IOS ? '#007aff' : '#3F51B5',
+  brandPrimary: '#395971',
   brandInfo: '#62B1F6',
-  brandSuccess: '#5cb85c',
+  //brandSuccess: '#5cb85c',
+  brandSuccess: '#43ac6a',
   brandDanger: '#d9534f',
   brandWarning: '#f0ad4e',
   brandDark: '#000',
@@ -246,7 +249,8 @@ export default {
   lineHeightH2: 27,
   lineHeightH3: 22,
   lineHeight: platform === PLATFORM.IOS ? 20 : 24,
-  listItemSelected: platform === PLATFORM.IOS ? '#007aff' : '#3F51B5',
+  listItemSelected: '#3F51B5',
+  //listItemSelected: platform === PLATFORM.IOS ? '#007aff' : '#3F51B5',
 
   // List
   listBg: 'transparent',
@@ -304,12 +308,17 @@ export default {
 
   // Title
   //titleFontfamily: platform === PLATFORM.IOS ? 'System' : 'SegoeUIRegular',
-  titleFontfamily: 'SegoeUIRegular',
-  titleFontSize: platform === PLATFORM.IOS ? 17 : 19,
-  subTitleFontSize: platform === PLATFORM.IOS ? 11 : 14,
-  subtitleColor: platform === PLATFORM.IOS ? '#8e8e93' : '#FFF',
+  //titleFontSize: platform === PLATFORM.IOS ? 17 : 19,
+  //subTitleFontSize: platform === PLATFORM.IOS ? 11 : 14,
+  //subtitleColor: platform === PLATFORM.IOS ? '#8e8e93' : '#FFF',
   //titleFontColor: platform === PLATFORM.IOS ? '#000' : '#FFF',
+
+  titleFontfamily: 'SegoeUIRegular',
   titleFontColor: '#FFF',
+  titleFontSize: 19,
+  subTitleFontSize: 14,
+  subtitleColor: '#FFF',
+  
 
   // Other
   borderRadiusBase: platform === PLATFORM.IOS ? 5 : 2,

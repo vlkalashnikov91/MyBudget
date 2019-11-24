@@ -3,7 +3,7 @@ import { Animated, StyleSheet, Modal, RefreshControl, Image, FlatList } from 're
 import { connect } from 'react-redux'
 import { Container, Content, Button, Text, Icon, Card, CardItem, H1, Segment, Left, Right, Header, Body, View, ListItem, Radio } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
-import { FontAwesome, SimpleLineIcons, MaterialCommunityIcons } from '@expo/vector-icons'
+import { FontAwesome, SimpleLineIcons, MaterialCommunityIcons, Feather } from '@expo/vector-icons'
 import moment from 'moment'
 import 'moment/locale/ru'
 
@@ -102,9 +102,9 @@ class HomeScreen extends Component {
 
     switch(sortId) {
       case 1:
-        return Payments.sort((a, b) => moment(a.TransDate) - moment(b.TransDate))
-      case 2:
         return Payments.sort((a, b) => moment(b.TransDate) - moment(a.TransDate))
+      case 2:
+        return Payments.sort((a, b) => moment(a.TransDate) - moment(b.TransDate))
       case 3:
         return Payments.sort((a, b) => Number(a.Amount) > Number(b.Amount))
       case 4:
@@ -194,126 +194,127 @@ class HomeScreen extends Component {
     }
 
     return (
-        <Container>
-          <Header>
-            <View style={[main.fl_1, main.fD_R, {alignSelf: 'center'}]}>
-              <Image resizeMode='contain' resizeMethod='scale' style={main.imageForHeader} source={require('../../../assets/Logo_min2.png')} />
-              <Grid style={[main.pdL_15, main.pdR_15]}>
+      <Container>
+        <Header>
+          <View style={[main.fl_1, main.fD_R, {alignSelf: 'center'}]}>
+            <Image resizeMode='contain' resizeMethod='scale' style={main.imageForHeader} source={require('../../../assets/Logo_min2.png')} />
+            <Grid style={[main.pdL_15, main.pdR_15]}>
+              <Row>
+                <Col>
+                  <Text style={styles.balanceStyle}>Баланс</Text>
+                </Col>
+                <Col>
+                  <Text style={styles.balanceStyle}>Плановый</Text>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Text style={[main.clWhite, main.txtAl_c, main.fontFamBold]}>{SummMask(balance)} {user.DefCurrency}</Text>
+                </Col>
+                <Col>
+                  <Text style={[main.clWhite, main.txtAl_c]}>{SummMask(planed)} {user.DefCurrency}</Text>
+                </Col>
+              </Row>
+            </Grid>
+
+            <Menu>
+              <MenuTrigger>
+                <View style={styles.headerButt}>
+                  <SimpleLineIcons name="options-vertical" style={main.clWhite} size={16}/>
+                </View>
+              </MenuTrigger>
+              <MenuOptions customStyles={{optionWrapper: styles.optionWrapper}}>
+                <MenuOption onSelect={this._toggleModalSort}><MaterialCommunityIcons name="sort" style={[main.mr_15, main.clBlue]} size={20} /><Text>Сортировать</Text></MenuOption>
+                <MenuOption onSelect={this._toggleModalInfo}><SimpleLineIcons name="question" style={[main.mr_15, main.clBlue]} size={20} /><Text>Помощь</Text></MenuOption>
+              </MenuOptions>
+            </Menu>
+
+          </View>
+        </Header>
+
+        <Segment style={main.bgWhite}>
+          <Left>
+            <Button transparent disabled={(isLoad)} onPress={this._prevMonth} style={styles.prevMonthBtn}>
+              <FontAwesome name="angle-left" size={27} />
+            </Button>
+          </Left>
+          <H1 style={styles.monthHeader} button disabled={(isLoad)} onPress={this._showModalCalendar}>
+            {capitalize(moment(selectedDate).format("MMMM YYYY"))}
+          </H1>
+          <Right>
+            <Button transparent disabled={(isLoad)} style={styles.nextMonthBtn} onPress={this._nextMonth}>
+              <FontAwesome name="angle-right" size={27} />
+            </Button>
+          </Right>
+        </Segment>
+
+        <Content
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={this._refreshData} />
+          }
+        >
+          <Card transparent>
+            <CardItem>
+              <Grid>
                 <Row>
                   <Col>
-                    <Text style={styles.balanceStyle}>Баланс</Text>
+                    <Row style={[main.jC_C, main.aI_C]}>
+                      <Button iconLeft disabled={(isLoad)} style={(!isLoad)? main.bgGreen : {}} rounded onPress={_=> this._navigateToAdd(INCOME)}>
+                        <Icon ios="ios-add" android="md-add" />
+                        <Text>Доход </Text>
+                      </Button>
+                    </Row>
                   </Col>
                   <Col>
-                    <Text style={styles.balanceStyle}>Плановый</Text>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Text style={[main.clWhite, main.txtAl_c, main.fontFamBold]}>{SummMask(balance)} {user.DefCurrency}</Text>
-                  </Col>
-                  <Col>
-                    <Text style={[main.clWhite, main.txtAl_c]}>{SummMask(planed)} {user.DefCurrency}</Text>
+                    <Row style={[main.jC_C, main.aI_C]}>
+                      <Button iconRight disabled={(isLoad)} style={(!isLoad)? main.bgDanger : {}} rounded onPress={_=> this._navigateToAdd(EXPENSE)}>
+                        <Text>Расход</Text>
+                        <Icon ios="ios-remove" android="md-remove" />
+                      </Button>
+                    </Row>
                   </Col>
                 </Row>
               </Grid>
+            </CardItem>
+          </Card>
+          
+          {Pays}
 
-              <Menu>
-                <MenuTrigger>
-                  <View style={[main.fD_R, main.aI_C, {height:45, paddingLeft:7, paddingRight:7}]}>
-                    <SimpleLineIcons name="options-vertical" style={main.clWhite} size={16}/>
-                  </View>
-                </MenuTrigger>
-                <MenuOptions customStyles={{optionWrapper: {padding: 10, flexDirection:'row', alignItems:'center'}}}>
-                  <MenuOption onSelect={this._toggleModalSort}><MaterialCommunityIcons name="sort" style={[main.mr_15, main.clBlue]} size={20} /><Text>Сортировать</Text></MenuOption>
-                  <MenuOption onSelect={this._toggleModalInfo}><SimpleLineIcons name="question" style={[main.mr_15, main.clBlue]} size={20} /><Text>Помощь</Text></MenuOption>
-                </MenuOptions>
-              </Menu>
+        </Content>
 
-            </View>
-          </Header>
-          <Segment style={main.bgWhite}>
-            <Left>
-              <Button transparent disabled={(isLoad)} onPress={this._prevMonth} style={styles.prevMonthBtn}>
-                <FontAwesome name="angle-left" size={27} />
+        <YearMonthPicker ref={(picker) => this.picker=picker} />
+
+
+        <Modal animationType="fade" transparent={true} visible={visibleModalInfo} onRequestClose={this._toggleModalInfo} >
+          <View style={main.modalOverlay} />
+          <Card transparent style={styles.modalMenu}>
+            <CardItem header>
+              <Text style={main.fontFamBold}>Планирование</Text>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <Text>"Плановый" баланс позволяет отследить остаток средств с учетом еще не проведенных, но запланированных выплат.</Text>
+                <View style={[main.fD_R, main.aI_C]}>
+                  <Button rounded bordered success={false} light={true} style={styles.chooseButton}>
+                    <Feather name="check" size={18} style={{color:'#d8d8d8'}}/>
+                  </Button>
+                  <Text>Запланированный платеж</Text>
+                </View>
+                <View style={[main.fD_R, main.aI_C, main.mt_5]}>
+                  <Button rounded bordered success={true} light={false} style={styles.chooseButton} >
+                    <Feather name="check" size={18} style={main.clIvanG}/>
+                  </Button>
+                  <Text>Проведенный платеж</Text>
+                </View>
+                <Text>Чтобы перевести платеж в статус "запланированный" нажмите на галочку перед наименованием платежа.</Text>
+              </Body>
+            </CardItem>
+            <CardItem style={[main.fD_R,{justifyContent:'flex-end'}]}>
+              <Button transparent onPress={this._toggleModalInfo}>
+                <Text>Ясно</Text>
               </Button>
-            </Left>
-            <H1 style={styles.monthHeader} button disabled={(isLoad)} onPress={this._showModalCalendar}>
-              {capitalize(moment(selectedDate).format("MMMM YYYY"))}
-            </H1>
-            <Right>
-              <Button transparent disabled={(isLoad)} style={styles.nextMonthBtn} onPress={this._nextMonth}>
-                <FontAwesome name="angle-right" size={27} />
-              </Button>
-            </Right>
-          </Segment>
-
-          <Content
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={this._refreshData} />
-            }
-          >
-            <Card transparent>
-              <CardItem>
-                <Grid>
-                  <Row>
-                    <Col>
-                      <Row style={[main.jC_C, main.aI_C]}>
-                        <Button iconLeft disabled={(isLoad)} style={(!isLoad)? main.bgGreen : {}} rounded onPress={_=> this._navigateToAdd(INCOME)}>
-                          <Icon ios="ios-add" android="md-add" />
-                          <Text uppercase={true}>Доход </Text>
-                        </Button>
-                      </Row>
-                    </Col>
-                    <Col>
-                      <Row style={[main.jC_C, main.aI_C]}>
-                        <Button iconRight disabled={(isLoad)} style={(!isLoad)? main.bgDanger : {}} rounded onPress={_=> this._navigateToAdd(EXPENSE)}>
-                          <Text uppercase={true}>Расход</Text>
-                          <Icon ios="ios-remove" android="md-remove" />
-                        </Button>
-                      </Row>
-                    </Col>
-                  </Row>
-                </Grid>
-              </CardItem>
-            </Card>
-            
-            {Pays}
-
-          </Content>
-
-          <YearMonthPicker ref={(picker) => this.picker=picker} />
-
-
-          <Modal animationType="fade" transparent={true} visible={visibleModalInfo} onRequestClose={this._toggleModalInfo} >
-            <View style={main.modalOverlay} />
-            <Card transparent style={styles.modalMenu}>
-              <CardItem header>
-                <Text style={main.fontFamBold}>Планирование</Text>
-              </CardItem>
-              <CardItem>
-                <Body>
-                  <Text>"Плановый" баланс позволяет отследить остаток средств с учетом еще не проведенных, но запланированных выплат.</Text>
-                  <View style={[main.fD_R, main.aI_C]}>
-                    <Button rounded bordered success={false} light={true} style={styles.chooseButton}>
-                      <Icon ios="ios-checkmark" android="md-checkmark" style={styles.checkmark}/>
-                    </Button>
-                    <Text>Запланированный платеж</Text>
-                  </View>
-                  <View style={[main.fD_R, main.aI_C]}>
-                    <Button rounded bordered success={true} light={false} style={styles.chooseButton} >
-                      <Icon ios="ios-checkmark" android="md-checkmark" style={styles.checkmark}/>
-                    </Button>
-                    <Text>Проведенный платеж</Text>
-                  </View>
-                  <Text>Чтобы перевести платеж в статус "запланированный" нажмите на галочку перед наименованием платежа.</Text>
-                </Body>
-              </CardItem>
-              <CardItem style={[main.fD_R,{justifyContent:'flex-end'}]}>
-                <Button transparent onPress={this._toggleModalInfo}>
-                  <Text>Ясно</Text>
-                </Button>
-              </CardItem>
-            </Card>
+            </CardItem>
+          </Card>
         </Modal>
 
         <Modal animationType="fade" transparent={true} visible={visibleModalSort} onRequestClose={this._toggleModalSort} >
@@ -329,7 +330,7 @@ class HomeScreen extends Component {
                 keyExtractor = {(item, index) => 'sort-'+index}
                 renderItem={({item}) => {
                   return (
-                    <ListItem noBorder={true} onPress={_=>this._changeSort(item.id)} >
+                    <ListItem noBorder={true} onPress={_=>this._changeSort(item.id)}>
                       <Left><Text>{item.desc}</Text></Left>
                       <Right><Radio selected={(sortId===item.id)} selectedColor={ivanColor} color={ivanGray} onPress={_=>this._changeSort(item.id)} /></Right>
                     </ListItem>
@@ -372,26 +373,32 @@ const styles = StyleSheet.create({
     ...main.bgWhite,
     marginTop: screenHeight / 7,
     ...main.ml_10,
-    ...main.mr_10
+    ...main.mr_10,
   },
   chooseButton: {
     ...main.ml_10, 
     marginRight: 10,
     height: 31,
     width: 31,
-    paddingHorizontal: 9,
-    marginVertical: 7
+    justifyContent:'space-around',
+    alignItems:'center'
   },
   modalCloseIcon: {
     ...main.mr_0,
     ...main.ml_auto,
     ...main.clGrey
   },
-  checkmark: {
-    fontSize:18, 
-    marginLeft:0, 
-    marginRight:0, 
-    marginTop:0
+  optionWrapper: {
+    padding: 10, 
+    flexDirection:'row', 
+    alignItems:'center'
+  },
+  headerButt: {
+    ...main.fD_R, 
+    ...main.aI_C,
+    height:45,
+    paddingLeft:7,
+    paddingRight:7
   }
 })
 

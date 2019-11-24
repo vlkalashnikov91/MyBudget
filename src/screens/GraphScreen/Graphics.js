@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet, FlatList } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import Svg, { Rect } from 'react-native-svg'
 import { PieChart } from 'react-native-svg-charts'
 import { Container, Body, Content, ListItem, Text, Card, Left, Right, CardItem, Segment, Icon, Title, Header, Button} from 'native-base'
 import { SkypeIndicator } from 'react-native-indicators'
+import { FlatList } from 'react-native-gesture-handler'
 import moment from 'moment'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, AntDesign } from '@expo/vector-icons'
  
 import { styles as main, ivanColor } from '../../Style'
 import { SummMask } from '../../utils/utils'
@@ -145,7 +146,9 @@ class Graphics extends Component {
               <Title style={main.ml_10}>Расходы по категориям</Title>
             </Body>
             <Right style={{flex:0.3}}>
-              <Icon android='md-calendar' ios='ios-calendar' style={[main.clWhite, main.mr_15]} button onPress={this._showModalCalendar} />
+              <Button transparent hitSlop={{top:10, left:10, bottom:10, right:10}} icon onPress={this._showModalCalendar}>
+                <AntDesign name='calendar' style={main.clWhite} size={20}/>
+              </Button>
             </Right>
           </Header>
           <Content padder>

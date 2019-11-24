@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { Container, Body, Content, Button, Text, Input, Card, CardItem, Item, Label, Icon, DatePicker, H3, Picker, Grid, Form, Header, Left, Title } from 'native-base'
 import { AntDesign } from '@expo/vector-icons'
 
-import { styles as main, ivanColor, ivanGray } from '../../Style'
+import { styles as main, ivanColor } from '../../Style'
 import { ToastTr } from '../../components/Toast'
 import ModalLoading from '../../components/ModalLoading'
 import { PaymentActions } from '../../actions/PaymentActions'
@@ -15,13 +15,13 @@ import { SummMask, ClearSpace, onlyNumbers } from '../../utils/utils'
 class AddPayment extends Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       Id: -1, 
       CategoryId: (this.props.navigation.getParam('type', INCOME) === INCOME) ? 1 : 2,
       Amount: '',
       Name:'', 
-      TransDate: new Date(),
+      TransDate: moment().format('YYYY-MM-DDTHH:mm:ss'),
       IsSpending: (this.props.navigation.getParam('type', INCOME) === INCOME) ? false : true,
       IsPlaned: false,
       Loading: false,
@@ -75,7 +75,11 @@ class AddPayment extends Component {
   }
 
   _changeDate = value => {
-    this.setState({ TransDate: value })
+    let day = value.getDate()
+    let month = value.getMonth()+1
+    let year = value.getFullYear()
+    let data = moment(year+'-'+month+'-'+day).format('YYYY-MM-DDTHH:mm:ss')
+    this.setState({ TransDate: data })
   }
 
   _checkParams() {
@@ -114,6 +118,9 @@ class AddPayment extends Component {
     const { Amount, errAmount, CategoryId, Name, TransDate, Loading } = this.state
     let type = this.props.navigation.getParam('type', INCOME) /* income - в случае если тип будет не определен */
 
+    const dtFrmt = moment(TransDate, 'YYYY-MM-DDTHH:mm:ss').format('DD.MM.YYYY')
+    const dt = new Date(TransDate)
+
     return (
       <Container>
         <Header>
@@ -138,10 +145,11 @@ class AddPayment extends Component {
             </Grid>
 
             <Grid style={styles.catGrid}>
-              <Item picker style={main.width_90prc}>
+              <Item picker style={{flex:0.9}}>
                 <Picker mode="dropdown"
-                  iosIcon={<Icon name="arrow-down" />}
+                  iosIcon={<Icon name="arrow-down" style={main.clGrey}/>}
                   iosHeader="Категория"
+                  headerBackButtonTextStyle={main.clWhite}
                   placeholderStyle={{ color: "#bfc6ea" }}
                   placeholderIconColor="#007aff"
                   selectedValue={CategoryId}
@@ -152,8 +160,10 @@ class AddPayment extends Component {
                 }
                 </Picker>
               </Item>
-
-              <AntDesign name="questioncircle" button size={20} style={[main.clBlue, main.ml_15]} onPress={this._infoCategories} />
+              
+              <Button icon transparent hitSlop={{top:10, left:10, bottom:10, right:10}} onPress={this._infoCategories} >
+                <AntDesign name="questioncircle" size={20} style={main.clBlue}/>
+              </Button>
             </Grid>
 
             <Item floatingLabel style={main.mb_20}>
@@ -163,7 +173,7 @@ class AddPayment extends Component {
 
             <DatePicker
               formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
-              defaultDate={TransDate}
+              defaultDate={dt}
               minimumDate={new Date(2016, 1, 1)}
               maximumDate={new Date(2040, 12, 31)}
               locale="ru"
@@ -171,20 +181,20 @@ class AddPayment extends Component {
               modalTransparent={false}
               animationType={"fade"}
               androidMode="calendar"
-              placeHolderText={(TransDate) ? moment(TransDate).format('DD.MM.YYYY') : "Выберите дату"}
+              placeHolderText={(TransDate) ? dtFrmt : "Выберите дату"}
               placeHolderTextStyle={styles.dateTextStyle}
               textStyle={styles.dateTextStyle}
               onDateChange={this._changeDate}
               disabled={false}
             >
-              <Text>moment(TransDate).format('DD.MM.YYYY')</Text>
+              <Text>dtFrmt</Text>
             </DatePicker>
           </Form>
 
           <Card transparent>
             <CardItem>
               <Body>
-                <Button style={main.bgGreen} block onPress={this._addPayment}>
+                <Button success block onPress={this._addPayment}>
                   {(Loading)
                   ? <Text>Загрузка...</Text>
                   : <Text>Создать</Text>

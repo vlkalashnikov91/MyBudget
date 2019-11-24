@@ -36,7 +36,7 @@ export default class ForgotPassInfo extends Component {
                 <Card transparent>
                     <CardItem>
                         <Body>
-                            <Button block style={main.bgIvan} onPress={_=>this.props.navigation.navigate('Login')}>
+                            <Button block onPress={_=>this.props.navigation.navigate('Login')}>
                                 <Text style={[main.clWhite]}>На страницу входа</Text>
                             </Button>
                         </Body>

@@ -85,7 +85,7 @@ class ForgotPass extends Component {
             <Card transparent>
               <CardItem>
                 <Body>
-                  <Button block style={(isDisabledButton) ? {} : main.bgGreen} disabled={isDisabledButton} onPress={this._forgotPass}>
+                  <Button success={(!isDisabledButton)} block disabled={isDisabledButton} onPress={this._forgotPass}>
                     {(user.isLoad)
                       ? <Text>Загрузка...</Text>
                       : <Text>Отправить</Text>

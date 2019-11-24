@@ -11,8 +11,6 @@ export const GraphActions = {
 
             NetInfo.isConnected.fetch().then(isConnected => {
                 if (isConnected) {
-
-
                     axios.get(URL + `graph/getSpendingGraph/${UserId}/${from}/${to}`).then(res => {
                         dispatch(ActionFetchData(res.data))
                     }).catch(error => {

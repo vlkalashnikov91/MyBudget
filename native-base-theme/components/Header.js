@@ -269,19 +269,13 @@ export default (variables /* : * */ = variable) => {
             ? 4
             : 8
       },
-      flex:
-        platform === PLATFORM.IOS && platformStyle !== PLATFORM.MATERIAL
-          ? 1
-          : 0.4,
+      flex: 0.4,
       alignSelf: 'center',
       alignItems: 'flex-start'
     },
     'NativeBase.Body': {
       flex: 1,
-      alignItems:
-        platform === PLATFORM.IOS && platformStyle !== PLATFORM.MATERIAL
-          ? 'center'
-          : 'flex-start',
+      alignItems: 'flex-start',
       alignSelf: 'center',
       'NativeBase.Segment': {
         borderWidth: 0,
@@ -387,10 +381,7 @@ export default (variables /* : * */ = variable) => {
     backgroundColor: variables.toolbarDefaultBg,
     flexDirection: 'row',
     // paddingHorizontal: 10,
-    paddingLeft:
-      platform === PLATFORM.IOS && variables.platformStyle !== PLATFORM.MATERIAL
-        ? 6
-        : 10,
+    paddingLeft: 10,
     paddingRight: 10,
     justifyContent: 'center',
     paddingTop: platform === PLATFORM.IOS ? 18 : StatusBar.currentHeight,
