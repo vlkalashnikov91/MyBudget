@@ -1,6 +1,8 @@
 import React from 'react'
-import { createBottomTabNavigator} from 'react-navigation'
+import { createBottomTabNavigator } from 'react-navigation'
 import { Ionicons } from '@expo/vector-icons'
+
+import { Text } from 'native-base'
 
 import CardsNav from './CardsScreen/index.js'
 import HomeScreenNav from './HomeScreen/index.js'
@@ -14,7 +16,7 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   let IconComponent = Ionicons;
   let iconName;
   if (routeName === 'Screen1') {
-    iconName = `ios-home`
+    iconName = `ios-paper`
   } else if (routeName === 'Screen2') {
     iconName = `ios-card`
   } else if (routeName === 'Screen3') {
@@ -23,7 +25,22 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
     iconName = `ios-person`
   }
 
-  return <IconComponent name={iconName} size={27} color={tintColor} />;
+  return <IconComponent name={iconName} size={25} color={tintColor} />;
+};
+
+const getTabBarLabel = (navigation) => {
+  const { routeName } = navigation.state;
+  let label;
+  if (routeName === 'Screen1') {
+    label = `Платежи`
+  } else if (routeName === 'Screen2') {
+    label = `Цели`
+  } else if (routeName === 'Screen3') {
+    label = `График`
+  } else if (routeName === 'Screen4') {
+    label = `Профиль`
+  }
+  return <Text style={{textAlign:'center', fontSize:12}}>{label}</Text>;
 };
 
 
@@ -51,12 +68,16 @@ export const HomeNavigator = createBottomTabNavigator(
     },
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarIcon: ({ focused, tintColor }) => getTabBarIcon(navigation, focused, tintColor),
+      tabBarLabel: () => getTabBarLabel(navigation),
     }),
     tabBarOptions: {
       activeTintColor: ivanColor,
       inactiveTintColor: 'gray',
-      showLabel: false,
-      style: [main.bgWhite, {borderTopColor:'#ddd', shadowColor:'#000', shadowOffset: {width: 0, height: 6}, shadowOpacity: 0.39, shadowRadius: 8.30, elevation: 13}]
+      //showLabel: false,
+      style: [main.bgWhite, {borderTopColor:'#ddd', shadowColor:'#000', shadowOffset: {width: 0, height: 6}, shadowOpacity: 0.39, shadowRadius: 8.30, elevation: 13}],
+      tabStyle:{
+        paddingVertical:5
+      }
     },
   }
 )

@@ -75,11 +75,15 @@ class AddPayment extends Component {
   }
 
   _changeDate = value => {
+    /*
+    console.log(value)
+    console.log(moment(value).format('YYYY-MM-DDTHH:mm:ss'))
+    
     let day = value.getDate()
     let month = value.getMonth()+1
     let year = value.getFullYear()
-    let data = moment(year+'-'+month+'-'+day).format('YYYY-MM-DDTHH:mm:ss')
-    this.setState({ TransDate: data })
+    let data = moment(year+'-'+month+'-'+day).format('YYYY-MM-DDTHH:mm:ss')*/
+    this.setState({ TransDate: moment(value).format('YYYY-MM-DDTHH:mm:ss') })
   }
 
   _checkParams() {
@@ -174,8 +178,6 @@ class AddPayment extends Component {
             <DatePicker
               formatChosenDate={date => { return moment(date).format('DD.MM.YYYY') }}
               defaultDate={dt}
-              minimumDate={new Date(2016, 1, 1)}
-              maximumDate={new Date(2040, 12, 31)}
               locale="ru"
               timeZoneOffsetInMinutes={undefined}
               modalTransparent={false}

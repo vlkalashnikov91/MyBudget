@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import { Animated, StyleSheet, Modal, RefreshControl, Image, FlatList } from 'react-native'
 import { connect } from 'react-redux'
-import { Container, Content, Button, Text, Icon, Card, CardItem, H1, Segment, Left, Right, Header, Body, View, ListItem, Radio } from 'native-base'
+import { Container, Content, Button, Text, Icon, Card, CardItem, H1, Segment, Left, Right, Header, View, ListItem, Radio } from 'native-base'
 import { Col, Row, Grid } from 'react-native-easy-grid'
-import { FontAwesome, SimpleLineIcons, MaterialCommunityIcons, Feather } from '@expo/vector-icons'
+import { FontAwesome, SimpleLineIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import moment from 'moment'
 import 'moment/locale/ru'
 
@@ -37,7 +37,6 @@ class HomeScreen extends Component {
     this.state = {
       selectedDate: moment(),
       refreshing: false,
-      visibleModalInfo: false,
       visibleModalSort: false,
       sortId: 1,
     }
@@ -80,8 +79,8 @@ class HomeScreen extends Component {
     this.props.navigation.navigate('AddPayment', {type: type})
   }
 
-  _toggleModalInfo = () => {
-    this.setState(prevState => ({visibleModalInfo: !prevState.visibleModalInfo}))
+  _navigateToHelp = () => {
+    this.props.navigation.navigate('HelpPayment')
   }
 
   _toggleModalSort = () => {
@@ -157,7 +156,7 @@ class HomeScreen extends Component {
 
   render() {
     const { payments, categories, user } = this.props
-    const { visibleModalInfo, selectedDate, refreshing, visibleModalSort, sortId } = this.state
+    const { selectedDate, refreshing, visibleModalSort, sortId } = this.state
 
     const isLoad = payments.isLoad || categories.isLoad || user.isLoad
 
@@ -225,7 +224,7 @@ class HomeScreen extends Component {
               </MenuTrigger>
               <MenuOptions customStyles={{optionWrapper: styles.optionWrapper}}>
                 <MenuOption onSelect={this._toggleModalSort}><MaterialCommunityIcons name="sort" style={[main.mr_15, main.clBlue]} size={20} /><Text>Сортировать</Text></MenuOption>
-                <MenuOption onSelect={this._toggleModalInfo}><SimpleLineIcons name="question" style={[main.mr_15, main.clBlue]} size={20} /><Text>Помощь</Text></MenuOption>
+                <MenuOption onSelect={this._navigateToHelp}><SimpleLineIcons name="question" style={[main.mr_15, main.clBlue]} size={20} /><Text>Помощь</Text></MenuOption>
               </MenuOptions>
             </Menu>
 
@@ -283,39 +282,6 @@ class HomeScreen extends Component {
         </Content>
 
         <YearMonthPicker ref={(picker) => this.picker=picker} />
-
-
-        <Modal animationType="fade" transparent={true} visible={visibleModalInfo} onRequestClose={this._toggleModalInfo} >
-          <View style={main.modalOverlay} />
-          <Card transparent style={styles.modalMenu}>
-            <CardItem header>
-              <Text style={main.fontFamBold}>Планирование</Text>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Text>"Плановый" баланс позволяет отследить остаток средств с учетом еще не проведенных, но запланированных выплат.</Text>
-                <View style={[main.fD_R, main.aI_C]}>
-                  <Button rounded bordered success={false} light={true} style={styles.chooseButton}>
-                    <Feather name="check" size={18} style={{color:'#d8d8d8'}}/>
-                  </Button>
-                  <Text>Запланированный платеж</Text>
-                </View>
-                <View style={[main.fD_R, main.aI_C, main.mt_5]}>
-                  <Button rounded bordered success={true} light={false} style={styles.chooseButton} >
-                    <Feather name="check" size={18} style={main.clIvanG}/>
-                  </Button>
-                  <Text>Проведенный платеж</Text>
-                </View>
-                <Text>Чтобы перевести платеж в статус "запланированный" нажмите на галочку перед наименованием платежа.</Text>
-              </Body>
-            </CardItem>
-            <CardItem style={[main.fD_R,{justifyContent:'flex-end'}]}>
-              <Button transparent onPress={this._toggleModalInfo}>
-                <Text>Ясно</Text>
-              </Button>
-            </CardItem>
-          </Card>
-        </Modal>
 
         <Modal animationType="fade" transparent={true} visible={visibleModalSort} onRequestClose={this._toggleModalSort} >
           <View style={main.modalOverlay}/>

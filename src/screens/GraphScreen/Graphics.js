@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
+import { Platform } from 'react-native'
 import { connect } from 'react-redux'
-import { StyleSheet, View } from 'react-native'
-import Svg, { Rect } from 'react-native-svg'
+import { StyleSheet, PixelRatio } from 'react-native'
+import Svg, { Rect, Circle } from 'react-native-svg'
 import { PieChart } from 'react-native-svg-charts'
-import { Container, Body, Content, ListItem, Text, Card, Left, Right, CardItem, Segment, Icon, Title, Header, Button} from 'native-base'
+import { Container, Body, Content, ListItem, Text, Card, Left, Right, CardItem, Segment, Icon, Title, Header, Button, View} from 'native-base'
 import { SkypeIndicator } from 'react-native-indicators'
-import { FlatList } from 'react-native-gesture-handler'
+import { FlatList, RectButton } from 'react-native-gesture-handler'
 import moment from 'moment'
 import { FontAwesome, AntDesign } from '@expo/vector-icons'
  
@@ -15,6 +16,8 @@ import { SummMask } from '../../utils/utils'
 import { GraphActions } from '../../actions/GraphActions'
 import { ToastTr } from '../../components/Toast'
 import PeriodPicker from '../../components/PeriodPicker'
+import SwipeableRow from '../../components/SwipeableRow'
+
 
 class Graphics extends Component {
   constructor(props) {
@@ -80,6 +83,27 @@ class Graphics extends Component {
     this.setState({ selectedPie: key })
   }
 
+
+  renderItem = ({ item }) => {
+    let { user } = this.props
+    let { selectedPie } = this.state
+    return (
+      <View style={styles.row}>
+        <RectButton style={main.fl_1} onPress={_=> this._choosPieItem(item.key)}>
+          <View style={styles.rectView}>
+            <Body style={[main.fl_1, main.fD_R]}>
+              <View style={[styles.rectDot,{backgroundColor:item.svg.fill}]}></View>
+              <Text style={(selectedPie === item.key)?{color:'#62B1F6'}:{}}>{item.description}</Text>
+            </Body>
+            <Right>
+              <Text style={(selectedPie === item.key)?{color:'#62B1F6'}:{}}>{item.value} {user.DefCurrency}</Text>
+            </Right>
+          </View>
+        </RectButton>
+      </View>
+    )
+  }
+
   render() {
     const { user, graph } = this.props
     const { dateTo, dateFrom, selectedPie, graphArr } = this.state
@@ -104,28 +128,10 @@ class Graphics extends Component {
             animate={true}
             animationDuration={500}
           />
-          <Card style={main.mt_10} transparent>
-            <FlatList data={arr}
-              keyExtractor = {(item, index) => 'graph-'+item.description + index}
-              renderItem={({item}) => {
-                return (
-                <ListItem icon button style={main.pd_0}>
-                  <Left>
-                    <Svg width="13" height="13">
-                      <Rect x="0" y="0" width="12" height="12" fill={item.svg.fill} />
-                    </Svg>
-                  </Left>
-                  <Body>
-                    <Text style={(selectedPie === item.key)?{color:'#62B1F6'}:{}}>{item.description}</Text>
-                  </Body>
-                  <Right>
-                    <Text note>{SummMask(item.value)} {user.DefCurrency}</Text>
-                  </Right>
-                </ListItem>
-                )
-              }}
-            />
-          </Card>
+          <FlatList data={arr}
+            keyExtractor = {(item, index) => 'graph-'+item.description + index}
+            renderItem={this.renderItem}
+          />
         </>
       } else {
         content = (
@@ -171,6 +177,22 @@ class Graphics extends Component {
 
 
 const styles = StyleSheet.create({
+  row: {
+    height: 50,
+    marginHorizontal: 8,
+    ...main.fD_R,
+    ...main.aI_C, 
+    ...main.fl_1
+  },
+  rectView: {
+    ...main.fl_1,
+    ...main.fD_R,
+    ...main.aI_C,
+    paddingLeft: 8,
+    paddingRight:8,
+    borderColor:'#c9c9c9', 
+    borderBottomWidth: 1 / PixelRatio.getPixelSizeForLayoutSize(1)
+  },
   modal: {
     position: 'absolute',
     top: 0,
@@ -201,6 +223,11 @@ const styles = StyleSheet.create({
     color:'#609AD3', 
     marginBottom:20, 
     opacity:0.8
+  },
+  rectDot: {
+    width:13, 
+    height:13, 
+    marginRight:8
   }
 })
 

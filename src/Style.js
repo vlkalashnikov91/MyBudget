@@ -98,6 +98,9 @@ export const styles = StyleSheet.create({
   mb_20: {
     marginBottom:20
   },
+  mb_5: {
+    marginBottom:5
+  },
   ml_auto: {
     marginLeft:'auto'
   },

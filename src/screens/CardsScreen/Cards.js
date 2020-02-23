@@ -13,9 +13,9 @@ import { TARGET, IDEBT, OWEME } from '../../constants/TargetDebts'
 import { SkypeIndicator } from 'react-native-indicators'
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu'
 
-
 import { styles as main, screenHeight, screenWidth, ivanColor, IDebtColor, TargetColor, DebtColor } from '../../Style'
 import { SummMask, ClearSpace, capitalize, onlyNumbers } from '../../utils/utils'
+
 
 var BUTTONS = [
   {text:"Поставить цель", icon:"add", iconColor:TargetColor, type:TARGET},
@@ -42,7 +42,6 @@ class Cards extends Component {
       choosenItem: {},
       Loading: false,
       isShowArchive: false,
-      visibleModalInfo: false,
       finishedTargets:[]
     }
 
@@ -253,13 +252,14 @@ class Cards extends Component {
     this.setState(prevState => ({ visibleModalMenu: false }))
   }
 
-  _toggleModalInfo = () => {
-    this.setState(prevState => ({visibleModalInfo: !prevState.visibleModalInfo}))
+  _navigateInfo = () => {
+    this.props.navigation.navigate('HelpCard')
+    
   }
 
   render() {
     const { targets, user } = this.props
-    const { isShowArchive, refreshing, visibleModalIncrease, visibleModalMenu, choosenItem, fabState, Amount, errAmount, Loading, visibleModalInfo } = this.state
+    const { isShowArchive, refreshing, visibleModalIncrease, visibleModalMenu, choosenItem, fabState, Amount, errAmount, Loading } = this.state
 
     var content = <View style={[main.fl_1, {padding:20}]}><SkypeIndicator color={ivanColor} /></View>
 
@@ -315,7 +315,7 @@ class Cards extends Component {
                   :<MaterialIcons name="check-box-outline-blank" style={[main.mr_15, main.clBlue]} size={20} />}
                   <Text>Архивные цели</Text>
                 </MenuOption>
-                <MenuOption onSelect={this._toggleModalInfo}>
+                <MenuOption onSelect={this._navigateInfo}>
                   <SimpleLineIcons name="question" style={[main.mr_15, main.clBlue]} size={20} />
                   <Text>Помощь</Text>
                 </MenuOption>
@@ -390,42 +390,6 @@ class Cards extends Component {
                 <Button transparent onPress={this._repayFull}><Text uppercase={false} style={(choosenItem.IsActive)?styles.modalButt:styles.modalButtDis}>Погасить полностью</Text></Button>
                 <Button transparent onPress={this._deleteItem}><Text uppercase={false} style={styles.modalButt}>Удалить</Text></Button>
               </Body>
-            </CardItem>
-          </Card>
-        </Modal>
-
-        <Modal animationType="fade"
-          transparent={true}
-          visible={visibleModalInfo}
-          onRequestClose={this._toggleModalInfo}
-        >
-          <View style={main.modalOverlay} />
-          <Card transparent style={styles.modalMenu2}>
-            <CardItem header>
-              <Text style={main.fontFamBold}>Информация</Text>
-            </CardItem>
-            <CardItem>
-              <Body style={main.aI_C}>
-                <View style={[main.fD_R, main.aI_C]}>
-                  <Button transparent>
-                    <FontAwesome name='exclamation-circle' size={25} style={styles.chooseButton} />
-                  </Button> 
-                  <Text>У цели подходит срок</Text>
-                </View>
-                <View style={[main.fD_R, main.aI_C]}>
-                  <Button transparent>
-                    <FontAwesome name='fire' size={25} style={[styles.chooseButton,{color:'orange'}]} />
-                  </Button>
-                  <Text>Просроченная цель</Text>
-                </View>
-                <Text style={[main.mt_20, main.txtAl_c]}>Долго удерживайте цель для выбора дополнительных действий</Text>
-              </Body>
-            </CardItem>
-
-            <CardItem style={[main.fD_R,{justifyContent:'flex-end'}]}>
-              <Button transparent onPress={this._toggleModalInfo}>
-                <Text>Ясно</Text>
-              </Button>
             </CardItem>
           </Card>
         </Modal>
